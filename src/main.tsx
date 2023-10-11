@@ -15,7 +15,7 @@ if (rootElement) {
   const queryClient = new QueryClient()
 
   const theme: MantineThemeOverride = {
-    primaryColor: '#1c1c1e',
+    primaryColor: 'dark',
     black: '#1c1c1e',
     white: '#fbfbff',
   }
