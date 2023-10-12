@@ -2,7 +2,7 @@ import { ReactElement, useEffect, useState } from 'react'
 import { Container, Stack, TextInput, Title } from '@mantine/core'
 import { IconSearch } from '@tabler/icons-react'
 import PatchGrid from '../components/PatchGrid.tsx'
-import { mockOwnPatches, mockPatches } from '../mock-data.ts'
+import { mockPatches } from '../mock-data.ts'
 import { Patch } from '../types.ts'
 
 const MarketScreen = (): ReactElement => {
@@ -13,7 +13,7 @@ const MarketScreen = (): ReactElement => {
     const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
 
     setPatches(
-      mockOwnPatches
+      mockPatches
         .filter((patch: Patch): boolean => patch.title.toLowerCase().includes(lowerCaseSearchQuery)))
   }, [searchQuery])
 
