@@ -1,8 +1,8 @@
+import { ReactElement } from 'react'
+import { NavLink } from 'react-router-dom'
 import { Anchor, AppShell, Burger, Button, Group, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconDiscount2 } from '@tabler/icons-react'
-import { ReactElement } from 'react'
-import { NavLink } from 'react-router-dom'
 import AppRouter from './router/AppRouter.tsx'
 
 type HeaderElement = {
@@ -10,7 +10,7 @@ type HeaderElement = {
   link: string;
 }
 
-const headerElements: Array<ReactElement> = [
+const headerLinks: Array<ReactElement> = [
   { label:'Home', link: '/' },
   { label:'My patches', link: '/my-patches' },
   { label:'My trades', link: '/my-trades' },
@@ -25,16 +25,26 @@ const headerElements: Array<ReactElement> = [
   >
     {headerElement.label}
   </Anchor>
-)).concat(<Button
-  key="/log-out"
-  to="/log-out"
-  component={NavLink}
-  variant="outline"
-  color="red"
-  mx="sm"
->
-  Log out
-</Button>)
+))
+
+const logoutButton: ReactElement = (
+  <Button
+    key="/log-out"
+    to="/log-out"
+    component={NavLink}
+    variant="outline"
+    color="red"
+    mx="sm"
+  >
+      Log out
+  </Button>
+)
+
+const headerElements: Array<ReactElement> =
+    [
+      ...headerLinks,
+      logoutButton
+    ]
 
 function App() {
   const [opened, { toggle }] = useDisclosure()
