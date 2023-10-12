@@ -31,6 +31,7 @@ const headerElements: Array<ReactElement> = [
   component={NavLink}
   variant="outline"
   color="red"
+  mx="sm"
 >
   Log out
 </Button>)
