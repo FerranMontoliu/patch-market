@@ -3,22 +3,28 @@ import { useDisclosure } from '@mantine/hooks'
 import { IconDiscount2 } from '@tabler/icons-react'
 import { ReactElement } from 'react'
 import { NavLink } from 'react-router-dom'
+import AppRouter from './router/AppRouter.tsx'
+
+type HeaderElement = {
+  label: string;
+  link: string;
+}
 
 const headerElements: Array<ReactElement> = [
-  'Home',
-  'My patches',
-  'My trades',
-  'Profile',
-  'Log out'
-].map((title: string) => (
+  { label:'Home', link: '/' },
+  { label:'My patches', link: '/my-patches' },
+  { label:'My trades', link: '/my-trades' },
+  { label:'Profile', link: '/user-profile' },
+  { label:'Log out', link: '/log-out' },
+].map((headerElement: HeaderElement) => (
   <Anchor
-    key={title}
-    to="/"
+    key={headerElement.link}
+    to={headerElement.link}
     component={NavLink}
     underline="hover"
     p="sm"
   >
-    {title}
+    {headerElement.label}
   </Anchor>
 ))
 
@@ -49,7 +55,7 @@ function App() {
       </AppShell.Navbar>
 
       <AppShell.Main>
-        Body
+        <AppRouter />
       </AppShell.Main>
     </AppShell>
   )
