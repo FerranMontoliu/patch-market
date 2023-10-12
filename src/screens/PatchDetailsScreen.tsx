@@ -1,10 +1,16 @@
 import { ReactElement } from 'react'
-import { Container, Title } from '@mantine/core'
+import { useParams } from 'react-router-dom'
+import { Container, Stack, Title } from '@mantine/core'
 
 const PatchDetailsScreen = (): ReactElement => {
+  const { patchId } = useParams()
+
   return (
     <Container>
-      <Title order={1}>Patch details</Title>
+      <Stack>
+        <Title order={1}>Patch details</Title>
+        <Title order={4}>ID: {patchId}</Title>
+      </Stack>
     </Container>
   )
 }
