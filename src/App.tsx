@@ -1,4 +1,4 @@
-import { Anchor, AppShell, Burger, Group } from '@mantine/core'
+import { Anchor, AppShell, Burger, Button, Group, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconDiscount2 } from '@tabler/icons-react'
 import { ReactElement } from 'react'
@@ -15,7 +15,6 @@ const headerElements: Array<ReactElement> = [
   { label:'My patches', link: '/my-patches' },
   { label:'My trades', link: '/my-trades' },
   { label:'Profile', link: '/user-profile' },
-  { label:'Log out', link: '/log-out' },
 ].map((headerElement: HeaderElement) => (
   <Anchor
     key={headerElement.link}
@@ -26,7 +25,15 @@ const headerElements: Array<ReactElement> = [
   >
     {headerElement.label}
   </Anchor>
-))
+)).concat(<Button
+  key="/log-out"
+  to="/log-out"
+  component={NavLink}
+  variant="outline"
+  color="red"
+>
+  Log out
+</Button>)
 
 function App() {
   const [opened, { toggle }] = useDisclosure()
@@ -40,7 +47,13 @@ function App() {
       <AppShell.Header>
         <Group h="100%" px="md">
           <Group justify="space-between" style={{ flex: 1 }}>
-            <IconDiscount2 size={30} />
+            <Anchor component={NavLink} to="/" underline="never">
+              <Group>
+                <IconDiscount2 size={30} />
+                <Title order={4}>PatchMarket</Title>
+              </Group>
+            </Anchor>
+
             <Group ml="xl" gap={0} visibleFrom="sm">
               {headerElements}
             </Group>
