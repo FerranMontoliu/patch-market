@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MantineProvider, MantineThemeOverride } from '@mantine/core'
 import { Notifications } from '@mantine/notifications'
 import App from './App.tsx'
+import { UserContextProvider } from './contexts/UserContext.tsx'
 
 const rootElement : HTMLElement | null= document.getElementById('root')
 
@@ -26,12 +27,16 @@ if (rootElement) {
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <MantineProvider theme={theme}>
-          <BrowserRouter>
-            <Notifications />
-            <App />
-          </BrowserRouter>
+          <UserContextProvider>
+            <BrowserRouter>
+              <Notifications />
+              <App />
+            </BrowserRouter>
+          </UserContextProvider>
         </MantineProvider>
       </QueryClientProvider>
     </StrictMode>,
   )
 }
+
+

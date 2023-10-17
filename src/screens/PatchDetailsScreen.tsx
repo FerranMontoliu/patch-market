@@ -6,25 +6,33 @@ import { mockPatches, mockOwnPatches, ownUser } from '../mock-data'
 import { IconCircle2Filled, IconCircleCheckFilled, IconAdjustmentsHorizontal, IconSearch } from '@tabler/icons-react'
 import PatchSelectionList from '../components/PatchSelectionList.tsx'
 import PatchList from '../components/PatchList.tsx'
+import { mockOwnPatches, mockPatches } from '../mock-data'
 
 const PatchDetailsScreen = (): ReactElement => {
   const { patchId } = useParams()
+
   const [isTradeMode, setIsTradeMode] = useState(false)
   const [isTradeOffered, setIsTradeOffered] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [patches, setPatches] = useState(mockOwnPatches)
   const [selectedPatches, setSelectedPatches] = useState(new Array<Patch>)
-  useEffect((): void => {
-    const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
 
-    setPatches(
-      mockOwnPatches
-        .filter((patch: Patch): boolean => patch.title.toLowerCase().includes(lowerCaseSearchQuery)))
-  }, [searchQuery])
-  const patchIdInt: number = patchId ? +patchId : -1
-  const patchArray: Array<Patch> = [... mockPatches, ...mockOwnPatches]
-  const patch: Patch = patchArray[patchIdInt-1]
-  const colors: Array<string> = [
+  const patchList: Array<Patch> = [... mockPatches, ...mockOwnPatches]
+  const patch: Patch | undefined = patchList.find((p: Patch): boolean => p.id === patchId)
+
+    useEffect((): void => {
+        const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
+
+        setPatches(
+            mockOwnPatches
+                .filter((patch: Patch): boolean => patch.title.toLowerCase().includes(lowerCaseSearchQuery)))
+    }, [searchQuery])
+
+  if (patch === undefined) {
+    return <Title>Error, patch not found</Title>
+  }
+
+  const categoryColorList: Array<string> = [
     '#FFA8A8',
     '#E599F7',
     '#B197FC',

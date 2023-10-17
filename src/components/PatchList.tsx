@@ -4,17 +4,19 @@ import { Stack, Divider } from '@mantine/core'
 import PatchListElement from './PatchListElement'
 
 type PatchListProps = {
-  patches: Array<Patch>;
-};
+  patches: Array<Patch>
+}
 
 const PatchList = ({ patches }: PatchListProps): ReactElement => (
   <Stack gap="xs">
-    {patches.map((patch) => (
+    {patches.map((patch: Patch, i: number) => (
       <Stack key={patch.id} gap="xs">
         <PatchListElement patch={patch}/>
-        {patches[patches.length - 1] !== patch ? (
-          <Divider size="xs" my="xs"></Divider>
-        ) : null}
+
+        { i < patches.length
+          ? <Divider my="xs"></Divider>
+          : null
+        }
       </Stack>
     ))}
   </Stack>

@@ -112,7 +112,7 @@ export const ownUser: User = {
   name: 'Rick',
   surname: 'Sánchez',
   telegramUser: 'rick_sanchez',
-  mail: 'rick@sanchez.com'
+  mail: 'rick@sanchez.com',
 }
 
 export const mockOwnPatches: Array<Patch> = [

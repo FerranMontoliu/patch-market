@@ -1,13 +1,15 @@
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Anchor, AppShell, Burger, Button, Group, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconDiscount2 } from '@tabler/icons-react'
-import AppRouter from './router/AppRouter.tsx'
+import AppRouter from './router/AppRouter'
+import { useUser } from './contexts/UserContext.tsx'
+import { User } from './types.ts'
 
 type HeaderElement = {
-  label: string;
-  link: string;
+  label: string
+  link: string
 }
 
 const headerLinks: Array<ReactElement> = [
@@ -27,27 +29,43 @@ const headerLinks: Array<ReactElement> = [
   </Anchor>
 ))
 
-const logoutButton: ReactElement = (
-  <Button
-    key="/log-out"
-    to="/log-out"
-    component={NavLink}
-    variant="outline"
-    color="red"
-    mx="sm"
-  >
-      Log out
-  </Button>
-)
-
-const headerElements: Array<ReactElement> =
-    [
-      ...headerLinks,
-      logoutButton
-    ]
-
-function App() {
+function App(): ReactElement {
   const [opened, { toggle }] = useDisclosure()
+
+  const [user, userDispatch] = useUser()
+  const isLoggedIn: boolean = user !== null
+
+  useEffect((): void => {
+    const loggedUserJSON: string | null = window.localStorage.getItem('patchMarketUser')
+
+    if (loggedUserJSON) {
+      const user: User = JSON.parse(loggedUserJSON)
+      userDispatch({ type: 'SET_USER', payload: user })
+    }
+  }, [])
+
+  const handleLogout = (): void => {
+    window.localStorage.removeItem('patchMarketUser')
+    userDispatch({ type: 'LOGOUT_USER' })
+  }
+
+  const logoutButton: ReactElement = (
+    <Button
+      key="log-out"
+      variant="outline"
+      color="red"
+      mx="sm"
+      onClick={handleLogout}
+    >
+        Log out
+    </Button>
+  )
+
+  const headerElements: Array<ReactElement> =
+      [
+        ...headerLinks,
+        logoutButton
+      ]
 
   return (
     <AppShell
@@ -66,16 +84,16 @@ function App() {
             </Anchor>
 
             <Group ml="xl" gap={0} visibleFrom="sm">
-              {headerElements}
+              {isLoggedIn && headerElements}
             </Group>
           </Group>
 
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+          {isLoggedIn && <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />}
         </Group>
       </AppShell.Header>
 
       <AppShell.Navbar py="md" px={4}>
-        {headerElements}
+        {isLoggedIn && headerElements}
       </AppShell.Navbar>
 
       <AppShell.Main>
@@ -86,3 +104,6 @@ function App() {
 }
 
 export default App
+
+
+//   {authContext.isLoggedIn ? (headerElements):(!headerElements)} option to not display the headers at all when not logged in
