@@ -3,11 +3,11 @@ import { Patch } from '../types'
 import { Stack, Divider } from '@mantine/core'
 import PatchListElement from './PatchListElement'
 
-type PatchGridProps = {
+type PatchListProps = {
   patches: Array<Patch>;
 };
 
-const PatchList = ({ patches }: PatchGridProps): ReactElement => (
+const PatchList = ({ patches }: PatchListProps): ReactElement => (
   <Stack gap="xs">
     {patches.map((patch) => (
       <Stack key={patch.id} gap="xs">
