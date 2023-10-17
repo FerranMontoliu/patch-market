@@ -88,12 +88,12 @@ function App(): ReactElement {
             </Group>
           </Group>
 
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+          {isLoggedIn && <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />}
         </Group>
       </AppShell.Header>
 
       <AppShell.Navbar py="md" px={4}>
-        {headerElements}
+        {isLoggedIn && headerElements}
       </AppShell.Navbar>
 
       <AppShell.Main>
