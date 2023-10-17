@@ -33,7 +33,7 @@ const MyPatchesScreen = (): ReactElement => {
               <Button 
                 variant="filled"
                 component={NavLink} to="/add-patch"
-                color='gray'
+                color='black'
                 mx="sm"
               >
                 Add Patch
