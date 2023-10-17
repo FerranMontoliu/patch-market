@@ -5,6 +5,7 @@ import { useDisclosure } from '@mantine/hooks'
 import { IconDiscount2 } from '@tabler/icons-react'
 import AppRouter from './router/AppRouter'
 import { useUser } from './contexts/UserContext.tsx'
+import { User } from './types.ts'
 
 type HeaderElement = {
   label: string
@@ -34,16 +35,17 @@ function App(): ReactElement {
   const [user, userDispatch] = useUser()
   const isLoggedIn: boolean = user !== null
 
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('patchMarketUser')
+  useEffect((): void => {
+    const loggedUserJSON: string | null = window.localStorage.getItem('patchMarketUser')
 
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
+      const user: User = JSON.parse(loggedUserJSON)
       userDispatch({ type: 'SET_USER', payload: user })
     }
   }, [])
 
   const handleLogout = (): void => {
+    window.localStorage.removeItem('patchMarketUser')
     userDispatch({ type: 'LOGOUT_USER' })
   }
 

@@ -29,6 +29,7 @@ const LoginScreen = (): ReactElement => {
 
   const handleFormSubmit = (values: LoginFormValues): void => {
     if (values.email === ownUser.mail) {
+      window.localStorage.setItem('patchMarketUser', JSON.stringify(ownUser))
       userDispatch({ type: 'SET_USER', payload: ownUser })
       navigate('/')
     }
