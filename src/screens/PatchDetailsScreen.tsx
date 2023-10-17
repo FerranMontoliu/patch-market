@@ -1,15 +1,19 @@
 import { ReactElement } from 'react'
-import { useParams, NavLink } from 'react-router-dom'
-import { Container, Grid,Group, Title, Image, Text, Card, Pill, Button } from '@mantine/core'
+import { useParams } from 'react-router-dom'
+import { Button, Card, Container, Grid, Image, Pill, Text, Title } from '@mantine/core'
 import { Patch } from '../types.ts'
-import { mockPatches, mockOwnPatches } from '../mock-data'
+import { mockOwnPatches, mockPatches } from '../mock-data'
 
 const PatchDetailsScreen = (): ReactElement => {
   const { patchId } = useParams()
-  const patchIdInt: number = patchId ? +patchId : -1
-  const patchArray: Array<Patch> = [... mockPatches, ...mockOwnPatches]
-  const patch: Patch = patchArray[patchIdInt-1]
-  const colors: Array<string> = [
+  const patchList: Array<Patch> = [... mockPatches, ...mockOwnPatches]
+  const patch: Patch | undefined = patchList.find((p: Patch): boolean => p.id === patchId)
+
+  if (patch === undefined) {
+    return <Title>Error, patch not found</Title>
+  }
+
+  const categoryColorList: Array<string> = [
     '#FFA8A8',
     '#E599F7',
     '#B197FC',
@@ -20,16 +24,9 @@ const PatchDetailsScreen = (): ReactElement => {
 
   return (
     <Container>
-      <Group gap="lg">
-        <Title order={1}>Patch details</Title>
-        <Button
-          variant="default"
-          component={NavLink} to="/add-patch"
-          color={'blue'}
-          mx="sm"
-        >Add Patch</Button>
-      </Group>
-      <Grid my="xl" gutter="xl" p="sm" align="stretch">
+      <Title order={1}>Patch details</Title>
+
+      <Grid gutter="xl" p="sm" align="stretch">
         <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
           <Image
             src={patch.image}
@@ -39,27 +36,36 @@ const PatchDetailsScreen = (): ReactElement => {
             radius="md"
           ></Image>
         </Grid.Col>
+
         <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
           <Title order={3}>
             {patch.title}
           </Title>
-          <Text fw={500} lineClamp={1}>
+          <Text fw={500}>
             {'Listed by ' + patch.owner.name + ' ' + patch.owner.surname}
           </Text>
           <Card shadow="sm" my="md" padding="md" radius="md" withBorder>
-            <Text fw={700} lineClamp={1}>
+            <Text fw="bold">
               About
             </Text>
+
             <Text>
               {patch.description}
             </Text>
-            <Text fw={700} lineClamp={1} my="sm">
+
+            <Text fw="bold" my="sm">
               Categories
             </Text>
+
             <Pill.Group>
-              {patch.categories.map(category => <Pill key={0} size='lg' bg={colors[Math.floor(Math.random() * colors.length)]}>{category}</Pill>)}
+              {patch.categories.map((category: string): ReactElement => (
+                <Pill key={0} size='lg' bg={categoryColorList[Math.floor(Math.random() * categoryColorList.length)]}>
+                  {category}
+                </Pill>
+              ))}
             </Pill.Group>
           </Card>
+
           <Button fullWidth mt="lg" radius="md">
             Make an offer
           </Button>
