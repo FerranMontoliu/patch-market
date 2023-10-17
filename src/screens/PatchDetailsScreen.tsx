@@ -1,12 +1,10 @@
-import { ReactElement } from 'react';
-import { useParams, NavLink } from 'react-router-dom';
-import {useAuth } from '../contexts/AuthContext.tsx';
+import { ReactElement } from 'react'
+import { useParams, NavLink } from 'react-router-dom'
 import { Container, Grid,Group, Title, Image, Text, Card, Pill, Button } from '@mantine/core'
 import { Patch } from '../types.ts'
 import { mockPatches, mockOwnPatches } from '../mock-data'
 
 const PatchDetailsScreen = (): ReactElement => {
-  const authContext = useAuth();
   const { patchId } = useParams()
   const patchIdInt: number = patchId ? +patchId : -1
   const patchArray: Array<Patch> = [... mockPatches, ...mockOwnPatches]
@@ -18,23 +16,18 @@ const PatchDetailsScreen = (): ReactElement => {
     '#74C0FC',
     '#63E6BE',
     '#FFC078',
-  ];
-
-
-
+  ]
 
   return (
     <Container>
-    {authContext.isLoggedIn ? (
-    <> 
       <Group gap="lg">
-          <Title order={1}>Patch details</Title>
-          <Button 
-            variant="default"
-            component={NavLink} to="/add-patch"
-            color={'blue'}
-            mx="sm"
-            >Add Patch</Button>
+        <Title order={1}>Patch details</Title>
+        <Button
+          variant="default"
+          component={NavLink} to="/add-patch"
+          color={'blue'}
+          mx="sm"
+        >Add Patch</Button>
       </Group>
       <Grid my="xl" gutter="xl" p="sm" align="stretch">
         <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
@@ -72,12 +65,8 @@ const PatchDetailsScreen = (): ReactElement => {
           </Button>
         </Grid.Col>
       </Grid>
-      </>
-    ) : (
-      <p>You are not logged in. Please log in to view your trades.</p>
-    )}
     </Container>
-  );
-};
+  )
+}
 
-export default PatchDetailsScreen;
+export default PatchDetailsScreen

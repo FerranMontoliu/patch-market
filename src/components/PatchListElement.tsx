@@ -3,11 +3,11 @@ import { Link as RouterLink } from 'react-router-dom'
 import { Group, Image, Text, UnstyledButton } from '@mantine/core'
 import { Patch } from '../types.ts'
 
-type PatchCardProps = {
-  patch: Patch;
-};
+type PatchListElementProps = {
+  patch: Patch
+}
 
-const PatchListElement = ({ patch }: PatchCardProps): ReactElement => {
+const PatchListElement = ({ patch }: PatchListElementProps): ReactElement => {
   return (
     <UnstyledButton component={RouterLink} to={`/patch-details/${patch.id}`}>
       <Group>
