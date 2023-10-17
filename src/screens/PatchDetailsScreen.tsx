@@ -76,13 +76,13 @@ const PatchDetailsScreen = (): ReactElement => {
             </Text>
             <Card shadow="sm" my="md" padding="md" radius="md" withBorder>
               <Text fw={700} lineClamp={1}>
-              About
+                About
               </Text>
               <Text>
                 {patch.description}
               </Text>
               <Text fw={700} lineClamp={1} my="sm">
-              Categories
+                Categories
               </Text>
               <Pill.Group>
                 {patch.categories.map((category, index) => <Pill key={index} size='lg' bg={colors[Math.floor(Math.random() * colors.length)]}>{category}</Pill>)}
@@ -141,11 +141,11 @@ const PatchDetailsScreen = (): ReactElement => {
                     size={52}
                   ></IconCircle2Filled>
                   <Title order={3}>
-                Exchange Offer
+                    Exchange Offer
                   </Title>
                 </Group>
               </Grid.Col>
-              <Grid.Col span={1} mr="xl">
+              <Grid.Col span={1} mr="xl" p="xs">
                 <Button radius="md" disabled={selectedPatches.length === 0} onClick={offerConfirmed}>
                 Confirm
                 </Button>
