@@ -1,7 +1,8 @@
 import { ReactElement } from 'react'
-import { Card, Center, Container, Image, Pill, Text, TextInput, Title } from '@mantine/core'
+import { Card, Center, Container, Image, Pill, Text, TextInput, Title, Button } from '@mantine/core'
 import { Patch } from '../types.ts'
 import { mockOwnPatches, mockPatches } from '../mock-data'
+import { Link as RouterLink } from 'react-router-dom'
 
 const AddPatchScreen = (): ReactElement => {
   const patchCategories: Array<string> = [...new Set(
@@ -72,6 +73,9 @@ const AddPatchScreen = (): ReactElement => {
         {/*    console.log('Selected files:', files)*/}
         {/*  }}*/}
         {/*/>*/}
+        <Button fullWidth mt="lg" radius="md" component={RouterLink} to={'/my-patches'}>
+          Add patch
+        </Button>
       </Card>
     </Container>
   )
