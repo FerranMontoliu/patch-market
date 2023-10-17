@@ -2,12 +2,14 @@ import { Patch, User } from './types.ts'
 
 export const mockUsers: Array<User> = [
   {
+    id: '2',
     name: 'John',
     surname: 'Doe',
     telegramUser: 'john_doe',
     mail: 'john@example.com',
   },
   {
+    id: '3',
     name: 'Jane',
     surname: 'Smith',
     telegramUser: 'jane_smith',
@@ -109,6 +111,7 @@ export const mockPatches: Array<Patch> = [
 ]
 
 export const ownUser: User = {
+  id: '1',
   name: 'Rick',
   surname: 'Sánchez',
   telegramUser: 'rick_sanchez',
