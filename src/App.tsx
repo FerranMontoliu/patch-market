@@ -1,9 +1,15 @@
-import { ReactElement } from 'react'
+import { ReactElement, useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Anchor, AppShell, Burger, Button, Group, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconDiscount2 } from '@tabler/icons-react'
-import AppRouter from './router/AppRouter.tsx'
+import AppRouter from './router/AppRouter'
+import {useAuth } from './contexts/AuthContext'
+
+
+
+
+
 
 type HeaderElement = {
   label: string;
@@ -27,27 +33,44 @@ const headerLinks: Array<ReactElement> = [
   </Anchor>
 ))
 
-const logoutButton: ReactElement = (
-  <Button
-    key="/log-out"
-    to="/log-out"
-    component={NavLink}
-    variant="outline"
-    color="red"
-    mx="sm"
-  >
-      Log out
-  </Button>
-)
 
-const headerElements: Array<ReactElement> =
-    [
-      ...headerLinks,
-      logoutButton
-    ]
 
-function App() {
+function App(): ReactElement {
   const [opened, { toggle }] = useDisclosure()
+  const authContext = useAuth();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const handleLogout = () => {
+    authContext.setLogin(false);  //Initialize
+
+  };                            
+  const loginButtonLabel = isLoggedIn ? 'Log Out' : 'Log In'; 
+
+  useEffect(() => {
+    setIsLoggedIn(authContext.isLoggedIn);
+  }, [authContext.isLoggedIn]);
+
+  const headerElements = [
+    <Anchor component={NavLink} to="/" key="home" underline="never">
+      <Group>
+        <IconDiscount2 size={30} />
+        <Title order={4}>PatchMarket</Title>
+      </Group>
+    </Anchor>,
+    ...headerLinks,
+    (
+      <Button
+        variant="outline"
+        color={isLoggedIn ? 'red' : 'blue'}
+        mx="sm"
+        onClick={handleLogout}
+        component={NavLink}
+        to={isLoggedIn ? '/log-out' : '/log-in'} // Change the 'to' based on isLoggedIn
+      >
+        {loginButtonLabel}
+      </Button>
+    ),
+  ];
+
 
   return (
     <AppShell
@@ -64,25 +87,24 @@ function App() {
                 <Title order={4}>PatchMarket</Title>
               </Group>
             </Anchor>
-
-            <Group ml="xl" gap={0} visibleFrom="sm">
+            <Group ml="xl" gap={0} visibleFrom="sm"> 
               {headerElements}
             </Group>
           </Group>
-
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-        </Group>
-      </AppShell.Header>
-
-      <AppShell.Navbar py="md" px={4}>
-        {headerElements}
-      </AppShell.Navbar>
-
-      <AppShell.Main>
+            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+          </Group>
+        </AppShell.Header>
+        <AppShell.Navbar py="md" px={4}>
+          {headerElements}
+        </AppShell.Navbar>
+          <AppShell.Main>
         <AppRouter />
       </AppShell.Main>
     </AppShell>
   )
 }
 
-export default App
+export default App;
+
+
+//   {authContext.isLoggedIn ? (headerElements):(!headerElements)} option to not display the headers at all when not logged in 

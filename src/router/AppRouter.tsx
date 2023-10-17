@@ -15,6 +15,7 @@ import UserProfileScreen from '../screens/UserProfileScreen.tsx'
 const AppRouter = (): ReactElement => (
   <Routes>
     <Route path="/log-in" element={<LoginScreen />} />
+    <Route path="/log-out" element={<LoginScreen />} />
     <Route path="/sign-up" element={<SignUpScreen />} />
     <Route path="/my-patches" element={<MyPatchesScreen />} />
     <Route path="/patch-details/:patchId" element={<PatchDetailsScreen />} />
@@ -28,3 +29,6 @@ const AppRouter = (): ReactElement => (
 )
 
 export default AppRouter
+
+
+//<Route path="/my-patches">{isLoggedIn ? (<MyPatchesComponent />) : (<Redirect to="/Log-in" />)}/>

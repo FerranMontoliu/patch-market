@@ -1,4 +1,5 @@
 import { ReactElement } from 'react'
+<<<<<<< Updated upstream
 import { useParams } from 'react-router-dom'
 import { Container, Grid, Title, Image, Text, Card, Pill, Button } from '@mantine/core'
 import { Patch } from '../types.ts'
@@ -57,6 +58,39 @@ const PatchDetailsScreen = (): ReactElement => {
           </Button>
         </Grid.Col>
       </Grid>
+=======
+import { useParams, NavLink } from 'react-router-dom'
+import { Container, Stack, Title, Group, Button } from '@mantine/core'
+
+
+import { AuthProvider,useAuth } from '../contexts/AuthContext';
+
+
+
+const PatchDetailsScreen = (): ReactElement => {
+  const { patchId } = useParams()
+  const authContext = useAuth();
+
+  return (
+    <Container>
+    {authContext.isLoggedIn ? (
+    <> 
+      <Stack>
+        <Group gap="lg">
+          <Title order={1}>Patch details</Title>
+          <Button 
+            variant="default"
+            component={NavLink} to="/add-patch"
+            color={'blue'}
+            mx="sm"
+            >Add Patch</Button>
+        </Group>
+        <Title order={4}>ID: {patchId}</Title>
+      </Stack> </>
+    ) : (
+      <p>You are not logged in. Please log in to view your trades.</p>
+    )}
+>>>>>>> Stashed changes
     </Container>
   )
 }
