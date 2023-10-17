@@ -167,7 +167,7 @@ const PatchDetailsScreen = (): ReactElement => {
                 </Group>
               </Grid.Col>
 
-              <Grid.Col span={1} mr="xl" p="xs">
+              <Grid.Col span="content">
                 <Button radius="md" disabled={selectedPatches.length === 0} onClick={offerConfirmed}>
                   Confirm
                 </Button>
@@ -186,7 +186,7 @@ const PatchDetailsScreen = (): ReactElement => {
                 />
               </Grid.Col>
 
-              <Grid.Col span={1}>
+              <Grid.Col span="content">
                 <Button variant="default" radius="md">
                   <IconAdjustmentsHorizontal size={24} />
                 </Button>
@@ -212,7 +212,7 @@ const PatchDetailsScreen = (): ReactElement => {
                 </Group>
               </Grid.Col>
 
-              <Grid.Col span={1} mr="xl">
+              <Grid.Col span="content">
                 <Button radius="md" variant="outline" color="red" onClick={cancelExchangeOffer}>
                   Cancel
                 </Button>

@@ -46,9 +46,9 @@ const UserProfileScreen = (): ReactElement => {
             />
           </Grid.Col>
 
-          <Grid.Col span={1} mr="xs">
+          <Grid.Col span="content">
             <Button variant="default" radius="md">
-              <IconAdjustmentsHorizontal size={24}></IconAdjustmentsHorizontal>
+              <IconAdjustmentsHorizontal size={24} />
             </Button>
           </Grid.Col>
         </Grid>

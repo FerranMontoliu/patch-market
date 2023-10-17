@@ -65,7 +65,8 @@ const PatchSelectionList = ({ patches, selectedPatches, handlePatchSelection }: 
           <Grid.Col span="auto">
             <PatchListElement patch={patch} />
           </Grid.Col>
-          <Grid.Col  span={1}>
+
+          <Grid.Col span="content">
             <Checkbox
               c='dark'
               checked={selectedPatches.includes(patch)}
