@@ -1,6 +1,6 @@
-<<<<<<< Updated upstream
 import { ReactElement, useState, useEffect } from 'react'
 import { Card, Group, Container, Title, Button, TextInput, Grid, Stack } from '@mantine/core'
+import { useAuth } from '../contexts/AuthContext.tsx';
 import { IconAdjustmentsHorizontal, IconSearch } from '@tabler/icons-react'
 import { Link as RouterLink } from 'react-router-dom'
 import { Patch } from '../types.ts'
@@ -9,7 +9,9 @@ import { mockOwnPatches } from '../mock-data.ts'
 import UserCard from '../components/UserCard.tsx'
 import PatchList from '../components/PatchList.tsx'
 
-const UserProfileScreen = () : ReactElement => {
+const UserProfileScreen = (): ReactElement => {
+  const authContext = useAuth();
+
   const [searchQuery, setSearchQuery] = useState('')
   const [patches, setPatches] = useState(mockOwnPatches)
 
@@ -24,7 +26,9 @@ const UserProfileScreen = () : ReactElement => {
   return (
     <Container>
       <Title order={1} mb="xl">My profile</Title>
-      <UserCard user={ownUser}></UserCard>
+      {authContext.isLoggedIn ? (
+    <> 
+          <UserCard user={ownUser}></UserCard>
       <Card mt="lg" shadow="sm" padding="lg" radius="md" withBorder>
         <Group justify="space-between" align="center" mb="lg">
           <Title order={3}>My Collection</Title>
@@ -53,28 +57,16 @@ const UserProfileScreen = () : ReactElement => {
           <PatchList patches={patches}></PatchList>
         </Stack>
       </Card>
-=======
-import { ReactElement } from 'react'
-import { Container, Title } from '@mantine/core'
-import { AuthProvider,useAuth } from '../contexts/AuthContext';
 
-
-const UserProfileScreen = (): ReactElement => {
-  const authContext = useAuth();
-
-  return (
-    <Container>
-      <Title order={1}>User profile</Title>
-      {authContext.isLoggedIn ? (
-    <> Fill in data here (your're currently logged in) </>
+     </>
     ) : (
       <p>You are not logged in. Please log in to view your Profile.</p>
     )}
->>>>>>> Stashed changes
     </Container>
   )
 }
 
 export default UserProfileScreen
+
 
 

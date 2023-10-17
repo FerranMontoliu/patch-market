@@ -1,11 +1,12 @@
-import { ReactElement } from 'react'
-<<<<<<< Updated upstream
-import { useParams } from 'react-router-dom'
-import { Container, Grid, Title, Image, Text, Card, Pill, Button } from '@mantine/core'
+import { ReactElement } from 'react';
+import { useParams, NavLink } from 'react-router-dom';
+import {useAuth } from '../contexts/AuthContext.tsx';
+import { Container, Grid,Group, Title, Image, Text, Card, Pill, Button } from '@mantine/core'
 import { Patch } from '../types.ts'
 import { mockPatches, mockOwnPatches } from '../mock-data'
 
 const PatchDetailsScreen = (): ReactElement => {
+  const authContext = useAuth();
   const { patchId } = useParams()
   const patchIdInt: number = patchId ? +patchId : -1
   const patchArray: Array<Patch> = [... mockPatches, ...mockOwnPatches]
@@ -17,11 +18,24 @@ const PatchDetailsScreen = (): ReactElement => {
     '#74C0FC',
     '#63E6BE',
     '#FFC078',
-  ]
+  ];
+
+
+
 
   return (
     <Container>
-      <Title order={1}>Patch details</Title>
+    {authContext.isLoggedIn ? (
+    <> 
+      <Group gap="lg">
+          <Title order={1}>Patch details</Title>
+          <Button 
+            variant="default"
+            component={NavLink} to="/add-patch"
+            color={'blue'}
+            mx="sm"
+            >Add Patch</Button>
+      </Group>
       <Grid my="xl" gutter="xl" p="sm" align="stretch">
         <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
           <Image
@@ -58,41 +72,12 @@ const PatchDetailsScreen = (): ReactElement => {
           </Button>
         </Grid.Col>
       </Grid>
-=======
-import { useParams, NavLink } from 'react-router-dom'
-import { Container, Stack, Title, Group, Button } from '@mantine/core'
-
-
-import { AuthProvider,useAuth } from '../contexts/AuthContext';
-
-
-
-const PatchDetailsScreen = (): ReactElement => {
-  const { patchId } = useParams()
-  const authContext = useAuth();
-
-  return (
-    <Container>
-    {authContext.isLoggedIn ? (
-    <> 
-      <Stack>
-        <Group gap="lg">
-          <Title order={1}>Patch details</Title>
-          <Button 
-            variant="default"
-            component={NavLink} to="/add-patch"
-            color={'blue'}
-            mx="sm"
-            >Add Patch</Button>
-        </Group>
-        <Title order={4}>ID: {patchId}</Title>
-      </Stack> </>
+      </>
     ) : (
       <p>You are not logged in. Please log in to view your trades.</p>
     )}
->>>>>>> Stashed changes
     </Container>
-  )
-}
+  );
+};
 
-export default PatchDetailsScreen
+export default PatchDetailsScreen;

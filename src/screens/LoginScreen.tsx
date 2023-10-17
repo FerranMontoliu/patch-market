@@ -97,3 +97,10 @@ const LoginScreen = (): ReactElement => {
 };
 
 export default LoginScreen;
+
+
+
+// name: 'Rick',
+//  surname: 'Sánchez',
+//  telegramUser: 'rick_sanchez',
+//  mail: 'rick@sanchez.com',
