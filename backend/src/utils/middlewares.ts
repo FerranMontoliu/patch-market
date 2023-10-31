@@ -3,7 +3,7 @@ import { JwtPayload, verify } from 'jsonwebtoken'
 import { logInfo, logError } from './logger'
 import { SECRET } from './config'
 import {  User } from '../models/user'
-import { type WebRequest, type WebError } from './types'
+import { type WebRequest, type WebError } from '../types'
 
 export const requestLoggerMiddleware = (request: WebRequest, response: Response, next: NextFunction): void => {
   logInfo('Method:', request.method)
