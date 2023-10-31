@@ -12,7 +12,7 @@ module.exports = {
     'plugin:react/jsx-runtime'
   ],
   ignorePatterns: [
-      'dist',
+    'dist',
     '.eslintrc.cjs'
   ],
   parserOptions: {
