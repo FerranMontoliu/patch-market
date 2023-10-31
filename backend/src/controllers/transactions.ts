@@ -32,7 +32,7 @@ transactionsRouter.get('/', userExtractorMiddleware, async (request: WebRequest,
   response.json(transactions)
 })
 
-transactionsRouter.get('/:id', async (request: WebRequest, response: Response): Promise<void> => {
+transactionsRouter.get('/:id', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
   const patch = await Transaction
     .findById(request.params.id)
     .populate('to', {
@@ -55,10 +55,10 @@ transactionsRouter.get('/:id', async (request: WebRequest, response: Response): 
   }
 })
 
-// transactionsRouter.post('/', async (request: WebRequest, response: Response): Promise<void> => {
+// transactionsRouter.post('/', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
 //   // TODO: CREATE TRANSACTION
 // })
 
-// transactionsRouter.put('/:id', async (request: WebRequest, response: Response): Promise<void> => {
+// transactionsRouter.put('/:id', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
 //   // TODO: UPDATE TRANSACTION (CHANGE STATUS)
 // })

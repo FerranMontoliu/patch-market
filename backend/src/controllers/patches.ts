@@ -11,9 +11,9 @@ patchesRouter.get('/owned', userExtractorMiddleware, async (request: WebRequest,
 
   const patches = await Patch
     .find({
-      user: user.id,
+      owner: user.id,
     })
-    .populate('user', {
+    .populate('owner', {
       name: 1,
     })
     .populate('university', {
@@ -26,28 +26,31 @@ patchesRouter.get('/owned', userExtractorMiddleware, async (request: WebRequest,
   response.json(patches)
 })
 
-patchesRouter.get('/tradeable', async (request: WebRequest, response: Response): Promise<void> => {
+patchesRouter.get('/tradeable', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
+  const user: UserType = request.user
+
   const patches = await Patch
     .find({
       tradeable: true,
+      owner: { $ne: user.id }, // TODO: THIS DOES NOT WORK, FIX IT
     })
-    .populate('user', {
-      name: 1,
-    })
-    .populate('university', {
-      name: 1,
-    })
-    .populate('categories', {
-      name: 1,
-    })
+    // .populate('owner', {
+    //   name: 1,
+    // })
+    // .populate('university', {
+    //   name: 1,
+    // })
+    // .populate('categories', {
+    //   name: 1,
+    // })
 
   response.json(patches)
 })
 
-patchesRouter.get('/:id', async (request: WebRequest, response: Response): Promise<void> => {
+patchesRouter.get('/:id', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
   const patch = await Patch
     .findById(request.params.id)
-    .populate('user', {
+    .populate('owner', {
       name: 1,
     })
     .populate('university', {
@@ -64,7 +67,7 @@ patchesRouter.get('/:id', async (request: WebRequest, response: Response): Promi
   }
 })
 
-// patchesRouter.post('/', async (request: WebRequest, response: Response): Promise<void> => {
+// patchesRouter.post('/', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
 //   // TODO: CREATE PATCH
 //   const patchToSave = new Patch({
 //     // TODO
