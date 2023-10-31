@@ -1,9 +1,10 @@
 import { ReactElement } from 'react'
 import { Anchor, Box, Button, Container, Group, PasswordInput, Stack, Text, TextInput, Title } from '@mantine/core'
 import { isEmail, isNotEmpty, useForm } from '@mantine/form'
-import { ownUser } from '../mock-data'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { useUserDispatch } from '../contexts/UserContext.tsx'
+import { login } from '../services/login.ts'
+import { notifications } from '@mantine/notifications'
 
 type LoginFormValues = {
   email: string;
@@ -28,11 +29,22 @@ const LoginScreen = (): ReactElement => {
   })
 
   const handleFormSubmit = (values: LoginFormValues): void => {
-    if (values.email === ownUser.mail) {
-      window.localStorage.setItem('patchMarketUser', JSON.stringify(ownUser))
-      userDispatch({ type: 'SET_USER', payload: ownUser })
-      navigate('/')
-    }
+    login({
+      email: values.email,
+      password: values.password,
+    })
+      .then((user) => {
+        window.localStorage.setItem('patchMarketUser', JSON.stringify(user))
+        userDispatch({ type: 'SET_USER', payload: user })
+        navigate('/')
+      })
+      .catch(() => {
+        notifications.show({
+          title: 'Error logging in',
+          message: 'Check that your username and password are correct or try again later',
+          color: 'red'
+        })
+      })
   }
 
   return (
