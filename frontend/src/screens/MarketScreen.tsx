@@ -1,21 +1,41 @@
-import { ReactElement, useEffect, useState } from 'react'
-import { Container, Stack, TextInput, Title } from '@mantine/core'
+import { ReactElement, useState } from 'react'
+import { Center, Container, Loader, Stack, Text, TextInput, Title } from '@mantine/core'
 import { IconSearch } from '@tabler/icons-react'
 import PatchGrid from '../components/PatchGrid.tsx'
-import { mockPatches } from '../mock-data.ts'
 import { Patch } from '../types.ts'
+import { useQuery } from '@tanstack/react-query'
+import { getTradeablePatches } from '../services/patches.ts'
 
 const MarketScreen = (): ReactElement => {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [patches, setPatches] = useState(mockPatches)
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  // const [patches, setPatches] = useState<Array<Patch>>([])
 
-  useEffect((): void => {
-    const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
+  const result = useQuery({
+    queryKey: ['tradeablePatches'],
+    queryFn: getTradeablePatches,
+  })
 
-    setPatches(
-      mockPatches
-        .filter((patch: Patch): boolean => patch.title.toLowerCase().includes(lowerCaseSearchQuery)))
-  }, [searchQuery])
+  // useEffect((): void => {
+  //   const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
+  //
+  //   setPatches(
+  //     initialPatches
+  //       .filter((patch: Patch): boolean => patch.title.toLowerCase().includes(lowerCaseSearchQuery)))
+  // }, [searchQuery])
+
+  if (result.isLoading) {
+    return (
+      <Center>
+        <Loader />
+      </Center>
+    )
+  }
+
+  if (result.isError) {
+    return <Text>There was an error fetching the patches</Text>
+  }
+
+  const patches: Array<Patch> = result.data
 
   return (
     <Container>
