@@ -1,11 +1,17 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model, Types } from 'mongoose'
+import uniqueValidator from 'mongoose-unique-validator'
 
 export type CategoryType = {
-  // TODO
+  id?: Types.ObjectId;
+  name: string;
 }
 
 const categorySchema = new Schema<CategoryType>({
-  // TODO
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+  },
 })
 
 categorySchema.set('toJSON', {
@@ -15,5 +21,7 @@ categorySchema.set('toJSON', {
     delete returnedObject.__v
   }
 })
+
+categorySchema.plugin(uniqueValidator)
 
 export const Category = model<CategoryType>('Category', categorySchema)

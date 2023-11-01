@@ -1,8 +1,11 @@
 import { ReactElement, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Grid, Title, Image, Text, Card, Pill, Button, Group, UnstyledButton, Stack, TextInput } from '@mantine/core'
+import { Container, Grid, Title, Image, Text, Card, Pill, Button, Group, UnstyledButton, Stack, TextInput, Center, Loader } from '@mantine/core'
 import { Patch } from '../types.ts'
-import { mockPatches, mockOwnPatches, ownUser } from '../mock-data'
+import { useQuery } from '@tanstack/react-query'
+import { getPatchById } from '../services/patches.ts'
+import { mockOwnPatches, ownUser } from '../mock-data'
+import NotFoundScreen from './NotFoundScreen.tsx'
 import { IconCircle2Filled, IconCircleCheckFilled, IconAdjustmentsHorizontal, IconSearch } from '@tabler/icons-react'
 import PatchSelectionList from '../components/PatchSelectionList.tsx'
 import PatchList from '../components/PatchList.tsx'
@@ -16,8 +19,12 @@ const PatchDetailsScreen = (): ReactElement => {
   const [patches, setPatches] = useState(mockOwnPatches)
   const [selectedPatches, setSelectedPatches] = useState(new Array<Patch>)
 
-  const patchList: Array<Patch> = [... mockPatches, ...mockOwnPatches]
-  const patch: Patch | undefined = patchList.find((p: Patch): boolean => p.id === patchId)
+  const result = useQuery({
+    queryKey: ['patchById', patchId],
+    queryFn: () => getPatchById(patchId!),
+  })
+
+  const patch: Patch | null | undefined = result.data
 
   useEffect((): void => {
     const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
@@ -58,6 +65,18 @@ const PatchDetailsScreen = (): ReactElement => {
   function cancelExchangeOffer(){
     setIsTradeOffered(false)
     setSelectedPatches(new Array<Patch>)
+  }
+
+  if (result.isLoading) {
+    return (
+      <Center>
+        <Loader/>
+      </Center>
+    )
+  }
+
+  if (result.isError || patch === undefined || patch === null) {
+    return <NotFoundScreen />
   }
 
   if(!isTradeMode && !isTradeOffered){
@@ -121,7 +140,7 @@ const PatchDetailsScreen = (): ReactElement => {
     <Container>
       <Title order={1}>Patch details</Title>
       <UnstyledButton w="100%" onClick={() => setIsTradeMode(false)}>
-        <Card shadow="sm" my="md" padding="md" radius="md" withBorder>
+        <Card shadow="sm" my="md" mx="xl" padding="md" radius="md" withBorder>
           <Group>
             <IconCircleCheckFilled
               size={36}

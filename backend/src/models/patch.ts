@@ -4,9 +4,10 @@ export type PatchType = {
   id?: Types.ObjectId;
   owner: Types.ObjectId;
   title: string;
+  university: string;
   description?: string;
-  image?: string;
-  categories?: Array<Types.ObjectId>;
+  image: string;
+  categories: Array<Types.ObjectId>;
   isTradeable: boolean;
 }
 
@@ -20,18 +21,25 @@ const patchSchema = new Schema<PatchType>({
     type: String,
     required: true,
   },
+  university: {
+    type: String,
+    required: true,
+  },
   description: {
     type: String,
   },
   image: {
     type: String,
+    required: true,
   },
   categories: {
     type: [Schema.Types.ObjectId],
     ref: 'Category',
+    required: true,
   },
   isTradeable: {
     type: Boolean,
+    default: false,
     required: true,
   },
 })

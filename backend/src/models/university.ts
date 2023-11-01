@@ -1,11 +1,17 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model, Types } from 'mongoose'
+import uniqueValidator from 'mongoose-unique-validator'
 
 export type UniversityType = {
-  // TODO
+  id?: Types.ObjectId;
+  name: string;
 }
 
 const universitySchema = new Schema<UniversityType>({
-  // TODO
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+  },
 })
 
 universitySchema.set('toJSON', {
@@ -15,5 +21,7 @@ universitySchema.set('toJSON', {
     delete returnedObject.__v
   }
 })
+
+universitySchema.plugin(uniqueValidator)
 
 export const University = model<UniversityType>('University', universitySchema)
