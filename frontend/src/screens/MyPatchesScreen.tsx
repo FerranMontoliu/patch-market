@@ -1,6 +1,8 @@
-import { ReactElement, useEffect, useState } from 'react'
-import { Container, Stack, TextInput, Title, Button, Group } from '@mantine/core'
-import { mockOwnPatches } from '../mock-data.ts'
+import { ReactElement, useState } from 'react'
+import { Container, Stack, TextInput, Title, Button, Group, Center, Loader, Text } from '@mantine/core'
+import NotFoundScreen from './NotFoundScreen'
+import { useQuery } from '@tanstack/react-query'
+import { getOwnPatches } from '../services/patches'
 import { IconSearch } from '@tabler/icons-react'
 import PatchGrid from '../components/PatchGrid'
 import { Patch } from '../types.ts'
@@ -8,15 +10,64 @@ import { NavLink } from 'react-router-dom'
 
 const MyPatchesScreen = (): ReactElement => {
   const [searchQuery, setSearchQuery] = useState('')
-  const [patches, setPatches] = useState(mockOwnPatches)
 
-  useEffect((): void => {
-    const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
+  const result = useQuery({
+    queryKey: ['ownPatches'],
+    queryFn: getOwnPatches,
+  })
 
-    setPatches(
-      mockOwnPatches
-        .filter((patch:Patch): boolean => patch.title.toLowerCase().includes(lowerCaseSearchQuery)))
-  }, [searchQuery])
+  const patches : Array<Patch> = result.data!
+  const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
+  const filteredPatches = patches
+    .filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery))
+
+  if (result.isLoading) {
+    return (
+      <Center>
+        <Loader/>
+      </Center>
+    )
+  }
+
+  if (result.isError || patches === undefined || patches === null) {
+    return <NotFoundScreen />
+  }
+
+  if (patches.length === 0) {
+    return (
+      <Container>
+        <Stack>
+          <Group>
+            <Title order={1}>My patches</Title>
+            <Group gap="lg">
+              <Button
+                variant="filled"
+                component={NavLink} to="/add-patch"
+                color='black'
+                mx="sm"
+              >
+                Add Patch
+              </Button>
+            </Group>
+          </Group>
+
+          <TextInput
+            leftSectionPointerEvents="none"
+            leftSection={<IconSearch size={16}/>}
+            placeholder="Search..."
+            radius="md"
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.currentTarget.value)}
+          />
+          <Center mt="lg">
+            <Text fw={500} size="lg" lineClamp={1}>
+            You do not have any patches yet. Add one!
+            </Text>
+          </Center>
+        </Stack>
+      </Container>
+    )
+  }
 
   return (
     <Container>
@@ -43,7 +94,7 @@ const MyPatchesScreen = (): ReactElement => {
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.currentTarget.value)}
         />
-        <PatchGrid patches={patches} />
+        <PatchGrid patches={filteredPatches} />
       </Stack>
     </Container>
   )

@@ -19,9 +19,9 @@ patchesRouter.get('/owned', userExtractorMiddleware, async (request: WebRequest,
     .populate('university', {
       name: 1,
     })
-    .populate('categories', {
+    /*.populate('categories', {
       name: 1,
-    })
+    })*/
 
   response.json(patches)
 })
@@ -56,9 +56,9 @@ patchesRouter.get('/:id', userExtractorMiddleware, async (request: WebRequest, r
     .populate('university', {
       name: 1,
     })
-    .populate('categories', {
+    /*.populate('categories', {
       name: 1,
-    })
+    })*/
 
   if (patch) {
     response.json(patch)

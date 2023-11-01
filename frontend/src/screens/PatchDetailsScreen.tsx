@@ -1,10 +1,10 @@
-import { ReactElement, useState, useEffect } from 'react'
+import { ReactElement, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Container, Grid, Title, Image, Text, Card, Pill, Button, Group, UnstyledButton, Stack, TextInput, Center, Loader } from '@mantine/core'
 import { Patch } from '../types.ts'
 import { useQuery } from '@tanstack/react-query'
-import { getPatchById } from '../services/patches.ts'
-import { mockOwnPatches, ownUser } from '../mock-data'
+import { getOwnPatches, getPatchById } from '../services/patches.ts'
+import { ownUser } from '../mock-data'
 import NotFoundScreen from './NotFoundScreen.tsx'
 import { IconCircle2Filled, IconCircleCheckFilled, IconAdjustmentsHorizontal, IconSearch } from '@tabler/icons-react'
 import PatchSelectionList from '../components/PatchSelectionList.tsx'
@@ -16,27 +16,26 @@ const PatchDetailsScreen = (): ReactElement => {
   const [isTradeMode, setIsTradeMode] = useState(false)
   const [isTradeOffered, setIsTradeOffered] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [patches, setPatches] = useState(mockOwnPatches)
   const [selectedPatches, setSelectedPatches] = useState(new Array<Patch>)
 
-  const result = useQuery({
+  const patchDetailsResult = useQuery({
     queryKey: ['patchById', patchId],
     queryFn: () => getPatchById(patchId!),
   })
 
-  const patch: Patch | null | undefined = result.data
+  const ownPatchesResult = useQuery({
+    queryKey: ['ownPatches'],
+    queryFn: getOwnPatches,
+  })
 
-  useEffect((): void => {
-    const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
+  const patch: Patch | null | undefined = patchDetailsResult.data
+  //change this, it could be undefined
+  let ownPatches: Array<Patch> = ownPatchesResult.data!
 
-    setPatches(
-      mockOwnPatches
-        .filter((patch: Patch): boolean => patch.title.toLowerCase().includes(lowerCaseSearchQuery)))
-  }, [searchQuery])
+  const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
+  ownPatches = ownPatches!
+    .filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery))
 
-  if (patch === undefined) {
-    return <Title>Error, patch not found</Title>
-  }
 
   const categoryColorList: Array<string> = [
     '#FFA8A8',
@@ -67,7 +66,7 @@ const PatchDetailsScreen = (): ReactElement => {
     setSelectedPatches(new Array<Patch>)
   }
 
-  if (result.isLoading) {
+  if (patchDetailsResult.isLoading) {
     return (
       <Center>
         <Loader/>
@@ -75,7 +74,7 @@ const PatchDetailsScreen = (): ReactElement => {
     )
   }
 
-  if (result.isError || patch === undefined || patch === null) {
+  if (patchDetailsResult.isError || patch === undefined || patch === null) {
     return <NotFoundScreen />
   }
 
@@ -214,7 +213,7 @@ const PatchDetailsScreen = (): ReactElement => {
 
             <Stack mb="xs" px="md" mx="xl">
               <PatchSelectionList
-                patches={patches}
+                patches={ownPatches}
                 selectedPatches={selectedPatches}
                 handlePatchSelection={handlePatchSelection} />
             </Stack>
