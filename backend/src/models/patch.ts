@@ -1,11 +1,39 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model, Types } from 'mongoose'
 
 export type PatchType = {
-  // TODO
+  id?: Types.ObjectId;
+  owner: Types.ObjectId;
+  title: string;
+  description?: string;
+  image?: string;
+  categories?: Array<Types.ObjectId>;
+  isTradeable: boolean;
 }
 
 const patchSchema = new Schema<PatchType>({
-  // TODO
+  owner: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'User',
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+  },
+  image: {
+    type: String,
+  },
+  categories: {
+    type: [Schema.Types.ObjectId],
+    ref: 'Category',
+  },
+  isTradeable: {
+    type: Boolean,
+    required: true,
+  },
 })
 
 patchSchema.set('toJSON', {
