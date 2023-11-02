@@ -1,7 +1,7 @@
 import { ReactElement, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Container, Grid, Title, Image, Text, Card, Pill, Button, Group, UnstyledButton, Stack, TextInput, Center, Loader } from '@mantine/core'
-import { Patch } from '../types.ts'
+import { Category, Patch } from '../types.ts'
 import { useQuery } from '@tanstack/react-query'
 import { getOwnPatches, getPatchById } from '../services/patches.ts'
 import { ownUser } from '../mock-data'
@@ -33,7 +33,6 @@ const PatchDetailsScreen = (): ReactElement => {
   const patch: Patch | null | undefined = patchDetailsResult.data
   //change this, it could be undefined
   const ownPatches: Array<Patch> = ownPatchesResult.data!
-
   const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
   const ownPatchesFiltered : Array<Patch> = ownPatches.filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery))
 
@@ -118,9 +117,9 @@ const PatchDetailsScreen = (): ReactElement => {
               </Text>
 
               <Pill.Group>
-                {patch.categories.map((category:string, index:number) => (
+                {patch.categories.map((category: Category, index:number) => (
                   <Pill key={index} size='lg' bg={categoryColorList[Math.floor(Math.random() * categoryColorList.length)]}>
-                    {category}</Pill>
+                    {category.name}</Pill>
                 ))}
               </Pill.Group>
             </Card>

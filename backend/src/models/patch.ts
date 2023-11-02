@@ -1,13 +1,15 @@
 import { Schema, model, Types } from 'mongoose'
+//import { Category } from './category'
 
+//const c = new Category()
 export type PatchType = {
   id?: Types.ObjectId;
   owner: Types.ObjectId;
   title: string;
   university: Types.ObjectId;
   description?: string;
-  image: Buffer;
-  categories: Array<Types.ObjectId>;
+  image: string; //should be Buffer
+  categories: Types.ObjectId[];
   isTradeable: boolean;
 }
 
@@ -29,7 +31,7 @@ const patchSchema = new Schema<PatchType>({
     type: String,
   },
   image: {
-    type: Buffer,
+    type: String, //should be Buffer
     required: true,
   },
   categories: [{
@@ -52,4 +54,6 @@ patchSchema.set('toJSON', {
   }
 })
 
-export const Patch = model<PatchType>('Patch', patchSchema)
+const Patch = model<PatchType>('Patch', patchSchema)
+
+export default Patch

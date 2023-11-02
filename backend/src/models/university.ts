@@ -24,4 +24,6 @@ universitySchema.set('toJSON', {
 
 universitySchema.plugin(uniqueValidator)
 
-export const University = model<UniversityType>('University', universitySchema)
+const University = model<UniversityType>('University', universitySchema)
+
+export default University

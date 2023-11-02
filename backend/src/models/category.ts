@@ -24,4 +24,10 @@ categorySchema.set('toJSON', {
 
 categorySchema.plugin(uniqueValidator)
 
-export const Category = model<CategoryType>('Category', categorySchema)
+const Category = model<CategoryType>('Category', categorySchema)
+
+export default Category
+
+
+
+

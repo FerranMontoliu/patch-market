@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import { Router, type Response } from 'express'
-import { User } from '../models/user'
+import User from '../models/user'
 import { type WebRequest } from '../types'
 
 export const usersRouter = Router()

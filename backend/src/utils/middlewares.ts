@@ -2,7 +2,7 @@ import { type NextFunction, type Response } from 'express'
 import { JwtPayload, verify } from 'jsonwebtoken'
 import { logInfo, logError } from './logger'
 import { SECRET } from './config'
-import {  User } from '../models/user'
+import User from '../models/user'
 import { type WebRequest, type WebError } from '../types'
 
 export const requestLoggerMiddleware = (request: WebRequest, response: Response, next: NextFunction): void => {

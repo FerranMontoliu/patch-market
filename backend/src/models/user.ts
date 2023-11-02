@@ -47,4 +47,6 @@ userSchema.set('toJSON', {
   }
 })
 
-export const User = model<UserType>('User', userSchema)
+const User = model<UserType>('User', userSchema)
+
+export default User

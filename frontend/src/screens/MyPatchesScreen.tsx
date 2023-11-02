@@ -17,9 +17,6 @@ const MyPatchesScreen = (): ReactElement => {
   })
 
   const patches : Array<Patch> = result.data!
-  const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
-  const filteredPatches = patches
-    .filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery))
 
   if (result.isLoading) {
     return (
@@ -32,6 +29,10 @@ const MyPatchesScreen = (): ReactElement => {
   if (result.isError || patches === undefined || patches === null) {
     return <NotFoundScreen />
   }
+
+  const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
+  const filteredPatches = patches
+    .filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery))
 
   if (patches.length === 0) {
     return (

@@ -1,5 +1,5 @@
 import { Router, type Response } from 'express'
-import { Patch } from '../models/patch'
+import { Patch } from '../models'
 import { WebRequest } from '../types'
 import { userExtractorMiddleware } from '../utils/middlewares'
 import { type UserType } from '../models/user'
@@ -19,9 +19,9 @@ patchesRouter.get('/owned', userExtractorMiddleware, async (request: WebRequest,
     .populate('university', {
       name: 1,
     })
-    /*.populate('categories', {
+    .populate('categories', {
       name: 1,
-    })*/
+    })
 
   response.json(patches)
 })
@@ -56,9 +56,9 @@ patchesRouter.get('/:id', userExtractorMiddleware, async (request: WebRequest, r
     .populate('university', {
       name: 1,
     })
-    /*.populate('categories', {
+    .populate('categories', {
       name: 1,
-    })*/
+    })
 
   if (patch) {
     response.json(patch)
