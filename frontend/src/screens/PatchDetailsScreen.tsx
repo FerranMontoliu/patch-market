@@ -23,6 +23,8 @@ const PatchDetailsScreen = (): ReactElement => {
     queryFn: () => getPatchById(patchId!),
   })
 
+  console.log(patchDetailsResult.data)
+
   const ownPatchesResult = useQuery({
     queryKey: ['ownPatches'],
     queryFn: getOwnPatches,
@@ -30,11 +32,10 @@ const PatchDetailsScreen = (): ReactElement => {
 
   const patch: Patch | null | undefined = patchDetailsResult.data
   //change this, it could be undefined
-  let ownPatches: Array<Patch> = ownPatchesResult.data!
+  const ownPatches: Array<Patch> = ownPatchesResult.data!
 
   const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
-  ownPatches = ownPatches!
-    .filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery))
+  const ownPatchesFiltered : Array<Patch> = ownPatches.filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery))
 
 
   const categoryColorList: Array<string> = [
@@ -213,7 +214,7 @@ const PatchDetailsScreen = (): ReactElement => {
 
             <Stack mb="xs" px="md" mx="xl">
               <PatchSelectionList
-                patches={ownPatches}
+                patches={ownPatchesFiltered}
                 selectedPatches={selectedPatches}
                 handlePatchSelection={handlePatchSelection} />
             </Stack>
