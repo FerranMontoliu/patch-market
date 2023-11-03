@@ -1,5 +1,5 @@
 import { Router, type Response } from 'express'
-import { Transaction } from '../models/transaction'
+import Transaction from '../models/transaction'
 import { WebRequest } from '../types'
 import { userExtractorMiddleware } from '../utils/middlewares'
 import { type UserType } from '../models/user'

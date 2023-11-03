@@ -18,7 +18,6 @@ require('express-async-errors')
 
 export const app: Express = express()
 
-mongoose.set('debug', true)
 mongoose.set('strictQuery', false)
 
 logInfo('connecting to', MONGODB_URI)

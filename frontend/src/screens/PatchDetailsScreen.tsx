@@ -31,11 +31,10 @@ const PatchDetailsScreen = (): ReactElement => {
   })
 
   const patch: Patch | null | undefined = patchDetailsResult.data
-  //change this, it could be undefined
-  const ownPatches: Array<Patch> = ownPatchesResult.data!
+  const ownPatches: Array<Patch> | null | undefined = ownPatchesResult.data
   const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
-  const ownPatchesFiltered : Array<Patch> = ownPatches.filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery))
-
+  const ownPatchesFiltered : Array<Patch> = ownPatches !== null && ownPatches !== undefined ? ownPatches.filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery)) : []
+  console.log(ownPatchesFiltered)
 
   const categoryColorList: Array<string> = [
     '#FFA8A8',
@@ -110,6 +109,14 @@ const PatchDetailsScreen = (): ReactElement => {
 
               <Text>
                 {patch.description}
+              </Text>
+
+              <Text fw="bold" mt="sm">
+                University
+              </Text>
+
+              <Text>
+                {patch.university.name}
               </Text>
 
               <Text fw="bold" my="sm">

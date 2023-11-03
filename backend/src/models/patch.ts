@@ -1,7 +1,5 @@
 import { Schema, model, Types } from 'mongoose'
-//import { Category } from './category'
 
-//const c = new Category()
 export type PatchType = {
   id?: Types.ObjectId;
   owner: Types.ObjectId;
@@ -26,6 +24,7 @@ const patchSchema = new Schema<PatchType>({
   university: {
     type: Schema.Types.ObjectId,
     required: true,
+    ref: 'University',
   },
   description: {
     type: String,

@@ -63,7 +63,7 @@ const SignUpScreen = (): ReactElement => {
   })
 
   const handleFormSubmit = (values: SignUpFormValues): void => {
-    if (values.email === ownUser.mail) {
+    if (values.email === ownUser.email) {
       window.localStorage.setItem('patchMarketUser', JSON.stringify(ownUser))
       userDispatch({ type: 'SET_USER', payload: ownUser })
       navigate('/')

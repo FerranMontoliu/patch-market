@@ -2,7 +2,8 @@ export type Patch = {
     id: string;
     owner: User;
     title: string;
-    description: string;
+    university: University;
+    description?: string;
     image: string;
     categories: Array<Category>;
     isTradeable: boolean;
@@ -13,10 +14,15 @@ export type User = {
     name: string;
     surname: string;
     telegramUser: string;
-    mail: string;
+    email: string;
 }
 
 export type Category = {
+    id: string;
+    name: string;
+}
+
+export type University = {
     id: string;
     name: string;
 }

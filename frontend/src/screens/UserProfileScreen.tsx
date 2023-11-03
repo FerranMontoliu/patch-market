@@ -1,23 +1,35 @@
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useUserValue } from '../contexts/UserContext.tsx'
+import { getOwnPatches } from '../services/patches.ts'
 import { Button, Card, Container, Grid, Group, Stack, TextInput, Title } from '@mantine/core'
 import { IconAdjustmentsHorizontal, IconSearch } from '@tabler/icons-react'
 import { Link as RouterLink } from 'react-router-dom'
 import { Patch } from '../types.ts'
-import { mockOwnPatches, ownUser } from '../mock-data.ts'
 import UserCard from '../components/UserCard.tsx'
 import PatchList from '../components/PatchList.tsx'
+import NotFoundScreen from './NotFoundScreen.tsx'
 
 const UserProfileScreen = (): ReactElement => {
   const [searchQuery, setSearchQuery] = useState('')
-  const [patches, setPatches] = useState(mockOwnPatches)
 
-  useEffect((): void => {
-    const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
+  const result = useQuery({
+    queryKey: ['ownPatches'],
+    queryFn: getOwnPatches,
+  })
 
-    setPatches(
-      mockOwnPatches
-        .filter((patch: Patch): boolean => patch.title.toLowerCase().includes(lowerCaseSearchQuery)))
-  }, [searchQuery])
+  console.log(result.data)
+
+  const ownUser = useUserValue()!
+
+  const patches : Array<Patch> | null | undefined = result.data
+  const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
+  const ownPatchesFiltered : Array<Patch> = patches !== null && patches !== undefined ? patches.filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery)) : []
+
+  if(ownUser === undefined || ownUser === null || patches === undefined || patches === null) {
+    <NotFoundScreen></NotFoundScreen>
+  }
+
 
   return (
     <Container>
@@ -54,7 +66,7 @@ const UserProfileScreen = (): ReactElement => {
         </Grid>
 
         <Stack mb="xs" px="md">
-          <PatchList patches={patches}></PatchList>
+          <PatchList patches={ownPatchesFiltered}></PatchList>
         </Stack>
       </Card>
     </Container>

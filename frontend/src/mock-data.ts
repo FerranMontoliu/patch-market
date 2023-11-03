@@ -6,14 +6,14 @@ export const mockUsers: Array<User> = [
     name: 'John',
     surname: 'Doe',
     telegramUser: 'john_doe',
-    mail: 'john@example.com',
+    email: 'john@example.com',
   },
   {
     id: '3',
     name: 'Jane',
     surname: 'Smith',
     telegramUser: 'jane_smith',
-    mail: 'jane@example.com',
+    email: 'jane@example.com',
   },
 ]
 
@@ -115,7 +115,7 @@ export const ownUser: User = {
   name: 'Rick',
   surname: 'Sánchez',
   telegramUser: 'rick_sanchez',
-  mail: 'rick@sanchez.com',
+  email: 'rick@sanchez.com',
 }
 
 export const mockOwnPatches: Array<Patch> = [

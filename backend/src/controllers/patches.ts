@@ -15,6 +15,7 @@ patchesRouter.get('/owned', userExtractorMiddleware, async (request: WebRequest,
     })
     .populate('owner', {
       name: 1,
+      surname: 1,
     })
     .populate('university', {
       name: 1,
@@ -52,6 +53,7 @@ patchesRouter.get('/:id', userExtractorMiddleware, async (request: WebRequest, r
     .findById(request.params.id)
     .populate('owner', {
       name: 1,
+      surname: 1,
     })
     .populate('university', {
       name: 1,

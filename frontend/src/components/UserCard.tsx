@@ -27,13 +27,13 @@ const UserCard = ({ user }: UserCardProps): ReactElement => (
         </Text>
 
         <Text lineClamp={1}>
-          {user.mail}
+          {user.email}
         </Text>
       </Group>
 
       <Group mb="xs">
         <Text fw="bold" lineClamp={1}>
-            Telegram user:
+            Telegram:
         </Text>
 
         <Text lineClamp={1}>
