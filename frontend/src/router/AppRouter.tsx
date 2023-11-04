@@ -11,6 +11,7 @@ import MyTradesScreen from '../screens/MyTradesScreen.tsx'
 import TradeDetailsScreen from '../screens/TradeDetailsScreen.tsx'
 import AddPatchScreen from '../screens/AddPatchScreen.tsx'
 import UserProfileScreen from '../screens/UserProfileScreen.tsx'
+import FAQScreen from '../screens/FAQScreen.tsx'
 import { useUserValue } from '../contexts/UserContext.tsx'
 import { User } from '../types.ts'
 
@@ -31,6 +32,8 @@ const AppRouter = (): ReactElement => {
       <Route path="/user-profile" element={isLoggedIn ? <UserProfileScreen/> : <Navigate to="/log-in" />} />
       <Route path="/" element={isLoggedIn ? <MarketScreen/> : <Navigate to="/log-in" />} />
       <Route path="*" element={<NotFoundScreen/>}/>
+      <Route path="/FAQ" element={<FAQScreen/>} />
+
     </Routes>
   )
 }
