@@ -29,12 +29,47 @@ patchesRouter.get('/owned', userExtractorMiddleware, async (request: WebRequest,
 
 patchesRouter.get('/tradeable', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
   const user: UserType = request.user
-
-  const patches = await Patch
-    .find({
+  try {
+    const patches = await Patch.find({
       tradeable: true,
-      owner: { $ne: user.id }, // TODO: THIS DOES NOT WORK, FIX IT
+      owner: { $ne: user.id }, // Exclude patches owned by the current user
     })
+      .populate('owner', 'name surname')
+      .populate('university', 'name')
+      .populate('categories', 'name');
+
+    response.json(patches);
+  } catch (error) {
+    console.error('Error while retrieving tradeable patches:', error);
+    response.status(500).json({ error: 'Internal server error' });
+  }
+})
+
+patchesRouter.get('/tradeHistory', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
+  const user: UserType = request.user
+  try {
+    const patches = await Patch.find({
+      //owner: { $ne: user.id }, // Exclude patches owned by the current user
+    })
+    // What should be in here? Things like status of trade, trade information? (connect to historyListElement?)
+      .populate('owner', 'name surname')
+      .populate('university', 'name')
+      .populate('categories', 'name');
+
+    response.json(patches);
+  } catch (error) {
+    console.error('Error while retrieving trade history:', error);
+    response.status(500).json({ error: 'Internal server error' });
+  }
+})
+
+
+  
+  //const patches = await Patch
+  //  .find({
+  //    tradeable: true,
+  //  owner: { $ne: user.id }, // TODO: THIS DOES NOT WORK, FIX IT
+  //})
     // .populate('owner', {
     //   name: 1,
     // })
@@ -45,8 +80,8 @@ patchesRouter.get('/tradeable', userExtractorMiddleware, async (request: WebRequ
     //   name: 1,
     // })
 
-  response.json(patches)
-})
+  //response.json(patches)
+//})
 
 patchesRouter.get('/:id', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
   const patch = await Patch

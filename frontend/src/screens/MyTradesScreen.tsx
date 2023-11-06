@@ -1,8 +1,33 @@
 import { ReactElement } from 'react'
-import { Container, Title, Grid, Text } from '@mantine/core'
-import { mockPatches } from '../mock-data.ts'
+import { Center, Container, Loader, Title, Grid, Text } from '@mantine/core'
+import { Patch } from '../types.ts'
+
+import { useQuery } from '@tanstack/react-query'
 import HistoryElement from '../components/HistoryListElement.tsx'
+import {getTradeHistory} from '../services/patches'
+import NotFoundScreen from './NotFoundScreen.tsx'
+
 const MyTradesScreen = (): ReactElement => {
+
+  const result = useQuery({
+    queryKey: ['gettradeHistory'],
+    queryFn: getTradeHistory,
+  })
+
+  if (result.isLoading) {
+    return (
+      <Center>
+        <Loader/>
+      </Center>
+    )
+  }
+  
+  if (result.isError) {
+    return <NotFoundScreen />
+  }
+  
+  const patches: Array<Patch> = result.data
+
   return (
     <Container>
       <Title order={1}>My trades</Title>
@@ -23,7 +48,7 @@ const MyTradesScreen = (): ReactElement => {
           </Text>
         </Grid.Col>
       </Grid>
-      {mockPatches.map((patch, index) => (<HistoryElement key={index} patch={patch}></HistoryElement>))}
+      {patches.map((patch, index) => (<HistoryElement key={index} patch={patch} />))}
     </Container>
   )
 }

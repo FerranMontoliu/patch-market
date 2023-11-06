@@ -1,15 +1,44 @@
 import { ReactElement } from 'react'
 // import { useParams } from 'react-router-dom'
-import { Button, Container, Divider, Group, Stack, Title } from '@mantine/core'
+import {Center, Loader, Button, Container, Divider, Group, Stack, Title } from '@mantine/core'
 import PatchCard from '../components/PatchCard.tsx'
-import { mockOwnPatches, mockPatches } from '../mock-data.ts'
 import PatchGrid from '../components/PatchGrid.tsx'
+
 import { notifications } from '@mantine/notifications'
 import { useNavigate } from 'react-router-dom'
+
+import { getOwnPatches } from '../services/patches.ts'
+import { useQuery } from '@tanstack/react-query'
+import { Patch } from '../types.ts'
+import { getTradeablePatches } from '../services/patches.ts'
+import NotFoundScreen from './NotFoundScreen.tsx'
+
 
 const TradeDetailsScreen = (): ReactElement => {
   // const { tradeId } = useParams()
   const navigate = useNavigate()
+  const ownPatchesResult = useQuery({
+    queryKey: ['ownPatches'],
+    queryFn: getOwnPatches,
+  })
+
+  const tradeablePatchesResult = useQuery({
+    queryKey: ['tradeablePatches'],
+    queryFn: getTradeablePatches,
+  })
+
+  if (ownPatchesResult.isLoading || tradeablePatchesResult.isLoading) {
+    return (
+      <Center>
+        <Loader/>
+      </Center>
+    )
+  }
+  if (ownPatchesResult.isError || tradeablePatchesResult.isError) {
+    return <NotFoundScreen />
+  }
+  const ownPatches: Array<Patch> = ownPatchesResult.data
+  const tradeablePatches: Array<Patch> = tradeablePatchesResult.data
 
   const onDecline = (): void => {
     notifications.show({
@@ -37,12 +66,12 @@ const TradeDetailsScreen = (): ReactElement => {
         <Title order={1}>Trade details</Title>
 
         <Title order={4}>I give</Title>
-        <PatchCard patch={mockOwnPatches[0]} />
+        {ownPatches.length > 0 && <PatchCard patch={ownPatches[0]} />}
 
         <Divider />
 
         <Title order={4}>I receive</Title>
-        <PatchGrid patches={mockPatches.slice(0, 4)} />
+        <PatchGrid patches={tradeablePatches.slice(0, 4)} />
 
         <Group grow>
           <Button
