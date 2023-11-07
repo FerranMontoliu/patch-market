@@ -10,13 +10,6 @@ export const getOwnPatches = async (): Promise<Array<Patch>> => {
   return (response.data ?? []) as Array<Patch>
 }
 
-export const getTradeHistory = async (): Promise<Array<Patch>> => {
-  const response = await axios.get(`${baseUrl}/tradehistory`, getAuthConfig())
-  console.log('Response data tradeHistory:', response.data);
-
-  return (response.data ?? []) as Array<Patch>
-}
-
 export const getTradeablePatches = async (): Promise<Array<Patch>> => {
   const response = await axios.get(`${baseUrl}/tradeable`, getAuthConfig())
   console.log('Response data getTradeablePatches:', response.data);

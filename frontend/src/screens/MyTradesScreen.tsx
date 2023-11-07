@@ -1,11 +1,11 @@
 import { ReactElement } from 'react'
 import { Center, Container, Loader, Title, Grid, Text } from '@mantine/core'
-import { Patch } from '../types.ts'
-
 import { useQuery } from '@tanstack/react-query'
 import HistoryElement from '../components/HistoryListElement.tsx'
-import {getTradeHistory} from '../services/patches'
+import {getTradeHistory} from '../services/transcations.ts'
 import NotFoundScreen from './NotFoundScreen.tsx'
+import { Transaction } from '../types';
+
 
 const MyTradesScreen = (): ReactElement => {
 
@@ -26,7 +26,15 @@ const MyTradesScreen = (): ReactElement => {
     return <NotFoundScreen />
   }
   
-  const patches: Array<Patch> = result.data
+  const transactions: Array<Transaction> = result.data;
+
+
+
+
+
+
+
+
 
   return (
     <Container>
@@ -48,7 +56,9 @@ const MyTradesScreen = (): ReactElement => {
           </Text>
         </Grid.Col>
       </Grid>
-      {patches.map((patch, index) => (<HistoryElement key={index} patch={patch} />))}
+      {transactions.map((transaction, index) => (
+        <HistoryElement key={index} transaction={transaction}  /> 
+        ))}
     </Container>
   )
 }
