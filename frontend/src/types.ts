@@ -1,6 +1,8 @@
 export type Transaction = {
     id: string;
     patchesFromArray: string[]; // An array of ObjectIds from the frontend
+    patchesFrom: string; // why does this exist?
+
     patchTo: string; // ObjectId from the frontend
     from: string; // ObjectId from the frontend
     to: string; // ObjectId from the frontend

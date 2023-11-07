@@ -45,23 +45,7 @@ patchesRouter.get('/tradeable', userExtractorMiddleware, async (request: WebRequ
   }
 })
 
-patchesRouter.get('/tradeHistory', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
-  const user: UserType = request.user
-  try {
-    const patches = await Patch.find({
-      //owner: { $ne: user.id }, // Exclude patches owned by the current user
-    })
-    // What should be in here? Things like status of trade, trade information? (connect to historyListElement?)
-      .populate('owner', 'name surname')
-      .populate('university', 'name')
-      .populate('categories', 'name');
 
-    response.json(patches);
-  } catch (error) {
-    console.error('Error while retrieving trade history:', error);
-    response.status(500).json({ error: 'Internal server error' });
-  }
-})
 
 
   

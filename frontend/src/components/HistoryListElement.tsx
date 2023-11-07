@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { Grid, Text, UnstyledButton, Pill, Divider, Stack } from '@mantine/core'
-import { Transaction, Patch } from '../types.ts';
+import { Transaction } from '../types.ts';
 
 type TransactionCardProps = {
   transaction: Transaction;
@@ -66,4 +66,4 @@ const TransactionCard = ({ transaction }: TransactionCardProps): ReactElement =>
 
 export default TransactionCard;
 
-//  transaction.patchTo.title does not exist. only writing ' transaction.patchTo : 'Title not available'' gives an error. 
+//  transaction.patchTo.title does not exist. Writing ' transaction.patchTo : 'Title not available'' gives an error. Needs to be replaced with null. 
