@@ -2,7 +2,7 @@ import { ReactElement } from 'react'
 import { Center, Container, Loader, Title, Grid, Text } from '@mantine/core'
 import { useQuery } from '@tanstack/react-query'
 import HistoryElement from '../components/HistoryListElement.tsx'
-import {getTradeHistory} from '../services/transcations.ts'
+import {getTradeHistory} from '../services/transactions.ts'
 import NotFoundScreen from './NotFoundScreen.tsx'
 import { Transaction } from '../types';
 
@@ -27,14 +27,6 @@ const MyTradesScreen = (): ReactElement => {
   }
   
   const transactions: Array<Transaction> = result.data;
-
-
-
-
-
-
-
-
 
   return (
     <Container>

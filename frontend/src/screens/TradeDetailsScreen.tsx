@@ -1,44 +1,30 @@
 import { ReactElement } from 'react'
-// import { useParams } from 'react-router-dom'
-import {Center, Loader, Button, Container, Divider, Group, Stack, Title } from '@mantine/core'
+import {
+  Center,
+  Loader,
+  Button,
+  Container,
+  Divider,
+  Group,
+  Stack,
+  Title
+} from '@mantine/core'
 import PatchCard from '../components/PatchCard.tsx'
-import PatchGrid from '../components/PatchGrid.tsx'
-
 import { notifications } from '@mantine/notifications'
 import { useNavigate } from 'react-router-dom'
-
-import { getOwnPatches } from '../services/patches.ts'
 import { useQuery } from '@tanstack/react-query'
-import { Patch } from '../types.ts'
-import { getTradeablePatches } from '../services/patches.ts'
+import { Patch } from '../types.ts' // Import your types
 import NotFoundScreen from './NotFoundScreen.tsx'
-
+import { useParams } from 'react-router-dom'
+import { getTransactionById } from '../services/transactions.ts'
 
 const TradeDetailsScreen = (): ReactElement => {
-  // const { tradeId } = useParams()
   const navigate = useNavigate()
-  const ownPatchesResult = useQuery({
-    queryKey: ['ownPatches'],
-    queryFn: getOwnPatches,
+  const { tradeId } = useParams()
+  const tradeDetailsResult = useQuery({
+    queryKey: ['transactionById', tradeId],
+    queryFn: () => getTransactionById(tradeId!)
   })
-
-  const tradeablePatchesResult = useQuery({
-    queryKey: ['tradeablePatches'],
-    queryFn: getTradeablePatches,
-  })
-
-  if (ownPatchesResult.isLoading || tradeablePatchesResult.isLoading) {
-    return (
-      <Center>
-        <Loader/>
-      </Center>
-    )
-  }
-  if (ownPatchesResult.isError || tradeablePatchesResult.isError) {
-    return <NotFoundScreen />
-  }
-  const ownPatches: Array<Patch> = ownPatchesResult.data
-  const tradeablePatches: Array<Patch> = tradeablePatchesResult.data
 
   const onDecline = (): void => {
     notifications.show({
@@ -60,33 +46,46 @@ const TradeDetailsScreen = (): ReactElement => {
     navigate('/my-trades')
   }
 
+  if (tradeDetailsResult.isLoading) {
+    return (
+      <Center>
+        <Loader />
+      </Center>
+    )
+  }
+  if (tradeDetailsResult.isError) {
+    return <NotFoundScreen />
+  }
+
+  const patchGiven: Patch[] = tradeDetailsResult.data
+    ? [tradeDetailsResult.data.patchTo]
+    : []
+  const patchReceived: Patch[] = tradeDetailsResult.data
+    ? tradeDetailsResult.data.patchesFrom
+    : []
+
   return (
     <Container>
       <Stack>
         <Title order={1}>Trade details</Title>
-
         <Title order={4}>I give</Title>
-        {ownPatches.length > 0 && <PatchCard patch={ownPatches[0]} />}
+        <PatchCard patch={patchGiven[0]} />
 
         <Divider />
-
         <Title order={4}>I receive</Title>
-        <PatchGrid patches={tradeablePatches.slice(0, 4)} />
+        {patchReceived.length > 0 && <PatchCard patch={patchReceived[0]} />}
 
         <Group grow>
           <Button
             color="red"
             variant="outline"
             radius="md"
-            onClick={onDecline}>
-              Decline
+            onClick={onDecline}
+          >
+            Decline
           </Button>
-
-          <Button
-            color="teal"
-            radius="md"
-            onClick={onAccept}>
-              Accept
+          <Button color="teal" radius="md" onClick={onAccept}>
+            Accept
           </Button>
         </Group>
       </Stack>
@@ -95,3 +94,4 @@ const TradeDetailsScreen = (): ReactElement => {
 }
 
 export default TradeDetailsScreen
+

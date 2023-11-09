@@ -3,10 +3,9 @@ import Transaction from '../models/transaction';
 import { WebRequest } from '../types';
 import { userExtractorMiddleware } from '../utils/middlewares';
 import { UserType } from '../models/user'; // Removed "type" keyword
-
 export const transactionsRouter = Router();
 
-transactionsRouter.get('/test', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
+transactionsRouter.get('/', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
   const user: UserType = request.user;
 
   try {
@@ -26,13 +25,9 @@ transactionsRouter.get('/test', userExtractorMiddleware, async (request: WebRequ
       .populate('patchTo', {
         title: 1,
       })
-      .populate('patchesFromArray', { 
+      .populate('patchesFrom', { 
         title: 1,
       });
-
-      console.log('Trade History 2:', tradeHistory); // Add this line to log the data
-
-
     response.json(tradeHistory);
   } catch (error) {
     console.error('Error fetching transactions:', error);
@@ -42,7 +37,7 @@ transactionsRouter.get('/test', userExtractorMiddleware, async (request: WebRequ
 
 transactionsRouter.get('/:id', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
   try {
-    const tradeHistoryid = await Transaction
+    const tradeHistoryId = await Transaction
       .findById(request.params.id)
       .populate('to', {
         name: 1,
@@ -52,13 +47,28 @@ transactionsRouter.get('/:id', userExtractorMiddleware, async (request: WebReque
       })
       .populate('patchTo', {
         title: 1,
+        owner: 1,
+        name: 1,
+        surname: 1,
+        university: 1,
+        image: 1,
+        isTradeable: 1,
+        categories: 1,
+        description: 1,
       })
-      .populate('patchesFromArray', { // Corrected the property name
+      .populate('patchesFrom', {
         title: 1,
+        owner: 1,
+        name: 1,
+        surname: 1,
+        university: 1,
+        image: 1,
+        isTradeable: 1,
+        categories: 1,
+        description: 1,
       });
-
-    if (tradeHistoryid) {
-      response.json(tradeHistoryid);
+    if (tradeHistoryId) {
+      response.json(tradeHistoryId);
     } else {
       response.status(404).end();
     }
@@ -67,6 +77,7 @@ transactionsRouter.get('/:id', userExtractorMiddleware, async (request: WebReque
     response.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 
 // transactionsRouter.post('/', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {

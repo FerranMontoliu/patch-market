@@ -9,8 +9,8 @@ enum TransactionStatus {
 }
 
 export type TransactionType = {
-  id?: Types.ObjectId;
-  patchesFromArray: Types.ObjectId[];
+  id: Types.ObjectId;
+  patchesFrom: Types.ObjectId[];
   patchTo: Types.ObjectId;
   from: Types.ObjectId;
   to: Types.ObjectId;
@@ -20,8 +20,8 @@ export type TransactionType = {
 }
 
 const transactionSchema = new Schema<TransactionType>({
-  patchesFromArray: [{ type: Schema.Types.ObjectId, ref: 'Patch' }],
-  patchTo: { type: Schema.Types.ObjectId, ref: 'Patch' },
+  patchesFrom: [{ type: Schema.Types.ObjectId, ref: 'Patch' }],
+  patchTo: { type: Schema.Types.ObjectId, ref: 'Patch' }, 
   from: { type: Schema.Types.ObjectId, ref: 'User' },
   to: { type: Schema.Types.ObjectId, ref: 'User' },
   createDate: { type: Date, required: true },

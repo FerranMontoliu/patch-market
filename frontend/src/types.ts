@@ -1,11 +1,9 @@
 export type Transaction = {
     id: string;
-    patchesFromArray: string[]; // An array of ObjectIds from the frontend
-    patchesFrom: string; // why does this exist?
-
-    patchTo: string; // ObjectId from the frontend
-    from: string; // ObjectId from the frontend
-    to: string; // ObjectId from the frontend
+    patchesFrom: Patch[]; // An array of ObjectIds from the frontend
+    patchTo: Patch; // ObjectId from the frontend
+    from: User; // ObjectId from the frontend
+    to: User; // ObjectId from the frontend
     createDate: Date;
     lastUpdateDate: Date;
     status: TransactionStatus;
