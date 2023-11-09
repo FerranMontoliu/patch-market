@@ -6,6 +6,7 @@ import { IconDiscount2 } from '@tabler/icons-react'
 import AppRouter from './router/AppRouter'
 import { useUser } from './contexts/UserContext.tsx'
 import { User } from './types.ts'
+import { setToken } from './services/config.ts'
 
 type HeaderElement = {
   label: string
@@ -40,10 +41,11 @@ function App(): ReactElement {
     const loggedUserJSON: string | null = window.localStorage.getItem('patchMarketUser')
 
     if (loggedUserJSON) {
-      const user: User = JSON.parse(loggedUserJSON)
-      userDispatch({ type: 'SET_USER', payload: user })
+      const parsedUser: User = JSON.parse(loggedUserJSON)
+      userDispatch({ type: 'SET_USER', payload: parsedUser })
+      setToken(parsedUser.token!)
     }
-  }, [])
+  }, [userDispatch])
 
   const handleLogout = (): void => {
     window.localStorage.removeItem('patchMarketUser')

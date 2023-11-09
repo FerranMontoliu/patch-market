@@ -6,13 +6,11 @@ const baseUrl: string = '/api/patches'
 
 export const getOwnPatches = async (): Promise<Array<Patch>> => {
   const response = await axios.get(`${baseUrl}/owned`, getAuthConfig())
-  console.log('Response data OwnPatches:', response.data);
   return (response.data ?? []) as Array<Patch>
 }
 
 export const getTradeablePatches = async (): Promise<Array<Patch>> => {
   const response = await axios.get(`${baseUrl}/tradeable`, getAuthConfig())
-  console.log('Response data getTradeablePatches:', response.data);
   return (response.data ?? []) as Array<Patch>
 }
 
