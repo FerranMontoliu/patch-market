@@ -28,12 +28,16 @@ export const userExtractorMiddleware = async (request: WebRequest, response: Res
     return response.status(401).json({ error: 'No token provided.' })
   }
 
-  const decodedToken = verify(request.token, SECRET) as JwtPayload
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'Invalid token.' })
-  }
+  try {
+    const decodedToken = verify(request.token, SECRET) as JwtPayload
+    if (!decodedToken.id) {
+      return response.status(401).json({ error: 'Invalid token.' })
+    }
 
-  request.user = await User.findById(decodedToken.id)
+    request.user = await User.findById(decodedToken.id)
+  } catch (e) {
+    response.status(401).json({ error: 'Expired token.' })
+  }
 
   next()
 }
