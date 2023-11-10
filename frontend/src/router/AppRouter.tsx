@@ -30,10 +30,9 @@ const AppRouter = (): ReactElement => {
       <Route path="/trade-details/:tradeId" element={isLoggedIn ? <TradeDetailsScreen/> : <Navigate to="/log-in" />} />
       <Route path="/add-patch" element={isLoggedIn ? <AddPatchScreen/> : <Navigate to="/log-in" />} />
       <Route path="/user-profile" element={isLoggedIn ? <UserProfileScreen/> : <Navigate to="/log-in" />} />
+      <Route path="/faq" element={isLoggedIn ? <FAQScreen/> : <Navigate to="/log-in" />} />
       <Route path="/" element={isLoggedIn ? <MarketScreen/> : <Navigate to="/log-in" />} />
       <Route path="*" element={<NotFoundScreen/>}/>
-      <Route path="/FAQ" element={<FAQScreen/>} />
-
     </Routes>
   )
 }

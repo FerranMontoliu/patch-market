@@ -23,8 +23,6 @@ const PatchDetailsScreen = (): ReactElement => {
     queryFn: () => getPatchById(patchId!),
   })
 
-  console.log(patchDetailsResult.data)
-
   const ownPatchesResult = useQuery({
     queryKey: ['ownPatches'],
     queryFn: getOwnPatches,
@@ -34,7 +32,6 @@ const PatchDetailsScreen = (): ReactElement => {
   const ownPatches: Array<Patch> | null | undefined = ownPatchesResult.data
   const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
   const ownPatchesFiltered : Array<Patch> = ownPatches !== null && ownPatches !== undefined ? ownPatches.filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery)) : []
-  console.log(ownPatchesFiltered)
 
   const categoryColorList: Array<string> = [
     '#FFA8A8',
