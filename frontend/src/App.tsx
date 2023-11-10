@@ -45,6 +45,8 @@ function App(): ReactElement {
       const parsedUser: User = JSON.parse(loggedUserJSON)
       userDispatch({ type: 'SET_USER', payload: parsedUser })
       setToken(parsedUser.token!)
+    } else {
+      userDispatch({ type: 'LOGOUT_USER' })
     }
   }, [userDispatch])
 
