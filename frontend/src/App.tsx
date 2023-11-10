@@ -13,7 +13,7 @@ type HeaderElement = {
   link: string
 }
 
-const headerLinks: Array<ReactElement> = [
+const getHeaderLinks = (onClick: () => void): Array<ReactElement> =>  [
   { label:'Home', link: '/' },
   { label:'My patches', link: '/my-patches' },
   { label:'My trades', link: '/my-trades' },
@@ -26,13 +26,14 @@ const headerLinks: Array<ReactElement> = [
     component={NavLink}
     underline="hover"
     p="sm"
+    onClick={onClick}
   >
     {headerElement.label}
   </Anchor>
 ))
 
 function App(): ReactElement {
-  const [opened, { toggle }] = useDisclosure()
+  const [opened, { toggle, close }] = useDisclosure()
 
   const [user, userDispatch] = useUser()
   const isLoggedIn: boolean = user !== null
@@ -52,6 +53,10 @@ function App(): ReactElement {
     userDispatch({ type: 'LOGOUT_USER' })
   }
 
+  const handleMenuClick = (): void => {
+    close()
+  }
+
   const logoutButton: ReactElement = (
     <Button
       key="log-out"
@@ -64,6 +69,7 @@ function App(): ReactElement {
     </Button>
   )
 
+  const headerLinks: Array<ReactElement> = getHeaderLinks(handleMenuClick)
   const headerElements: Array<ReactElement> =
       [
         ...headerLinks,
@@ -107,6 +113,3 @@ function App(): ReactElement {
 }
 
 export default App
-
-
-//   {authContext.isLoggedIn ? (headerElements):(!headerElements)} option to not display the headers at all when not logged in
