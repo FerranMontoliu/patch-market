@@ -18,8 +18,6 @@ const UserProfileScreen = (): ReactElement => {
     queryFn: getOwnPatches,
   })
 
-  console.log(result.data)
-
   const ownUser = useUserValue()!
 
   const patches : Array<Patch> | null | undefined = result.data
