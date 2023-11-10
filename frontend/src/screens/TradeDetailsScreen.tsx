@@ -53,14 +53,14 @@ const TradeDetailsScreen = (): ReactElement => {
       </Center>
     )
   }
-  if (tradeDetailsResult.isError) {
+  if (tradeDetailsResult.isError|| !tradeDetailsResult.data) {
     return <NotFoundScreen />
   }
 
   const patchGiven: Patch[] = tradeDetailsResult.data
     ? [tradeDetailsResult.data.patchTo]
     : []
-  const patchReceived: Patch[] = tradeDetailsResult.data
+  const patchesReceived: Patch[] = tradeDetailsResult.data
     ? tradeDetailsResult.data.patchesFrom
     : []
 
@@ -72,9 +72,10 @@ const TradeDetailsScreen = (): ReactElement => {
         <PatchCard patch={patchGiven[0]} />
 
         <Divider />
-        <Title order={4}>I receive</Title>
-        {patchReceived.length > 0 && <PatchCard patch={patchReceived[0]} />}
-
+        {patchesReceived.length > 0 &&
+          patchesReceived.map((patch, index) => (
+          <PatchCard key={index} patch={patch} />
+        ))}
         <Group grow>
           <Button
             color="red"
