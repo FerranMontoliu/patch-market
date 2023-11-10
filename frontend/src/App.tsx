@@ -18,7 +18,7 @@ const getHeaderLinks = (onClick: () => void): Array<ReactElement> =>  [
   { label:'My patches', link: '/my-patches' },
   { label:'My trades', link: '/my-trades' },
   { label:'Profile', link: '/user-profile' },
-  { label:'FAQ', link: '/FAQ' },
+  { label:'FAQ', link: '/faq' },
 ].map((headerElement: HeaderElement) => (
   <Anchor
     key={headerElement.link}
