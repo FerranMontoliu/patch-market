@@ -1,11 +1,10 @@
 import { Schema, model, Types } from 'mongoose'
 
-
 enum TransactionStatus {
-  Pending = 'Pending',
-  Accepted = 'Accepted',
-  Rejected = 'Rejected',
-  Cancelled = 'Cancelled',
+  Pending = 'pending',
+  Accepted = 'accepted',
+  Rejected = 'rejected',
+  Cancelled = 'cancelled',
 }
 
 export type TransactionType = {
@@ -14,20 +13,47 @@ export type TransactionType = {
   patchTo: Types.ObjectId;
   from: Types.ObjectId;
   to: Types.ObjectId;
-  createDate: Date; // check this later
-  lastUpdateDate: Date; // check this later
-  status: TransactionStatus; // Use the TransactionStatus enum
+  createDate: Date;
+  lastUpdateDate: Date;
+  status: TransactionStatus;
 }
 
 const transactionSchema = new Schema<TransactionType>({
-  patchesFrom: [{ type: Schema.Types.ObjectId, ref: 'Patch' }],
-  patchTo: { type: Schema.Types.ObjectId, ref: 'Patch' }, 
-  from: { type: Schema.Types.ObjectId, ref: 'User' },
-  to: { type: Schema.Types.ObjectId, ref: 'User' },
-  createDate: { type: Date, required: true },
-  lastUpdateDate: { type: Date, required: true },
-  status: { type: String, enum: Object.values(TransactionStatus), required: true },
-});
+  patchesFrom: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Patch',
+    required: true,
+  }],
+  patchTo: {
+    type: Schema.Types.ObjectId,
+    ref: 'Patch',
+    required: true,
+  },
+  from: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  to: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  createDate: {
+    type: Date,
+    required: true,
+  },
+  lastUpdateDate: {
+    type: Date,
+    required: true,
+  },
+  status: {
+    type: String,
+    enum: TransactionStatus,
+    default: TransactionStatus.Pending,
+    required: true,
+  },
+})
 
 transactionSchema.set('toJSON', {
   transform: (document, returnedObject) => {
