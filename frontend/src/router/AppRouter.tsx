@@ -1,37 +1,47 @@
 import { ReactElement } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
-
-import SignUpScreen from '../screens/SignUpScreen'
-import LoginScreen from '../screens/LoginScreen.tsx'
-import MyPatchesScreen from '../screens/MyPatchesScreen.tsx'
-import PatchDetailsScreen from '../screens/PatchDetailsScreen.tsx'
-import MarketScreen from '../screens/MarketScreen.tsx'
 import NotFoundScreen from '../screens/NotFoundScreen.tsx'
-import MyTradesScreen from '../screens/MyTradesScreen.tsx'
-import TradeDetailsScreen from '../screens/TradeDetailsScreen.tsx'
-import AddPatchScreen from '../screens/AddPatchScreen.tsx'
-import UserProfileScreen from '../screens/UserProfileScreen.tsx'
-import FAQScreen from '../screens/FAQScreen.tsx'
-import { useUserValue } from '../contexts/UserContext.tsx'
+import { useIsLoadingValue, useUserValue } from '../contexts/UserContext.tsx'
 import { User } from '../types.ts'
+import { Center, Loader } from '@mantine/core'
+import { AppRoute, privateRoutes, publicRoutes } from './routes.tsx'
 
-const AppRouter = (): ReactElement => {
-  const user : User | null= useUserValue()
+const AppRouter = (): ReactElement | null => {
+  const user : User | null = useUserValue()
+  const isLoading: boolean = useIsLoadingValue()
 
   const isLoggedIn: boolean = user !== null
 
+  if (isLoading) {
+    return (
+      <Center>
+        <Loader />
+      </Center>
+    )
+  }
+
   return (
     <Routes>
-      <Route path="/log-in" element={isLoggedIn ? <Navigate to="/" /> : <LoginScreen/>} />
-      <Route path="/sign-up" element={isLoggedIn ? <Navigate to="/" /> : <SignUpScreen/>} />
-      <Route path="/my-patches" element={isLoggedIn ? <MyPatchesScreen/> : <Navigate to="/log-in" />} />
-      <Route path="/patch-details/:patchId" element={isLoggedIn ? <PatchDetailsScreen/> : <Navigate to="/log-in" />} />
-      <Route path="/my-trades" element={isLoggedIn ? <MyTradesScreen/> : <Navigate to="/log-in" />} />
-      <Route path="/trade-details/:tradeId" element={isLoggedIn ? <TradeDetailsScreen/> : <Navigate to="/log-in" />} />
-      <Route path="/add-patch" element={isLoggedIn ? <AddPatchScreen/> : <Navigate to="/log-in" />} />
-      <Route path="/user-profile" element={isLoggedIn ? <UserProfileScreen/> : <Navigate to="/log-in" />} />
-      <Route path="/faq" element={isLoggedIn ? <FAQScreen/> : <Navigate to="/log-in" />} />
-      <Route path="/" element={isLoggedIn ? <MarketScreen/> : <Navigate to="/log-in" />} />
+      {privateRoutes
+        .map(({ path, element }: AppRoute): ReactElement => (
+          <Route
+            key={path}
+            path={path}
+            element={isLoggedIn
+              ? element
+              : <Navigate to="/log-in" />} />
+        ))}
+
+      {publicRoutes
+        .map(({ path, element }: AppRoute): ReactElement => (
+          <Route
+            key={path}
+            path={path}
+            element={isLoggedIn
+              ? <Navigate to="/" />
+              : element} />
+        ))}
+
       <Route path="*" element={<NotFoundScreen/>}/>
     </Routes>
   )

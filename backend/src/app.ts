@@ -13,14 +13,13 @@ import { loginRouter } from './controllers/login'
 import { usersRouter } from './controllers/users'
 import { patchesRouter } from './controllers/patches'
 import { transactionsRouter } from './controllers/transactions'
-
-require('express-async-errors')
+import 'express-async-errors'
 
 export const app: Express = express()
 
 mongoose.set('strictQuery', false)
 
-logInfo('connecting to', MONGODB_URI)
+logInfo('Connecting to MongoDB...')
 
 mongoose.connect(MONGODB_URI)
   .then((): void => {

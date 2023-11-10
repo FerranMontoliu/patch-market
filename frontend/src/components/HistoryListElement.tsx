@@ -22,41 +22,41 @@ const getStatusPill = (status: string): ReactElement => {
   }
 }
 
-
-
-const generateDate = (timestamp: Date): string => {
-  if (!timestamp) {
+const generateDate = (date: Date): string => {
+  if (!date) {
     return 'Date not available'
   }
-  if (isNaN(timestamp.getTime())) {
+  if (isNaN(date.getTime())) {
     return 'Invalid date'
   }
   const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' }
-  return Intl.DateTimeFormat('en-us', options).format(timestamp)
+  return Intl.DateTimeFormat('en-us', options).format(date)
 }
 
 const TransactionCard = ({ transaction }: TransactionCardProps): ReactElement => {
   return (
     <Stack>
       <UnstyledButton component={RouterLink} to={`/trade-details/${transaction.id}`}>
-        <Grid align='center' mt="lg" mx="xl">
+        <Grid align='center' mt="lg">
           <Grid.Col span={4}>
             <Text fw={500} lineClamp={1}>
               {transaction.patchTo ? transaction.patchTo.title : 'Title not available'}
             </Text>
           </Grid.Col>
+
           <Grid.Col span={4}>
             <Text lineClamp={1}>
               {generateDate(new Date(transaction.createDate))}
             </Text>
           </Grid.Col>
+
           <Grid.Col span={4}>
             {getStatusPill(transaction.status)}
-
           </Grid.Col>
         </Grid>
       </UnstyledButton>
-      <Divider mx="xl"></Divider>
+
+      <Divider />
     </Stack>
   )
 }

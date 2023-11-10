@@ -30,25 +30,31 @@ const MyTradesScreen = (): ReactElement => {
 
   return (
     <Container>
-      <Title order={1}>My trades</Title>
-      <Grid align='center' mt="xl" mx="xl">
+      <Title order={1}>
+        My trades
+      </Title>
+
+      <Grid align='center' mt="xl">
         <Grid.Col span={4}>
-          <Text fw={700} lineClamp={1}>
+          <Text fw="bold">
             Patch
           </Text>
         </Grid.Col>
+
         <Grid.Col span={4}>
-          <Text fw={700} lineClamp={1}>
+          <Text fw="bold">
             Date
           </Text>
         </Grid.Col>
+
         <Grid.Col span={4}>
-          <Text fw={700} lineClamp={1}>
+          <Text fw="bold">
             Status
           </Text>
         </Grid.Col>
       </Grid>
-      {transactions.map((transaction, index) => (
+
+      {transactions.map((transaction: Transaction, index: number) => (
         <HistoryElement key={index} transaction={transaction}  />
       ))}
     </Container>

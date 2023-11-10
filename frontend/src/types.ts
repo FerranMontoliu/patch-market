@@ -29,10 +29,10 @@ export type Patch = {
 }
 
 type TransactionStatus  =
-    | 'Pending'
-    | 'Accepted'
-    | 'Rejected'
-    | 'Cancelled'
+    | 'pending'
+    | 'accepted'
+    | 'rejected'
+    | 'cancelled'
 
 export type Transaction = {
     id: string
