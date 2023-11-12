@@ -23,9 +23,10 @@ const UserProfileScreen = (): ReactElement => {
   const patches : Array<Patch> | null | undefined = result.data
   const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
   const ownPatchesFiltered : Array<Patch> = patches !== null && patches !== undefined ? patches.filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery)) : []
+  console.log('ownUser:', ownUser);
 
   if(ownUser === undefined || ownUser === null || patches === undefined || patches === null) {
-    <NotFoundScreen></NotFoundScreen>
+    return <NotFoundScreen></NotFoundScreen>
   }
 
 

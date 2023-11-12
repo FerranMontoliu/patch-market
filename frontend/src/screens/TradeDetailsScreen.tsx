@@ -72,6 +72,8 @@ const TradeDetailsScreen = (): ReactElement => {
         <PatchCard patch={patchGiven[0]} />
 
         <Divider />
+        <Title order={4}>I receive</Title>
+
         {patchesReceived.length > 0 &&
           patchesReceived.map((patch, index) => (
           <PatchCard key={index} patch={patch} />
@@ -95,4 +97,3 @@ const TradeDetailsScreen = (): ReactElement => {
 }
 
 export default TradeDetailsScreen
-

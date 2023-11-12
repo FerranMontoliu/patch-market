@@ -53,10 +53,15 @@ const MyTradesScreen = (): ReactElement => {
           </Text>
         </Grid.Col>
       </Grid>
-
-      {transactions.map((transaction: Transaction, index: number) => (
-        <HistoryElement key={index} transaction={transaction}  />
-      ))}
+      {transactions.length === 0 ? (
+        <Text fw={500} size="lg" lineClamp={1}>
+          You do not have any trades yet.
+        </Text>
+      ) : (
+        transactions.map((transaction: Transaction, index: number) => (
+          <HistoryElement key={index} transaction={transaction}  />
+        ))
+      )}
     </Container>
   )
 }
