@@ -41,7 +41,7 @@ patchesRouter.get('/tradeable', userExtractorMiddleware, async (request: WebRequ
     response.json(patches);
   } catch (error) {
     console.error('Error while retrieving tradeable patches:', error);
-    response.status(500).json({ error: 'Internal server error' });
+    response.status(500).json({ error: 'Internal server error', details: error.message });
   }
 })
 

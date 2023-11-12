@@ -28,10 +28,10 @@ transactionsRouter.get('/', userExtractorMiddleware, async (request: WebRequest,
       .populate('patchesFrom', { 
         title: 1,
       });
-    response.json(tradeHistory);
+    response.json(tradeHistory)
   } catch (error) {
-    console.error('Error fetching transactions:', error);
-    response.status(500).json({ error: 'Internal server error' });
+    console.error('Error fetching transactions:', error)
+    response.status(500).json({ error: 'Internal server error' })
   }
 });
 
@@ -68,15 +68,15 @@ transactionsRouter.get('/:id', userExtractorMiddleware, async (request: WebReque
         description: 1,
       });
     if (tradeHistoryId) {
-      response.json(tradeHistoryId);
+      response.json(tradeHistoryId)
     } else {
-      response.status(404).end();
+      response.status(404).end()
     }
   } catch (error) {
-    console.error('Error fetching transaction by ID:', error);
-    response.status(500).json({ error: 'Internal server error' });
+    console.error('Error fetching transaction by ID:', error)
+    response.status(500).json({ error: 'Internal server error' })
   }
-});
+})
 
 
 

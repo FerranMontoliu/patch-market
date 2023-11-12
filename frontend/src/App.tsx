@@ -38,13 +38,16 @@ function App(): ReactElement {
   const [user, userDispatch] = useUser()
   const isLoggedIn: boolean = user !== null
 
-  useEffect((): void => {
-    const loggedUserJSON: string | null = window.localStorage.getItem('patchMarketUser')
-
+  useEffect(() => {
+    const loggedUserJSON: string | null = window.localStorage.getItem('patchMarketUser');
+  
     if (loggedUserJSON) {
       const parsedUser: User = JSON.parse(loggedUserJSON)
       userDispatch({ type: 'SET_USER', payload: parsedUser })
-      setToken(parsedUser.token!)
+      if (parsedUser.token) {
+        setToken(parsedUser.token);
+      } else {
+      }
     } else {
       userDispatch({ type: 'LOGOUT_USER' })
     }
