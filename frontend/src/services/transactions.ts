@@ -18,3 +18,8 @@ export const getTransactionById = async (transactionId: string): Promise<Transac
   const response = await axios.get(`${baseUrl}/${transactionId}`, getAuthConfig())
   return response.data as Transaction ?? null
 }
+
+export const updateTransactionStatus = async (transactionId: string, newStatus: string): Promise<Transaction | null> => {
+  const response = await axios.put(`${baseUrl}/${transactionId}`, {newStatus: newStatus},getAuthConfig())
+  return response.data as Transaction ?? null
+}

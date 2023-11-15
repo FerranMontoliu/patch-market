@@ -88,12 +88,13 @@ transactionsRouter.put('/:id', userExtractorMiddleware, async (request: WebReque
   const { newStatus } = request.body
   const id = request.params.id
 
+  //check the user is part of the transaction?
   const updatedTransaction = await Transaction
     .findByIdAndUpdate(id, { status: newStatus }, { new: true })
 
   if (updatedTransaction) {
     response.json(updatedTransaction)
   } else {
-    response.status(404).json({ error: 'The transaction you are trying to update does not exist' }).end()
+    response.status(404).json({ error: 'The transaction you are trying to update does not exist' })
   }
 })

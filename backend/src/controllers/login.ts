@@ -36,6 +36,7 @@ loginRouter.post('/', async (request: WebRequest, response: Response): Promise<R
   response
     .status(200)
     .send({
+      id,
       token,
       name,
       surname,

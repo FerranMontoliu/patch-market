@@ -11,7 +11,7 @@ const getStatusPill = (status: string): ReactElement => {
   switch (status) {
   case 'accepted':
     return <Pill size="lg" bg="green">Accepted</Pill>
-  case 'declined':
+  case 'rejected':
     return <Pill size="lg" bg="red">Declined</Pill>
   case 'cancelled':
     return <Pill size="lg" bg="orange">Cancelled</Pill>
