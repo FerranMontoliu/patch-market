@@ -1,16 +1,55 @@
 import { ReactElement } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
+import { AddPatchProps, addPatch } from '../services/patches.ts'
+import { notifications } from '@mantine/notifications'
 import { Card, Center, Container, Image, Pill, Text, TextInput, Title, Button } from '@mantine/core'
-import { Patch } from '../types.ts'
+import { Category, Patch, University } from '../types.ts'
 import { mockOwnPatches, mockPatches } from '../mock-data'
-import { Link as RouterLink } from 'react-router-dom'
 
 const AddPatchScreen = (): ReactElement => {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+
   const patchCategories: Array<string> = [...new Set(
     [...mockPatches, ...mockOwnPatches]
       .reduce((acc: Array<string>, patch: Patch) => {
         return acc.concat(patch.categories)
       }, [])
   )]
+
+  const addPatchMutation = useMutation({
+    mutationFn: addPatch,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['ownPatches'] })
+      notifications.show({
+        title: 'You added a new patch',
+        message: 'The new patch was added successfully',
+        color: 'teal'
+      })
+    },
+    onError: (error: Error) => {
+      notifications.show({
+        title: 'Error',
+        message: error.message, 
+        color: 'red'
+      })
+      navigate('/my-patches')
+    },
+  })
+
+  const onAddPatch = (): void => {
+    const patch : AddPatchProps = {
+      title : "test",
+      description : "test",
+      universityId : "65413a83028970eb913c97ee",
+      categoriesIds : ["65413a4d028970eb913c97eb"],
+      image : " ",
+    }
+    addPatchMutation.mutate(patch) //put patch here
+
+    navigate('/my-patches')
+  }
 
   const colors: Array<string> = [
     '#FFA8A8',
@@ -73,7 +112,7 @@ const AddPatchScreen = (): ReactElement => {
         {/*    console.log('Selected files:', files)*/}
         {/*  }}*/}
         {/*/>*/}
-        <Button fullWidth mt="lg" radius="md" component={RouterLink} to={'/my-patches'}>
+        <Button fullWidth mt="lg" radius="md" onClick={onAddPatch}>
           Add patch
         </Button>
       </Card>
