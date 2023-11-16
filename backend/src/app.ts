@@ -13,6 +13,7 @@ import { loginRouter } from './controllers/login'
 import { usersRouter } from './controllers/users'
 import { patchesRouter } from './controllers/patches'
 import { transactionsRouter } from './controllers/transactions'
+import { universitiesRouter } from './controllers/universities'
 import 'express-async-errors'
 
 export const app: Express = express()
@@ -39,6 +40,7 @@ app.use('/api/login', loginRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/patches', patchesRouter)
 app.use('/api/transactions', transactionsRouter)
+app.use('/api/universities', universitiesRouter)
 
 app.use(unknownEndpointMiddleware)
 app.use(errorHandlerMiddleware)

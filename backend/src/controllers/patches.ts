@@ -88,18 +88,18 @@ patchesRouter.get('/:id', userExtractorMiddleware, async (request: WebRequest, r
 })
 
 patchesRouter.post('/', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
-  const { title, description, universityId, categoriesIds, image } = request.body
+  const { title, description, universityId, categoriesNames, image } = request.body
   const user: UserType = request.user
   const patchToSave = new Patch({
     owner: user.id,
     title: title,
     university: universityId,
-    description: description && '',
+    description: description,
     image: image,
     isTradeable: false
   })
 
-  categoriesIds.forEach(async (category : string) => {
+  categoriesNames.forEach(async (category : string) => {
     const newCategory = new Category({
       name: category
     })

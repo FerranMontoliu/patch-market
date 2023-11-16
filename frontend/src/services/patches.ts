@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { getAuthConfig } from './config.ts'
-import { Category, Patch, University } from '../types.ts'
+import { Patch } from '../types.ts'
 
 const baseUrl: string = '/api/patches'
 
@@ -23,7 +23,7 @@ export type AddPatchProps = {
   title: string;
   description?: string;
   universityId: string;
-  categoriesIds: Array<string>;
+  categoriesNames: Array<string>;
   image: string;
 }
 
