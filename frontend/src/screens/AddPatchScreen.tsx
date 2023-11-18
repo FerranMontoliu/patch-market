@@ -1,20 +1,20 @@
-import { ReactElement } from 'react'
+import { ReactElement, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
+import { redirect, useNavigate } from 'react-router-dom'
 import { AddPatchProps, addPatch } from '../services/patches.ts'
 import { notifications } from '@mantine/notifications'
-import { Card, Center, Container, Image, Pill, Text, TextInput, Title, Button, Loader, NativeSelect } from '@mantine/core'
-import { Patch } from '../types.ts'
-import { mockOwnPatches, mockPatches } from '../mock-data'
+import { Card, Center, Container, Image, TextInput, Title, Button, Loader, NativeSelect, FileInput, PillsInput, TagsInput } from '@mantine/core'
+import { University } from '../types.ts'
 import { isNotEmpty, useForm } from '@mantine/form'
 import { getUniversities } from '../services/universities.ts'
 import NotFoundScreen from './NotFoundScreen.tsx'
-import { University } from '../types.ts'
-import { IconBuilding } from '@tabler/icons-react'
+import { IconBuilding, IconPhoto } from '@tabler/icons-react'
 
 const AddPatchScreen = (): ReactElement => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+
+  const [imageTooBig, setImageTooBig] = useState(false)
 
   const getUniversitiesResult = useQuery({
     queryKey: ['universities'],
@@ -26,21 +26,14 @@ const AddPatchScreen = (): ReactElement => {
       title: '',
       description: '',
       university: '',
-      categories: [],
-      image: '',
+      categories: new Array<string>(),
+      image: new File([], ''),
     },
     validate: {
       title: isNotEmpty('Title is required'),
       university: isNotEmpty('University is required'),
     }
   })
-
-  const patchCategories: Array<string> = [...new Set(
-    [...mockPatches, ...mockOwnPatches]
-      .reduce((acc: Array<string>, patch: Patch) => {
-        return acc.concat(patch.categories)
-      }, [])
-  )]
 
   const addPatchMutation = useMutation({
     mutationFn: addPatch,
@@ -62,27 +55,55 @@ const AddPatchScreen = (): ReactElement => {
     },
   })
 
-  const onAddPatch = (): void => {
+  const getBase64 = async (file: File) : Promise<string | ArrayBuffer | null> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => {
+        if (typeof reader.result === 'string' || reader.result instanceof ArrayBuffer) {
+          resolve(reader.result);
+        } else {
+          reject(new Error('Failed to convert image to base64.'));
+        }
+      }
+      reader.onerror = error => reject(error)
+      reader.readAsDataURL(file)
+    })
+  }
+
+  const onAddPatch = async (): Promise<void> => {
+    let base64Image : string = ' ';
+    try {
+      const image = await getBase64(form.values.image)
+      base64Image = image?.toString() ?? ' '
+    }catch(error) {
+      notifications.show({
+        title: 'Error',
+        message: (error as Error).message, 
+        color: 'red'
+      })
+      navigate('/my-patches')
+    }
     const patch : AddPatchProps = {
       title : form.values.title,
       description : form.values.description,
       universityId : form.values.university,
-      categoriesNames : ["65413a4d028970eb913c97eb"],
-      image : " ",
+      categoriesNames : form.values.categories.map((category: string) => category[0].toUpperCase() + category.slice(1, category.length).toLowerCase()),
+      image : base64Image,
     }
     addPatchMutation.mutate(patch)
 
     navigate('/my-patches')
   }
 
-  const colors: Array<string> = [
-    '#FFA8A8',
-    '#E599F7',
-    '#B197FC',
-    '#74C0FC',
-    '#63E6BE',
-    '#FFC078',
-  ]
+  const checkFile = (file: File) => {
+    if(file.size > 1000000)
+    {
+      setImageTooBig(true)
+      return false
+    }
+    setImageTooBig(false)
+    return true
+  }
 
   if (getUniversitiesResult.isLoading) {
     return (
@@ -96,6 +117,12 @@ const AddPatchScreen = (): ReactElement => {
   }
 
   const universities: Array<University> = getUniversitiesResult.data
+  if(form.values.university === '')
+  {
+    form.setValues({
+      university: universities[0].id
+    })
+  }
 
   return (
     <Container>
@@ -104,19 +131,30 @@ const AddPatchScreen = (): ReactElement => {
         <form onSubmit={form.onSubmit(onAddPatch)}>
         <Center>
           <Image
-            src="https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_1280.png"
+            src={form.values.image ? URL.createObjectURL(form.values.image) : "https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_1280.png"}
             radius="md"
-            mah={400}
-            maw={400}
+            h={200}
+            w="auto"
             fallbackSrc="https://placehold.co/600x400?text=Placeholder"
           />
         </Center>
+
+        <FileInput
+            label="Patch Image"
+            accept="image/png,image/jpeg"
+            placeholder='Upload an image that shows the patch'
+            withAsterisk
+            leftSection={<IconPhoto size={16}/>}
+            mt={30}
+            error={imageTooBig ? 'Image is too big, maximum size is 1MB' : false}
+            onChange={(file) => form.values.image = checkFile(file) ? file : new File([], '')}
+        ></FileInput>
 
         <TextInput
           withAsterisk
           label="Patch name"
           placeholder="Patch name"
-          mt={30}
+          mt={10}
           {...form.getInputProps('title')}
         />
 
@@ -136,30 +174,13 @@ const AddPatchScreen = (): ReactElement => {
           {...form.getInputProps('university')}
         ></NativeSelect>
 
-        <Text fw={700} lineClamp={1} my="sm">
-          Categories
-        </Text>
-
-        <Pill.Group>
-          {patchCategories.map((category: string) => (
-            <Pill
-              key={category}
-              size="lg"
-              bg={colors[Math.floor(Math.random() * colors.length)]}
-            >
-              {category}
-            </Pill>
-          ))}
-        </Pill.Group>
-
-        {/*<FileInput*/}
-        {/*  variant="filled"*/}
-        {/*  placeholder="Add Patch"*/}
-        {/*  onChange={(files) => {*/}
-        {/*    // Handle the selected files here*/}
-        {/*    console.log('Selected files:', files)*/}
-        {/*  }}*/}
-        {/*/>*/}
+        <TagsInput 
+          variant='unstyled'
+          label="Categories" 
+          value={form.values.categories}
+          onChange={(value) => form.setValues({ categories: value })}
+          mt={10}
+          placeholder="Add category" />
         <Center>
           <Button type='submit' w="40%" mt="xl" radius="md">
             Add patch

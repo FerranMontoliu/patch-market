@@ -38,7 +38,6 @@ patchesRouter.get('/tradeable', userExtractorMiddleware, async (request: WebRequ
       .populate('owner', 'name surname')
       .populate('university', 'name')
       .populate('categories', 'name')
-
     response.json(patches)
   } catch (error) {
     console.error('Error while retrieving tradeable patches:', error)
@@ -95,19 +94,20 @@ patchesRouter.post('/', userExtractorMiddleware, async (request: WebRequest, res
     title: title,
     university: universityId,
     description: description,
+    categories: [],
     image: image,
     isTradeable: false
   })
 
-  categoriesNames.forEach(async (category : string) => {
+  const categoriesPromises = categoriesNames.map(async (category : string) => {
     const newCategory = new Category({
       name: category
     })
     const categoryExists = await Category.findOne({ name: category })
     if(!categoryExists){
       try{
-        await newCategory.save()
-        patchToSave.categories.push(newCategory._id)
+        const addedCategory = await newCategory.save()
+        patchToSave.categories.push(addedCategory._id)
       }catch(error){
         logInfo('Error saving new category.')
         response.status(500).json({ error: 'Error saving new category.' })
@@ -118,6 +118,8 @@ patchesRouter.post('/', userExtractorMiddleware, async (request: WebRequest, res
       patchToSave.categories.push(categoryExists._id)
     }
   })
+
+  await Promise.all(categoriesPromises)
 
   try{
     const savedPatch = await patchToSave.save()

@@ -6,7 +6,7 @@ export type PatchType = {
   title: string;
   university: Types.ObjectId;
   description?: string;
-  image: string; //should be Buffer
+  image: string;
   categories: Types.ObjectId[];
   isTradeable: boolean;
 }
@@ -30,7 +30,7 @@ const patchSchema = new Schema<PatchType>({
     type: String,
   },
   image: {
-    type: String, //should be Buffer
+    type: String,
     required: true,
   },
   categories: [{
