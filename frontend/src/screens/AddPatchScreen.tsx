@@ -1,6 +1,6 @@
 import { ReactElement, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { redirect, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { AddPatchProps, addPatch } from '../services/patches.ts'
 import { notifications } from '@mantine/notifications'
 import { Card, Center, Container, Image, TextInput, Title, Button, Loader, NativeSelect, FileInput, PillsInput, TagsInput } from '@mantine/core'
@@ -15,6 +15,8 @@ const AddPatchScreen = (): ReactElement => {
   const queryClient = useQueryClient()
 
   const [imageTooBig, setImageTooBig] = useState(false)
+  const [noImage, setNoImage] = useState(false)
+  const [imageInput, setImageInput] = useState<File | null>(null)
 
   const getUniversitiesResult = useQuery({
     queryKey: ['universities'],
@@ -27,7 +29,6 @@ const AddPatchScreen = (): ReactElement => {
       description: '',
       university: '',
       categories: new Array<string>(),
-      image: new File([], ''),
     },
     validate: {
       title: isNotEmpty('Title is required'),
@@ -73,30 +74,26 @@ const AddPatchScreen = (): ReactElement => {
   const onAddPatch = async (): Promise<void> => {
     let base64Image : string = ' ';
     try {
-      const image = await getBase64(form.values.image)
+      const image = await getBase64(imageInput!)
       base64Image = image?.toString() ?? ' '
+      const patch : AddPatchProps = {
+        title : form.values.title,
+        description : form.values.description,
+        universityId : form.values.university,
+        categoriesNames : form.values.categories.map((category: string) => category[0].toUpperCase() + category.slice(1, category.length).toLowerCase()),
+        image : base64Image,
+      }
+      addPatchMutation.mutate(patch)
+  
+      navigate('/my-patches') 
     }catch(error) {
-      notifications.show({
-        title: 'Error',
-        message: (error as Error).message, 
-        color: 'red'
-      })
-      navigate('/my-patches')
+      setNoImage(true)
     }
-    const patch : AddPatchProps = {
-      title : form.values.title,
-      description : form.values.description,
-      universityId : form.values.university,
-      categoriesNames : form.values.categories.map((category: string) => category[0].toUpperCase() + category.slice(1, category.length).toLowerCase()),
-      image : base64Image,
-    }
-    addPatchMutation.mutate(patch)
-
-    navigate('/my-patches')
   }
 
-  const checkFile = (file: File) => {
-    if(file.size > 1000000)
+  const checkFile = (file: File | null) => {
+    setNoImage(false)
+    if(!file || file.size > 1000000)
     {
       setImageTooBig(true)
       return false
@@ -131,9 +128,9 @@ const AddPatchScreen = (): ReactElement => {
         <form onSubmit={form.onSubmit(onAddPatch)}>
         <Center>
           <Image
-            src={form.values.image ? URL.createObjectURL(form.values.image) : "https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_1280.png"}
+            src={imageInput ? URL.createObjectURL(imageInput) : "https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_1280.png"}
             radius="md"
-            h={200}
+            h={300}
             w="auto"
             fallbackSrc="https://placehold.co/600x400?text=Placeholder"
           />
@@ -146,8 +143,8 @@ const AddPatchScreen = (): ReactElement => {
             withAsterisk
             leftSection={<IconPhoto size={16}/>}
             mt={30}
-            error={imageTooBig ? 'Image is too big, maximum size is 1MB' : false}
-            onChange={(file) => form.values.image = file && checkFile(file) ? file : new File([], '')}
+            error={imageTooBig ? 'Image is too big, maximum size is 1MB' : noImage ? 'Image is required' : false}
+            onChange={(file) => checkFile(file) ? setImageInput(file) : setImageInput(null)}
         ></FileInput>
 
         <TextInput
