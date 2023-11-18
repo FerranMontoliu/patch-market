@@ -147,7 +147,7 @@ const AddPatchScreen = (): ReactElement => {
             leftSection={<IconPhoto size={16}/>}
             mt={30}
             error={imageTooBig ? 'Image is too big, maximum size is 1MB' : false}
-            onChange={(file) => form.values.image = checkFile(file) ? file : new File([], '')}
+            onChange={(file) => form.values.image = file && checkFile(file) ? file : new File([], '')}
         ></FileInput>
 
         <TextInput
