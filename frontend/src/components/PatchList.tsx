@@ -14,7 +14,7 @@ const PatchList = ({ patches }: PatchListProps): ReactElement => (
         <Stack key={patch.id} gap="xs">
           <PatchListElement patch={patch}/>
 
-          { i < patches.length
+          { i < patches.length - 1
             ? <Divider my="xs"></Divider>
             : null
           }

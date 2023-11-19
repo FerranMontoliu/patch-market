@@ -38,18 +38,18 @@ const MyPatchesScreen = (): ReactElement => {
     return (
       <Container>
         <Stack>
-          <Group>
-            <Title order={1}>My patches</Title>
-            <Group gap="lg">
-              <Button
-                variant="filled"
-                component={NavLink} to="/add-patch"
-                color='black'
-                mx="sm"
-              >
-                Add Patch
-              </Button>
-            </Group>
+          <Group grow>
+            <Title order={1} mx="auto">My patches</Title>
+            <Button
+              variant="filled"
+              component={NavLink} to="/add-patch"
+              color='black'
+              mr="auto"
+              radius="md"
+              mx="sm"
+            >
+              Add Patch
+            </Button>
           </Group>
 
           <TextInput
@@ -74,17 +74,17 @@ const MyPatchesScreen = (): ReactElement => {
     <Container>
       <Stack>
         <Group>
-          <Title order={1}>My patches</Title>
-          <Group gap="lg">
+          <Title order={1} mr="auto">My patches</Title>
             <Button
               variant="filled"
               component={NavLink} to="/add-patch"
               color='black'
+              radius="md"
+              miw="20%"
               mx="sm"
             >
                 Add Patch
             </Button>
-          </Group>
         </Group>
 
         <TextInput

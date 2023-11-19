@@ -14,6 +14,8 @@ const PatchListElement = ({ patch }: PatchListElementProps): ReactElement => {
         <Image
           src={patch.image}
           height={50}
+          miw={70}
+          maw={70}
           alt={patch.title}
           fallbackSrc="https://placehold.co/600x400?font=roboto&text=Placeholder"
           radius="md"
