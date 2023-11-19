@@ -25,7 +25,7 @@ export type Patch = {
     description?: string
     image: string
     categories: Array<Category>
-    isTradeable: boolean
+    tradeable: boolean
 }
 
 type TransactionStatus  =

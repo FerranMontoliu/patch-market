@@ -32,7 +32,7 @@ const MarketScreen = (): ReactElement => {
   const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
   const filteredPatches: Array<Patch> = patches
     .filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery))
-
+  console.log(filteredPatches)
   return (
     <Container>
       <Stack>

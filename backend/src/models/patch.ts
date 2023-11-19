@@ -8,7 +8,7 @@ export type PatchType = {
   description?: string;
   image: string;
   categories: Types.ObjectId[];
-  isTradeable: boolean;
+  tradeable: boolean;
 }
 
 const patchSchema = new Schema<PatchType>({
@@ -38,7 +38,7 @@ const patchSchema = new Schema<PatchType>({
     ref: 'Category',
     required: true,
   }],
-  isTradeable: {
+  tradeable: {
     type: Boolean,
     default: false,
     required: true,

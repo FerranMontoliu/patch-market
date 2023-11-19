@@ -52,7 +52,7 @@ transactionsRouter.get('/:id', userExtractorMiddleware, async (request: WebReque
         surname: 1,
         university: 1,
         image: 1,
-        isTradeable: 1,
+        tradeable: 1,
         categories: 1,
         description: 1,
       })
@@ -63,7 +63,7 @@ transactionsRouter.get('/:id', userExtractorMiddleware, async (request: WebReque
         surname: 1,
         university: 1,
         image: 1,
-        isTradeable: 1,
+        tradeable: 1,
         categories: 1,
         description: 1,
       })

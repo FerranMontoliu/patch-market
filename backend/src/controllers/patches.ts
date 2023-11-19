@@ -96,7 +96,7 @@ patchesRouter.post('/', userExtractorMiddleware, async (request: WebRequest, res
     description: description,
     categories: [],
     image: image,
-    isTradeable: false
+    tradeable: false
   })
 
   const categoriesPromises = categoriesNames.map(async (category : string) => {
@@ -127,5 +127,25 @@ patchesRouter.post('/', userExtractorMiddleware, async (request: WebRequest, res
   } catch (error) {
     logInfo(error)
     response.status(500).json({ error: 'Error saving new patch.' })
+  }
+})
+
+patchesRouter.put('/tradeable', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
+  const patch = request.body
+  const user: UserType = request.user
+  logInfo(patch)
+  if(user.id === patch.owner.id){
+    const updatedPatch = await Patch
+      .findByIdAndUpdate(patch.id, { tradeable: true }, { new: true })
+    if (updatedPatch) {
+      response.json(updatedPatch)
+    } else {
+      logInfo('Error in making this patch tradeable.')
+      response.status(500).json({ error: 'Error in making this patch tradeable.' })
+    }
+  }
+  else {
+    logInfo('User unauthorized to modify this patch.')
+    response.status(401).json({ error: 'Unauthorized to modify this patch.' })
   }
 })

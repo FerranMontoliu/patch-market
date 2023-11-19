@@ -2,9 +2,11 @@ import { ReactElement, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Container, Grid, Title, Image, Text, Card, Pill, Button, Group, UnstyledButton, Stack, TextInput, Center, Loader } from '@mantine/core'
 import { Category, Patch } from '../types.ts'
-import { useQuery } from '@tanstack/react-query'
-import { getOwnPatches, getPatchById } from '../services/patches.ts'
-import { ownUser } from '../mock-data'
+import { notifications } from '@mantine/notifications'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
+import { getOwnPatches, getPatchById, makePatchTradeable } from '../services/patches.ts'
+import { useUserValue } from '../contexts/UserContext.tsx'
 import NotFoundScreen from './NotFoundScreen.tsx'
 import { IconCircle2Filled, IconCircleCheckFilled, IconAdjustmentsHorizontal, IconSearch } from '@tabler/icons-react'
 import PatchSelectionList from '../components/PatchSelectionList.tsx'
@@ -12,11 +14,15 @@ import PatchList from '../components/PatchList.tsx'
 
 const PatchDetailsScreen = (): ReactElement => {
   const { patchId } = useParams()
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const [isTradeMode, setIsTradeMode] = useState(false)
   const [isTradeOffered, setIsTradeOffered] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedPatches, setSelectedPatches] = useState(new Array<Patch>)
+
+  const user = useUserValue()
 
   const patchDetailsResult = useQuery({
     queryKey: ['patchById', patchId],
@@ -32,6 +38,28 @@ const PatchDetailsScreen = (): ReactElement => {
   const ownPatches: Array<Patch> | null | undefined = ownPatchesResult.data
   const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
   const ownPatchesFiltered : Array<Patch> = ownPatches !== null && ownPatches !== undefined ? ownPatches.filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery)) : []
+
+  const makePatchTradeableMutation = useMutation({
+    mutationFn: makePatchTradeable,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['patchById'] })
+      queryClient.invalidateQueries({ queryKey: ['ownPatches'] })
+      queryClient.invalidateQueries({ queryKey: ['tradeablePatches'] })
+      notifications.show({
+        title: 'You listed this patch for trading!',
+        message: 'Other users can now make offers for this patch.',
+        color: 'teal'
+      })
+    },
+    onError: (error: Error) => {
+      notifications.show({
+        title: 'Error',
+        message: error.message, 
+        color: 'red'
+      })
+      navigate('/my-patches')
+    },
+  })
 
   const categoryColorList: Array<string> = [
     '#FFA8A8',
@@ -70,7 +98,7 @@ const PatchDetailsScreen = (): ReactElement => {
     )
   }
 
-  if (patchDetailsResult.isError || patch === undefined || patch === null) {
+  if (patchDetailsResult.isError || !patch || !user) {
     return <NotFoundScreen />
   }
 
@@ -128,10 +156,18 @@ const PatchDetailsScreen = (): ReactElement => {
               </Pill.Group>
             </Card>
 
-            { patch.owner.id !== ownUser.id && (
+            { patch.owner.id !== user.id && (
               <Button fullWidth mt="lg" radius="md" onClick={() => setIsTradeMode(true)}>
                 Make an offer
               </Button>
+            )}
+            { (patch.owner.id === user.id && patch.tradeable === false) && (
+              <Button fullWidth mt="lg" radius="md" onClick={() => makePatchTradeableMutation.mutate(patch)}>
+                List for trading
+              </Button>
+            )}
+            { (patch.owner.id === user.id && patch.tradeable === true) && (
+              <Center><Text>You listed this patch for trading!</Text></Center>
             )}
           </Grid.Col>
         </Grid>

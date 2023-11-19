@@ -25,7 +25,7 @@ export const mockPatches: Array<Patch> = [
     description: 'A collection of rare and vintage stamps from around the world.',
     image: 'stamp_collection.jpg',
     categories: ['Collectibles', 'Philately'],
-    isTradeable: true,
+    tradeable: true,
   },
   {
     id: '2',
@@ -34,7 +34,7 @@ export const mockPatches: Array<Patch> = [
     description: 'A set of antique coins from various historical periods.',
     image: 'coin_set.jpg',
     categories: ['Collectibles', 'Numismatics'],
-    isTradeable: true,
+    tradeable: true,
   },
   {
     id: '3',
@@ -43,7 +43,7 @@ export const mockPatches: Array<Patch> = [
     description: 'A collection of rare and antique books from different genres.',
     image: 'book_collection.jpg',
     categories: ['Books', 'Collectibles'],
-    isTradeable: true,
+    tradeable: true,
   },
   {
     id: '4',
@@ -52,7 +52,7 @@ export const mockPatches: Array<Patch> = [
     description: 'A collection of classic vinyl records in excellent condition.',
     image: 'vinyl_records.jpg',
     categories: ['Music', 'Collectibles'],
-    isTradeable: true,
+    tradeable: true,
   },
   {
     id: '5',
@@ -61,7 +61,7 @@ export const mockPatches: Array<Patch> = [
     description: 'Miniature models of classic cars from the 20th century.',
     image: 'car_models.jpg',
     categories: ['Collectibles', 'Automobilia'],
-    isTradeable: true,
+    tradeable: true,
   },
   {
     id: '6',
@@ -70,7 +70,7 @@ export const mockPatches: Array<Patch> = [
     description: 'A set of vintage postcards from various destinations.',
     image: 'postcard_set.jpg',
     categories: ['Collectibles', 'Philately'],
-    isTradeable: true,
+    tradeable: true,
   },
   {
     id: '7',
@@ -79,7 +79,7 @@ export const mockPatches: Array<Patch> = [
     description: 'A collection of ancient artifacts from different civilizations.',
     image: 'artifact_collection.jpg',
     categories: ['Archaeology', 'Collectibles'],
-    isTradeable: true,
+    tradeable: true,
   },
   {
     id: '8',
@@ -88,7 +88,7 @@ export const mockPatches: Array<Patch> = [
     description: 'Reproduction prints of classic movie posters.',
     image: 'movie_posters.jpg',
     categories: ['Movies', 'Collectibles'],
-    isTradeable: true,
+    tradeable: true,
   },
   {
     id: '9',
@@ -97,7 +97,7 @@ export const mockPatches: Array<Patch> = [
     description: 'A collection of vintage toys from the 20th century.',
     image: 'toy_collection.jpg',
     categories: ['Collectibles', 'Toys'],
-    isTradeable: true,
+    tradeable: true,
   },
   {
     id: '10',
@@ -106,7 +106,7 @@ export const mockPatches: Array<Patch> = [
     description: 'A selection of rare and collectible comic books.',
     image: 'comic_books.jpg',
     categories: ['Books', 'Collectibles'],
-    isTradeable: true,
+    tradeable: true,
   },
 ]
 
@@ -126,7 +126,7 @@ export const mockOwnPatches: Array<Patch> = [
     description: 'A collection of vintage wristwatches from various brands.',
     image: 'watch_collection.jpg',
     categories: ['Collectibles', 'Watches'],
-    isTradeable: true,
+    tradeable: true,
   },
   {
     id: '12',
@@ -135,7 +135,7 @@ export const mockOwnPatches: Array<Patch> = [
     description: 'A series of limited edition art prints from renowned artists.',
     image: 'art_prints.jpg',
     categories: ['Art', 'Collectibles'],
-    isTradeable: true,
+    tradeable: true,
   },
   {
     id: '13',
@@ -144,7 +144,7 @@ export const mockOwnPatches: Array<Patch> = [
     description: 'A set of vintage film cameras in excellent working condition.',
     image: 'camera_set.jpg',
     categories: ['Photography', 'Collectibles'],
-    isTradeable: true,
+    tradeable: true,
   },
   {
     id: '14',
@@ -153,7 +153,7 @@ export const mockOwnPatches: Array<Patch> = [
     description: 'A collection of rare and valuable stamps from different eras.',
     image: 'rare_stamps.jpg',
     categories: ['Collectibles', 'Philately'],
-    isTradeable: true,
+    tradeable: true,
   },
   {
     id: '15',
@@ -162,6 +162,6 @@ export const mockOwnPatches: Array<Patch> = [
     description: 'A collection of vintage posters from various cultural events.',
     image: 'poster_collection.jpg',
     categories: ['Collectibles', 'Art'],
-    isTradeable: true,
+    tradeable: true,
   },
 ]
