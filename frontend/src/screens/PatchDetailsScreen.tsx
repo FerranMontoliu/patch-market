@@ -11,6 +11,8 @@ import NotFoundScreen from './NotFoundScreen.tsx'
 import { IconCircle2Filled, IconCircleCheckFilled, IconAdjustmentsHorizontal, IconSearch } from '@tabler/icons-react'
 import PatchSelectionList from '../components/PatchSelectionList.tsx'
 import PatchList from '../components/PatchList.tsx'
+import { addTransaction, AddTransactionProps } from '../services/transactions.ts';
+
 
 const PatchDetailsScreen = (): ReactElement => {
   const { patchId } = useParams()
@@ -23,6 +25,7 @@ const PatchDetailsScreen = (): ReactElement => {
   const [selectedPatches, setSelectedPatches] = useState(new Array<Patch>)
 
   const user = useUserValue()
+  const ownUser = useUserValue()!
 
   const patchDetailsResult = useQuery({
     queryKey: ['patchById', patchId],
@@ -88,6 +91,41 @@ const PatchDetailsScreen = (): ReactElement => {
   function cancelExchangeOffer(){
     setIsTradeOffered(false)
     setSelectedPatches(new Array<Patch>)
+  }
+
+  const addTransactionMutation = useMutation({
+    mutationFn: addTransaction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['transactionById'] })
+      queryClient.invalidateQueries({ queryKey: ['gettradeHistory'] })
+      notifications.show({
+        title: 'Offer Made',
+        message: 'Your offer has been made successfully.',
+        color: 'teal'
+      })
+    },
+    onError: (error: Error) => {
+      notifications.show({
+        title: 'Error',
+        message: error.message, 
+        color: 'red'
+      })
+      navigate('/my-patches')
+    },
+  })
+
+  function makeOffer(){
+    try {
+    const transactionData: AddTransactionProps = {
+      patchTo: patchId!, 
+      patchesFrom: selectedPatches.map((selectedPatch) => selectedPatch.id), 
+      from: ownUser.id,
+      to: patch?.owner?.id || '', 
+    }
+      addTransactionMutation.mutate(transactionData)
+      navigate('/my-trades') 
+    }catch(error) {
+    }
   }
 
   if (patchDetailsResult.isLoading) {
@@ -259,7 +297,8 @@ const PatchDetailsScreen = (): ReactElement => {
             </Stack>
           </Card>
         ) : (
-          <Card shadow="sm" my="md" padding="md" radius="md" withBorder>
+          <>
+          <Card shadow="sm" my="md" mx="xl" padding="md" radius="md" withBorder>
             <Grid gutter="xs" mb="md" p="sm" align="center">
               <Grid.Col span="auto">
                 <Group>
@@ -285,8 +324,15 @@ const PatchDetailsScreen = (): ReactElement => {
               <PatchList patches={selectedPatches} />
             </Stack>
           </Card>
-        )
-      }
+
+          <Card shadow="sm" my="md" padding="md" radius="md" withBorder>
+            <Button fullWidth mt="lg" radius="md" onClick={makeOffer}>
+              Make Offer
+            </Button>
+          </Card>
+          </>
+          )
+        }
     </Container>
   )
 }

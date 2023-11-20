@@ -8,7 +8,8 @@ import {
   Group,
   Stack,
   Title,
-  Text
+  Text,
+  Space
 } from '@mantine/core'
 import PatchCard from '../components/PatchCard.tsx'
 import { useUserValue } from '../contexts/UserContext.tsx'
@@ -24,7 +25,6 @@ const TradeDetailsScreen = (): ReactElement => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { tradeId } = useParams()
-
   const ownUser = useUserValue()!
 
   const tradeDetailsResult = useQuery({
@@ -57,18 +57,16 @@ const TradeDetailsScreen = (): ReactElement => {
 
     navigate('/my-trades')
   }
-
-  const onAccept = (): void => {
+  const onAccept = async (): Promise<void> => {
     updateStatusMutation.mutate("accepted")
     notifications.show({
       title: 'You accepted the trade',
       message: 'Your patches will be traded',
       color: 'teal'
     })
-
-    navigate('/my-trades')
+    navigate('/my-trades');
   }
-
+  
   const onCancel = (): void => {
     updateStatusMutation.mutate("cancelled")
     notifications.show({
@@ -76,7 +74,6 @@ const TradeDetailsScreen = (): ReactElement => {
       message: 'Your patches will not be traded',
       color: 'red'
     })
-
     navigate('/my-trades')
   }
 
@@ -92,7 +89,6 @@ const TradeDetailsScreen = (): ReactElement => {
   }
 
   const transaction: Transaction = tradeDetailsResult.data
-  
   const patchGiven: Patch[] = tradeDetailsResult.data
     ? [tradeDetailsResult.data.patchTo]
     : []
@@ -101,47 +97,63 @@ const TradeDetailsScreen = (): ReactElement => {
     : []
 
   return (
-    <Container>
+    <Container size="sm">
       <Stack>
         <Title order={1}>Trade details</Title>
-        <Title order={4}>I give</Title>
-        <PatchCard patch={patchGiven[0]} />
-
         <Divider />
-        <Title order={4}>I receive</Title>
-
+        <Title order={3}>
+          {transaction.to && transaction.to.id === ownUser.id
+            ? 'I give'
+            : 'I receive'}
+        <Space h="xs" />
+        </Title>
+        {patchGiven.length > 0 &&
+          patchGiven.map((patch, index) => (
+        <PatchCard key={index} patch={patch} />
+          ))}
+      </Stack>
+      <Space h="md" />
+        <Divider />
+        <Stack>
+        <Space h="xs" />
+        <Title order={3}>
+          {transaction.to && transaction.to.id === ownUser.id
+            ? 'I receive'
+            : 'I give'}
+        <Space h="xs" />
+        </Title>
         {patchesReceived.length > 0 &&
           patchesReceived.map((patch, index) => (
-          <PatchCard key={index} patch={patch} />
-        ))}
-        
-          {transaction.to.id === ownUser.id && transaction.status === 'pending' ?
-          (<Group grow>
-            <Button
-              color="red"
-              variant="outline"
-              radius="md"
-              onClick={onDecline}
-            >
+            <PatchCard key={index} patch={patch} />
+          ))}
+        {transaction.to && transaction.to.id === ownUser.id && transaction.status === 'pending' ? (
+          <Group grow>
+            <Button color="red" variant="outline" radius="md" onClick={onDecline}>
               Decline
             </Button>
             <Button color="teal" radius="md" onClick={onAccept}>
               Accept
             </Button>
-          </Group>) : transaction.status === 'pending' ?
-          <Group grow> 
-            <Button color="red" radius="md" onClick={onCancel}>
-              Cancel
-            </Button>
           </Group>
-          : transaction.status === 'accepted' ?
-          <Center my="lg"><Text>You accepted this trade offer.</Text></Center>
-          : transaction.status === 'rejected' ?
-          <Center my="lg"><Text>You declined this trade offer.</Text></Center>
-          : transaction.status === 'cancelled' ?
-          <Center my="lg"><Text>You canceled this trade offer.</Text></Center> 
-          : null
-          }
+        ) : transaction.status === 'pending' ? (
+        <Group grow>
+          <Button color="red" radius="md" onClick={onCancel}>
+            Cancel
+          </Button>
+        </Group>
+        ) : transaction.status === 'accepted' ? (
+        <Center my="lg">
+          <Text>You accepted this trade offer.</Text>
+        </Center>
+        ) : transaction.status === 'rejected' ? (
+        <Center my="lg">
+          <Text>You declined this trade offer.</Text>
+        </Center>
+        ) : transaction.status === 'cancelled' ? (
+        <Center my="lg">
+          <Text>You canceled this trade offer.</Text>
+        </Center>
+        ) : null}
       </Stack>
     </Container>
   )

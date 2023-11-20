@@ -20,11 +20,11 @@ export const getPatchById = async (patchId: string): Promise<Patch | null> => {
 }
 
 export type AddPatchProps = {
-  title: string;
-  description?: string;
-  universityId: string;
-  categoriesNames: Array<string>;
-  image: string;
+  title: string
+  description?: string
+  universityId: string
+  categoriesNames: Array<string>
+  image: string
 }
 
 export const addPatch = async (patch: AddPatchProps): Promise<Patch | null> => {
@@ -37,5 +37,3 @@ export const makePatchTradeable = async (patch: Patch): Promise<Patch | null> =>
   const response = await axios.put(`${baseUrl}/tradeable`, patch, getAuthConfig())
   return response.data as Patch ?? null
 }
-
-

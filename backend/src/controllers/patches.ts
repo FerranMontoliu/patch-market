@@ -45,26 +45,6 @@ patchesRouter.get('/tradeable', userExtractorMiddleware, async (request: WebRequ
   }
 })
 
-
-
-//const patches = await Patch
-//  .find({
-//    tradeable: true,
-//  owner: { $ne: user.id }, // TODO: THIS DOES NOT WORK, FIX IT
-//})
-// .populate('owner', {
-//   name: 1,
-// })
-// .populate('university', {
-//   name: 1,
-// })
-// .populate('categories', {
-//   name: 1,
-// })
-
-//response.json(patches)
-//})
-
 patchesRouter.get('/:id', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
   const patch = await Patch
     .findById(request.params.id)
@@ -98,7 +78,6 @@ patchesRouter.post('/', userExtractorMiddleware, async (request: WebRequest, res
     image: image,
     tradeable: false
   })
-
   const categoriesPromises = categoriesNames.map(async (category : string) => {
     const newCategory = new Category({
       name: category
@@ -118,9 +97,7 @@ patchesRouter.post('/', userExtractorMiddleware, async (request: WebRequest, res
       patchToSave.categories.push(categoryExists._id)
     }
   })
-
   await Promise.all(categoriesPromises)
-
   try{
     const savedPatch = await patchToSave.save()
     response.status(201).json(savedPatch)
@@ -149,3 +126,14 @@ patchesRouter.put('/tradeable', userExtractorMiddleware, async (request: WebRequ
     response.status(401).json({ error: 'Unauthorized to modify this patch.' })
   }
 })
+
+patchesRouter.put('/ownership', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
+  const user: UserType = request.user;
+  const { patchTo, patchesFrom, newOwner } = request.body
+  try {
+    await Patch.findByIdAndUpdate(patchTo, { owner: newOwner })
+    await Patch.updateMany({ _id: { $in: patchesFrom } }, { owner: newOwner })
+  } catch (error) {
+    response.status(500).json({ error: 'Internal server error' })
+  }
+});

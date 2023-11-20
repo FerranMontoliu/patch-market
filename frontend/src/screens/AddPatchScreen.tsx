@@ -10,6 +10,7 @@ import { getUniversities } from '../services/universities.ts'
 import NotFoundScreen from './NotFoundScreen.tsx'
 import { IconBuilding, IconPhoto } from '@tabler/icons-react'
 
+
 const AddPatchScreen = (): ReactElement => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -72,7 +73,7 @@ const AddPatchScreen = (): ReactElement => {
   }
 
   const onAddPatch = async (): Promise<void> => {
-    let base64Image : string = ' ';
+    let base64Image : string = ' '
     try {
       const image = await getBase64(imageInput!)
       base64Image = image?.toString() ?? ' '
