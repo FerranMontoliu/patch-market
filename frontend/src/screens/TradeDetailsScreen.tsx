@@ -1,31 +1,21 @@
 import { ReactElement } from 'react'
-import {
-  Center,
-  Loader,
-  Button,
-  Container,
-  Divider,
-  Group,
-  Stack,
-  Title,
-  Text
-} from '@mantine/core'
+import { Button, Center, Container, Divider, Group, Loader, Stack, Text, Title } from '@mantine/core'
 import PatchCard from '../components/PatchCard.tsx'
-import { useUserValue } from '../contexts/UserContext.tsx'
+import { useUser } from '../contexts/UserContext.tsx'
 import { notifications } from '@mantine/notifications'
-import { useNavigate } from 'react-router-dom'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Patch, Transaction } from '../types.ts' // Import your types
-import NotFoundScreen from './NotFoundScreen.tsx'
-import { useParams } from 'react-router-dom'
 import { getTransactionById, updateTransactionStatus } from '../services/transactions.ts'
+import { logout } from '../utils/logout.ts'
+import LogoutScreen from './LogoutScreen.tsx'
 
 const TradeDetailsScreen = (): ReactElement => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { tradeId } = useParams()
 
-  const ownUser = useUserValue()!
+  const [ownUser, userDispatch] = useUser()
 
   const tradeDetailsResult = useQuery({
     queryKey: ['transactionById', tradeId],
@@ -36,21 +26,23 @@ const TradeDetailsScreen = (): ReactElement => {
     mutationFn: (newStatus: string) => updateTransactionStatus(tradeId!, newStatus),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['transactionById'] })
-      queryClient.invalidateQueries({ queryKey: ['gettradeHistory'] })
+      queryClient.invalidateQueries({ queryKey: ['tradeHistory'] })
     },
     onError: (error: Error) => {
+      logout(userDispatch)
+
       notifications.show({
         title: 'Error',
-        message: error.message, 
+        message: error.message,
         color: 'red'
       })
     },
   })
 
   const onDecline = (): void => {
-    updateStatusMutation.mutate("rejected")
+    updateStatusMutation.mutate('rejected')
     notifications.show({
-      title: 'You declined the trade',
+      title: 'You declined the trade offer',
       message: 'Your patches will not be traded',
       color: 'red'
     })
@@ -59,9 +51,9 @@ const TradeDetailsScreen = (): ReactElement => {
   }
 
   const onAccept = (): void => {
-    updateStatusMutation.mutate("accepted")
+    updateStatusMutation.mutate('accepted')
     notifications.show({
-      title: 'You accepted the trade',
+      title: 'You accepted the trade offer',
       message: 'Your patches will be traded',
       color: 'teal'
     })
@@ -70,9 +62,9 @@ const TradeDetailsScreen = (): ReactElement => {
   }
 
   const onCancel = (): void => {
-    updateStatusMutation.mutate("cancelled")
+    updateStatusMutation.mutate('cancelled')
     notifications.show({
-      title: 'You canceled your trade offer',
+      title: 'You cancelled the trade offer',
       message: 'Your patches will not be traded',
       color: 'red'
     })
@@ -87,35 +79,31 @@ const TradeDetailsScreen = (): ReactElement => {
       </Center>
     )
   }
-  if (tradeDetailsResult.isError|| !tradeDetailsResult.data) {
-    return <NotFoundScreen />
+  if (tradeDetailsResult.isError|| !tradeDetailsResult.data || !ownUser) {
+    return <LogoutScreen />
   }
 
   const transaction: Transaction = tradeDetailsResult.data
-  
-  const patchGiven: Patch[] = tradeDetailsResult.data
-    ? [tradeDetailsResult.data.patchTo]
-    : []
-  const patchesReceived: Patch[] = tradeDetailsResult.data
-    ? tradeDetailsResult.data.patchesFrom
-    : []
+
+  const patchGiven: Patch = transaction.patchTo
+  const patchesReceived: Array<Patch> = transaction.patchesFrom
 
   return (
     <Container>
       <Stack>
         <Title order={1}>Trade details</Title>
         <Title order={4}>I give</Title>
-        <PatchCard patch={patchGiven[0]} />
+        <PatchCard patch={patchGiven} />
 
         <Divider />
         <Title order={4}>I receive</Title>
 
         {patchesReceived.length > 0 &&
           patchesReceived.map((patch, index) => (
-          <PatchCard key={index} patch={patch} />
-        ))}
-        
-          {transaction.to.id === ownUser.id && transaction.status === 'pending' ?
+            <PatchCard key={index} patch={patch} />
+          ))}
+
+        {transaction.to.id === ownUser.id && transaction.status === 'pending' ?
           (<Group grow>
             <Button
               color="red"
@@ -129,19 +117,19 @@ const TradeDetailsScreen = (): ReactElement => {
               Accept
             </Button>
           </Group>) : transaction.status === 'pending' ?
-          <Group grow> 
-            <Button color="red" radius="md" onClick={onCancel}>
+            <Group grow>
+              <Button color="red" radius="md" onClick={onCancel}>
               Cancel
-            </Button>
-          </Group>
-          : transaction.status === 'accepted' ?
-          <Center my="lg"><Text>You accepted this trade offer.</Text></Center>
-          : transaction.status === 'rejected' ?
-          <Center my="lg"><Text>You declined this trade offer.</Text></Center>
-          : transaction.status === 'cancelled' ?
-          <Center my="lg"><Text>You canceled this trade offer.</Text></Center> 
-          : null
-          }
+              </Button>
+            </Group>
+            : transaction.status === 'accepted' ?
+              <Center my="lg"><Text>You accepted this trade offer.</Text></Center>
+              : transaction.status === 'rejected' ?
+                <Center my="lg"><Text>You declined this trade offer.</Text></Center>
+                : transaction.status === 'cancelled' ?
+                  <Center my="lg"><Text>You canceled this trade offer.</Text></Center>
+                  : null
+        }
       </Stack>
     </Container>
   )

@@ -6,7 +6,7 @@ type UserState = {
   isLoading: boolean
 }
 
-type UserAction =
+export type UserAction =
     | { type: 'SET_USER'; payload: User }
     | { type: 'LOGOUT_USER' }
 
