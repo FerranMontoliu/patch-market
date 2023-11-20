@@ -25,6 +25,7 @@ import { IconAdjustmentsHorizontal, IconCircle2Filled, IconCircleCheckFilled, Ic
 import PatchSelectionList from '../components/PatchSelectionList.tsx'
 import PatchList from '../components/PatchList.tsx'
 import { addTransaction, AddTransactionProps } from '../services/transactions.ts';
+
 import LogoutScreen from './LogoutScreen.tsx'
 
 const PatchDetailsScreen = (): ReactElement => {
@@ -61,6 +62,7 @@ const PatchDetailsScreen = (): ReactElement => {
       queryClient.invalidateQueries({ queryKey: ['patchById'] })
       queryClient.invalidateQueries({ queryKey: ['ownPatches'] })
       queryClient.invalidateQueries({ queryKey: ['tradeablePatches'] })
+      queryClient.invalidateQueries({ queryKey: ['updateTransactionStatus'] })
 
       notifications.show({
         title: 'You listed this patch for trading!',
