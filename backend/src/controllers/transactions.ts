@@ -30,7 +30,6 @@ transactionsRouter.get('/', userExtractorMiddleware, async (request: WebRequest,
       })
     response.json(tradeHistory)
   } catch (error) {
-    console.error('Error fetching transactions:', error)
     response.status(500).json({ error: 'Internal server error' })
   }
 })
@@ -73,12 +72,9 @@ transactionsRouter.get('/:id', userExtractorMiddleware, async (request: WebReque
       response.status(404).end()
     }
   } catch (error) {
-    console.error('Error fetching transaction by ID:', error)
     response.status(500).json({ error: 'Internal server error' })
   }
 })
-
-
 
 // transactionsRouter.post('/', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
 //   // TODO: CREATE TRANSACTION
