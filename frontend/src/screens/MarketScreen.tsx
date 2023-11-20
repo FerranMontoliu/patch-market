@@ -5,7 +5,7 @@ import PatchGrid from '../components/PatchGrid.tsx'
 import { Patch } from '../types.ts'
 import { useQuery } from '@tanstack/react-query'
 import { getTradeablePatches } from '../services/patches.ts'
-import NotFoundScreen from './NotFoundScreen.tsx'
+import LogoutScreen from './LogoutScreen.tsx'
 
 const MarketScreen = (): ReactElement => {
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -24,7 +24,7 @@ const MarketScreen = (): ReactElement => {
   }
 
   if (result.isError) {
-    return <NotFoundScreen />
+    return <LogoutScreen />
   }
 
   const patches: Array<Patch> = result.data
@@ -32,7 +32,7 @@ const MarketScreen = (): ReactElement => {
   const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
   const filteredPatches: Array<Patch> = patches
     .filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery))
-  console.log(filteredPatches)
+
   return (
     <Container>
       <Stack>

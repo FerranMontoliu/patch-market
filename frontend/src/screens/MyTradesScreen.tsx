@@ -1,16 +1,14 @@
 import { ReactElement } from 'react'
-import { Center, Container, Loader, Title, Grid, Text } from '@mantine/core'
+import { Center, Container, Grid, Loader, Text, Title } from '@mantine/core'
 import { useQuery } from '@tanstack/react-query'
 import HistoryElement from '../components/HistoryListElement.tsx'
 import { getTradeHistory } from '../services/transactions.ts'
-import NotFoundScreen from './NotFoundScreen.tsx'
 import { Transaction } from '../types'
-
+import LogoutScreen from './LogoutScreen.tsx'
 
 const MyTradesScreen = (): ReactElement => {
-
   const result = useQuery({
-    queryKey: ['gettradeHistory'],
+    queryKey: ['tradeHistory'],
     queryFn: getTradeHistory,
   })
 
@@ -23,7 +21,7 @@ const MyTradesScreen = (): ReactElement => {
   }
 
   if (result.isError) {
-    return <NotFoundScreen />
+    return <LogoutScreen />
   }
 
   const transactions: Array<Transaction> = result.data
@@ -53,12 +51,12 @@ const MyTradesScreen = (): ReactElement => {
           </Text>
         </Grid.Col>
       </Grid>
-      
+
       {transactions.length === 0 ? (
         <Center mt="lg">
-        <Text fw={500} size="lg" lineClamp={1}>
+          <Text fw={500} size="lg" lineClamp={1}>
           You do not have any trades yet.
-        </Text>
+          </Text>
         </Center>
       ) : (
         transactions.map((transaction: Transaction, index: number) => (

@@ -1,16 +1,30 @@
 import { ReactElement, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { Container, Grid, Title, Image, Text, Card, Pill, Button, Group, UnstyledButton, Stack, TextInput, Center, Loader } from '@mantine/core'
+import { useNavigate, useParams } from 'react-router-dom'
+import {
+  Button,
+  Card,
+  Center,
+  Container,
+  Grid,
+  Group,
+  Image,
+  Loader,
+  Pill,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+  UnstyledButton
+} from '@mantine/core'
 import { Category, Patch } from '../types.ts'
 import { notifications } from '@mantine/notifications'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getOwnPatches, getPatchById, makePatchTradeable } from '../services/patches.ts'
 import { useUserValue } from '../contexts/UserContext.tsx'
-import NotFoundScreen from './NotFoundScreen.tsx'
-import { IconCircle2Filled, IconCircleCheckFilled, IconAdjustmentsHorizontal, IconSearch } from '@tabler/icons-react'
+import { IconAdjustmentsHorizontal, IconCircle2Filled, IconCircleCheckFilled, IconSearch } from '@tabler/icons-react'
 import PatchSelectionList from '../components/PatchSelectionList.tsx'
 import PatchList from '../components/PatchList.tsx'
+import LogoutScreen from './LogoutScreen.tsx'
 
 const PatchDetailsScreen = (): ReactElement => {
   const { patchId } = useParams()
@@ -45,6 +59,7 @@ const PatchDetailsScreen = (): ReactElement => {
       queryClient.invalidateQueries({ queryKey: ['patchById'] })
       queryClient.invalidateQueries({ queryKey: ['ownPatches'] })
       queryClient.invalidateQueries({ queryKey: ['tradeablePatches'] })
+
       notifications.show({
         title: 'You listed this patch for trading!',
         message: 'Other users can now make offers for this patch.',
@@ -54,7 +69,7 @@ const PatchDetailsScreen = (): ReactElement => {
     onError: (error: Error) => {
       notifications.show({
         title: 'Error',
-        message: error.message, 
+        message: error.message,
         color: 'red'
       })
       navigate('/my-patches')
@@ -99,7 +114,7 @@ const PatchDetailsScreen = (): ReactElement => {
   }
 
   if (patchDetailsResult.isError || !patch || !user) {
-    return <NotFoundScreen />
+    return <LogoutScreen />
   }
 
   if(!isTradeMode && !isTradeOffered){

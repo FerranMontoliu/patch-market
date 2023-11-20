@@ -1,18 +1,34 @@
 import { ReactElement, useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { AddPatchProps, addPatch } from '../services/patches.ts'
+import { addPatch, AddPatchProps } from '../services/patches.ts'
 import { notifications } from '@mantine/notifications'
-import { Card, Center, Container, Image, TextInput, Title, Button, Loader, NativeSelect, FileInput, PillsInput, TagsInput } from '@mantine/core'
+import {
+  Button,
+  Card,
+  Center,
+  Container,
+  FileInput,
+  Image,
+  Loader,
+  NativeSelect,
+  TagsInput,
+  TextInput,
+  Title
+} from '@mantine/core'
 import { University } from '../types.ts'
 import { isNotEmpty, useForm } from '@mantine/form'
 import { getUniversities } from '../services/universities.ts'
-import NotFoundScreen from './NotFoundScreen.tsx'
 import { IconBuilding, IconPhoto } from '@tabler/icons-react'
+import { logout } from '../utils/logout.ts'
+import { useUserDispatch } from '../contexts/UserContext.tsx'
+import LogoutScreen from './LogoutScreen.tsx'
 
 const AddPatchScreen = (): ReactElement => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+
+  const userDispatch = useUserDispatch()
 
   const [imageTooBig, setImageTooBig] = useState(false)
   const [noImage, setNoImage] = useState(false)
@@ -47,9 +63,11 @@ const AddPatchScreen = (): ReactElement => {
       })
     },
     onError: (error: Error) => {
+      logout(userDispatch)
+
       notifications.show({
         title: 'Error',
-        message: error.message, 
+        message: error.message,
         color: 'red'
       })
       navigate('/my-patches')
@@ -61,9 +79,9 @@ const AddPatchScreen = (): ReactElement => {
       const reader = new FileReader()
       reader.onload = () => {
         if (typeof reader.result === 'string' || reader.result instanceof ArrayBuffer) {
-          resolve(reader.result);
+          resolve(reader.result)
         } else {
-          reject(new Error('Failed to convert image to base64.'));
+          reject(new Error('Failed to convert image to base64.'))
         }
       }
       reader.onerror = error => reject(error)
@@ -72,7 +90,7 @@ const AddPatchScreen = (): ReactElement => {
   }
 
   const onAddPatch = async (): Promise<void> => {
-    let base64Image : string = ' ';
+    let base64Image : string = ' '
     try {
       const image = await getBase64(imageInput!)
       base64Image = image?.toString() ?? ' '
@@ -84,20 +102,21 @@ const AddPatchScreen = (): ReactElement => {
         image : base64Image,
       }
       addPatchMutation.mutate(patch)
-  
-      navigate('/my-patches') 
-    }catch(error) {
+
+      navigate('/my-patches')
+    } catch(error) {
       setNoImage(true)
     }
   }
 
   const checkFile = (file: File | null) => {
     setNoImage(false)
-    if(!file || file.size > 1000000)
-    {
+
+    if(!file || file.size > 1000000) {
       setImageTooBig(true)
       return false
     }
+
     setImageTooBig(false)
     return true
   }
@@ -109,13 +128,14 @@ const AddPatchScreen = (): ReactElement => {
       </Center>
     )
   }
+
   if (getUniversitiesResult.isError || !getUniversitiesResult.data || getUniversitiesResult.data.length === 0) {
-    return <NotFoundScreen />
+    return <LogoutScreen />
   }
 
   const universities: Array<University> = getUniversitiesResult.data
-  if(form.values.university === '')
-  {
+
+  if(form.values.university === '') {
     form.setValues({
       university: universities[0].id
     })
@@ -126,17 +146,17 @@ const AddPatchScreen = (): ReactElement => {
       <Title order={1}>Add a new patch</Title>
       <Card shadow="sm" padding="lg" radius="md" withBorder>
         <form onSubmit={form.onSubmit(onAddPatch)}>
-        <Center>
-          <Image
-            src={imageInput ? URL.createObjectURL(imageInput) : "https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_1280.png"}
-            radius="md"
-            h={300}
-            w="auto"
-            fallbackSrc="https://placehold.co/600x400?text=Placeholder"
-          />
-        </Center>
+          <Center>
+            <Image
+              src={imageInput ? URL.createObjectURL(imageInput) : 'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_1280.png'}
+              radius="md"
+              h={300}
+              w="auto"
+              fallbackSrc="https://placehold.co/600x400?text=Placeholder"
+            />
+          </Center>
 
-        <FileInput
+          <FileInput
             label="Patch Image"
             accept="image/png,image/jpeg"
             placeholder='Upload an image that shows the patch'
@@ -145,44 +165,44 @@ const AddPatchScreen = (): ReactElement => {
             mt={30}
             error={imageTooBig ? 'Image is too big, maximum size is 1MB' : noImage ? 'Image is required' : false}
             onChange={(file) => checkFile(file) ? setImageInput(file) : setImageInput(null)}
-        ></FileInput>
+          ></FileInput>
 
-        <TextInput
-          withAsterisk
-          label="Patch name"
-          placeholder="Patch name"
-          mt={10}
-          {...form.getInputProps('title')}
-        />
+          <TextInput
+            withAsterisk
+            label="Patch name"
+            placeholder="Patch name"
+            mt={10}
+            {...form.getInputProps('title')}
+          />
 
-        <TextInput
-          label="Description"
-          placeholder="Write the patch description here!"
-          mt={10}
-          {...form.getInputProps('description')}
-        />
+          <TextInput
+            label="Description"
+            placeholder="Write the patch description here!"
+            mt={10}
+            {...form.getInputProps('description')}
+          />
 
-        <NativeSelect
-          label="University"
-          withAsterisk
-          leftSection={<IconBuilding size={16}/>}
-          data={universities.map((university: University) => ({ value: university.id, label: university.name }))}
-          mt={10}
-          {...form.getInputProps('university')}
-        ></NativeSelect>
+          <NativeSelect
+            label="University"
+            withAsterisk
+            leftSection={<IconBuilding size={16}/>}
+            data={universities.map((university: University) => ({ value: university.id, label: university.name }))}
+            mt={10}
+            {...form.getInputProps('university')}
+          ></NativeSelect>
 
-        <TagsInput 
-          variant='unstyled'
-          label="Categories" 
-          value={form.values.categories}
-          onChange={(value) => form.setValues({ categories: value })}
-          mt={10}
-          placeholder="Add category" />
-        <Center>
-          <Button type='submit' w="40%" mt="xl" radius="md">
+          <TagsInput
+            variant='unstyled'
+            label="Categories"
+            value={form.values.categories}
+            onChange={(value) => form.setValues({ categories: value })}
+            mt={10}
+            placeholder="Add category" />
+          <Center>
+            <Button type='submit' w="40%" mt="xl" radius="md">
             Add patch
-          </Button>
-        </Center>
+            </Button>
+          </Center>
         </form>
       </Card>
     </Container>

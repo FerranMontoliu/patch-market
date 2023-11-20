@@ -42,7 +42,7 @@ const AppRouter = (): ReactElement | null => {
               : element} />
         ))}
 
-      <Route path="*" element={<NotFoundScreen/>}/>
+      <Route path="*" element={<NotFoundScreen />}/>
     </Routes>
   )
 }
