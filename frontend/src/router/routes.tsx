@@ -9,6 +9,7 @@ import AddPatchScreen from '../screens/AddPatchScreen.tsx'
 import UserProfileScreen from '../screens/UserProfileScreen.tsx'
 import FAQScreen from '../screens/FAQScreen.tsx'
 import MarketScreen from '../screens/MarketScreen.tsx'
+import LogoutScreen from '../screens/LogoutScreen.tsx'
 
 export type AppRoute = {
     path: string
@@ -43,6 +44,10 @@ export const privateRoutes: Array<AppRoute> = [
   {
     path: '/faq',
     element: <FAQScreen />,
+  },
+  {
+    path: '/log-out',
+    element: <LogoutScreen />,
   },
   {
     path: '/',

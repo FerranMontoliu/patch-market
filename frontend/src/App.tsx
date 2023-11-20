@@ -1,5 +1,5 @@
 import { ReactElement, useEffect } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { Anchor, AppShell, Burger, Button, Group, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconDiscount2 } from '@tabler/icons-react'
@@ -33,20 +33,20 @@ const getHeaderLinks = (onClick: () => void): Array<ReactElement> =>  [
 ))
 
 function App(): ReactElement {
+  const navigate = useNavigate()
   const [opened, { toggle, close }] = useDisclosure()
 
   const [user, userDispatch] = useUser()
   const isLoggedIn: boolean = user !== null
 
   useEffect(() => {
-    const loggedUserJSON: string | null = window.localStorage.getItem('patchMarketUser');
-  
+    const loggedUserJSON: string | null = window.localStorage.getItem('patchMarketUser')
+
     if (loggedUserJSON) {
       const parsedUser: User = JSON.parse(loggedUserJSON)
       userDispatch({ type: 'SET_USER', payload: parsedUser })
       if (parsedUser.token) {
-        setToken(parsedUser.token);
-      } else {
+        setToken(parsedUser.token)
       }
     } else {
       userDispatch({ type: 'LOGOUT_USER' })
@@ -54,8 +54,7 @@ function App(): ReactElement {
   }, [userDispatch])
 
   const handleLogout = (): void => {
-    window.localStorage.removeItem('patchMarketUser')
-    userDispatch({ type: 'LOGOUT_USER' })
+    navigate('/log-out')
   }
 
   const handleMenuClick = (): void => {

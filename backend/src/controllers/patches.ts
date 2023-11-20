@@ -40,7 +40,6 @@ patchesRouter.get('/tradeable', userExtractorMiddleware, async (request: WebRequ
       .populate('categories', 'name')
     response.json(patches)
   } catch (error) {
-    console.error('Error while retrieving tradeable patches:', error)
     response.status(500).json({ error: 'Internal server error', details: error.message })
   }
 })
@@ -83,17 +82,16 @@ patchesRouter.post('/', userExtractorMiddleware, async (request: WebRequest, res
       name: category
     })
     const categoryExists = await Category.findOne({ name: category })
-    if(!categoryExists){
-      try{
+    if (!categoryExists) {
+      try {
         const addedCategory = await newCategory.save()
         patchToSave.categories.push(addedCategory._id)
-      }catch(error){
+      } catch(error) {
         logInfo('Error saving new category.')
         response.status(500).json({ error: 'Error saving new category.' })
         return
       }
-    }
-    else{
+    } else {
       patchToSave.categories.push(categoryExists._id)
     }
   })
@@ -111,7 +109,7 @@ patchesRouter.put('/tradeable', userExtractorMiddleware, async (request: WebRequ
   const patch = request.body
   const user: UserType = request.user
   logInfo(patch)
-  if(user.id === patch.owner.id){
+  if (user.id === patch.owner.id) {
     const updatedPatch = await Patch
       .findByIdAndUpdate(patch.id, { tradeable: true }, { new: true })
     if (updatedPatch) {

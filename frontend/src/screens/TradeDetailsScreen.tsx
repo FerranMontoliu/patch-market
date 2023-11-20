@@ -1,31 +1,20 @@
 import { ReactElement } from 'react'
-import {
-  Center,
-  Loader,
-  Button,
-  Container,
-  Divider,
-  Group,
-  Stack,
-  Title,
-  Text,
-  Space
-} from '@mantine/core'
+import { Button, Space, Center, Container, Divider, Group, Loader, Stack, Text, Title } from '@mantine/core'
 import PatchCard from '../components/PatchCard.tsx'
-import { useUserValue } from '../contexts/UserContext.tsx'
+import { useUser } from '../contexts/UserContext.tsx'
 import { notifications } from '@mantine/notifications'
-import { useNavigate } from 'react-router-dom'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Patch, Transaction } from '../types.ts' // Import your types
-import NotFoundScreen from './NotFoundScreen.tsx'
-import { useParams } from 'react-router-dom'
 import { getTransactionById, updateTransactionStatus } from '../services/transactions.ts'
+import { logout } from '../utils/logout.ts'
+import LogoutScreen from './LogoutScreen.tsx'
 
 const TradeDetailsScreen = (): ReactElement => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { tradeId } = useParams()
-  const ownUser = useUserValue()!
+  const [ownUser, userDispatch] = useUser()
 
   const tradeDetailsResult = useQuery({
     queryKey: ['transactionById', tradeId],
@@ -36,21 +25,23 @@ const TradeDetailsScreen = (): ReactElement => {
     mutationFn: (newStatus: string) => updateTransactionStatus(tradeId!, newStatus),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['transactionById'] })
-      queryClient.invalidateQueries({ queryKey: ['gettradeHistory'] })
+      queryClient.invalidateQueries({ queryKey: ['tradeHistory'] })
     },
     onError: (error: Error) => {
+      logout(userDispatch)
+
       notifications.show({
         title: 'Error',
-        message: error.message, 
+        message: error.message,
         color: 'red'
       })
     },
   })
 
   const onDecline = (): void => {
-    updateStatusMutation.mutate("rejected")
+    updateStatusMutation.mutate('rejected')
     notifications.show({
-      title: 'You declined the trade',
+      title: 'You declined the trade offer',
       message: 'Your patches will not be traded',
       color: 'red'
     })
@@ -60,7 +51,7 @@ const TradeDetailsScreen = (): ReactElement => {
   const onAccept = async (): Promise<void> => {
     updateStatusMutation.mutate("accepted")
     notifications.show({
-      title: 'You accepted the trade',
+      title: 'You accepted the trade offer',
       message: 'Your patches will be traded',
       color: 'teal'
     })
@@ -68,9 +59,9 @@ const TradeDetailsScreen = (): ReactElement => {
   }
   
   const onCancel = (): void => {
-    updateStatusMutation.mutate("cancelled")
+    updateStatusMutation.mutate('cancelled')
     notifications.show({
-      title: 'You canceled your trade offer',
+      title: 'You cancelled the trade offer',
       message: 'Your patches will not be traded',
       color: 'red'
     })
@@ -84,8 +75,8 @@ const TradeDetailsScreen = (): ReactElement => {
       </Center>
     )
   }
-  if (tradeDetailsResult.isError|| !tradeDetailsResult.data) {
-    return <NotFoundScreen />
+  if (tradeDetailsResult.isError|| !tradeDetailsResult.data || !ownUser) {
+    return <LogoutScreen />
   }
 
   const transaction: Transaction = tradeDetailsResult.data

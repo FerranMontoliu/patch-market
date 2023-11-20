@@ -2,13 +2,13 @@ import { ReactElement, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useUserValue } from '../contexts/UserContext.tsx'
 import { getOwnPatches } from '../services/patches.ts'
-import { Button, Card, Container, Grid, Group, Stack, TextInput, Title } from '@mantine/core'
+import { Button, Card, Center, Container, Grid, Group, Loader, Stack, TextInput, Title } from '@mantine/core'
 import { IconAdjustmentsHorizontal, IconSearch } from '@tabler/icons-react'
 import { Link as RouterLink } from 'react-router-dom'
 import { Patch } from '../types.ts'
 import UserCard from '../components/UserCard.tsx'
 import PatchList from '../components/PatchList.tsx'
-import NotFoundScreen from './NotFoundScreen.tsx'
+import LogoutScreen from './LogoutScreen.tsx'
 
 const UserProfileScreen = (): ReactElement => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -18,17 +18,25 @@ const UserProfileScreen = (): ReactElement => {
     queryFn: getOwnPatches,
   })
 
-  const ownUser = useUserValue()!
+  const ownUser = useUserValue()
 
-  const patches : Array<Patch> | null | undefined = result.data
-  const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
-  const ownPatchesFiltered : Array<Patch> = patches !== null && patches !== undefined ? patches.filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery)) : []
-  console.log('ownUser:', ownUser);
-
-  if(ownUser === undefined || ownUser === null || patches === undefined || patches === null) {
-    return <NotFoundScreen></NotFoundScreen>
+  if (result.isLoading) {
+    return (
+      <Center>
+        <Loader/>
+      </Center>
+    )
   }
 
+  if (result.isError || !ownUser || !result.data) {
+    return <LogoutScreen />
+  }
+
+  const patches: Array<Patch> = result.data
+
+  const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
+  const ownPatchesFiltered: Array<Patch> = patches
+    .filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery))
 
   return (
     <Container>
@@ -65,7 +73,7 @@ const UserProfileScreen = (): ReactElement => {
         </Grid>
 
         <Stack mb="xs" px="md">
-          <PatchList patches={ownPatchesFiltered}></PatchList>
+          <PatchList patches={ownPatchesFiltered} />
         </Stack>
       </Card>
     </Container>

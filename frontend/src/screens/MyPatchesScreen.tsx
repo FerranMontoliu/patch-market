@@ -1,12 +1,12 @@
 import { ReactElement, useState } from 'react'
-import { Container, Stack, TextInput, Title, Button, Group, Center, Loader, Text } from '@mantine/core'
-import NotFoundScreen from './NotFoundScreen'
+import { Button, Center, Container, Group, Loader, Stack, Text, TextInput, Title } from '@mantine/core'
 import { useQuery } from '@tanstack/react-query'
 import { getOwnPatches } from '../services/patches'
 import { IconSearch } from '@tabler/icons-react'
 import PatchGrid from '../components/PatchGrid'
 import { Patch } from '../types.ts'
 import { NavLink } from 'react-router-dom'
+import LogoutScreen from './LogoutScreen.tsx'
 
 const MyPatchesScreen = (): ReactElement => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -16,8 +16,6 @@ const MyPatchesScreen = (): ReactElement => {
     queryFn: getOwnPatches,
   })
 
-  const patches : Array<Patch> = result.data!
-
   if (result.isLoading) {
     return (
       <Center>
@@ -26,20 +24,22 @@ const MyPatchesScreen = (): ReactElement => {
     )
   }
 
-  if (result.isError || patches === undefined || patches === null) {
-    return <NotFoundScreen />
+  if (result.isError || !result.data) {
+    return <LogoutScreen />
   }
 
+  const patches : Array<Patch> = result.data
+
   const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
-  const filteredPatches = patches
+  const filteredPatches: Array<Patch> = patches
     .filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery))
 
   if (patches.length === 0) {
     return (
       <Container>
         <Stack>
-        <Group>
-          <Title order={1} mr="auto">My patches</Title>
+          <Group>
+            <Title order={1} mr="auto">My patches</Title>
             <Button
               variant="filled"
               component={NavLink} to="/add-patch"
@@ -50,7 +50,7 @@ const MyPatchesScreen = (): ReactElement => {
             >
                 Add Patch
             </Button>
-        </Group>
+          </Group>
 
           <TextInput
             leftSectionPointerEvents="none"
@@ -75,16 +75,16 @@ const MyPatchesScreen = (): ReactElement => {
       <Stack>
         <Group>
           <Title order={1} mr="auto">My patches</Title>
-            <Button
-              variant="filled"
-              component={NavLink} to="/add-patch"
-              color='black'
-              radius="md"
-              miw="20%"
-              mx="sm"
-            >
+          <Button
+            variant="filled"
+            component={NavLink} to="/add-patch"
+            color='black'
+            radius="md"
+            miw="20%"
+            mx="sm"
+          >
                 Add Patch
-            </Button>
+          </Button>
         </Group>
 
         <TextInput
