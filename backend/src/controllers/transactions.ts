@@ -33,8 +33,8 @@ transactionsRouter.get('/:id', userExtractorMiddleware, async (request: WebReque
   try {
     const tradeHistoryId = await Transaction
       .findById(request.params.id)
-      .populate('to', { name: 1 })
-      .populate('from', { name: 1 })
+      .populate('to', { name: 1, telegramUser: 1 })
+      .populate('from', { name: 1, telegramUser: 1 })
       .populate('patchTo', { title: 1, owner: 1, name: 1, surname: 1, university: 1, image: 1, tradeable: 1, categories: 1, description: 1 })
       .populate('patchesFrom', { title: 1, owner: 1, name: 1, surname: 1, university: 1, image: 1, tradeable: 1, categories: 1, description: 1 })
 
@@ -52,7 +52,6 @@ transactionsRouter.get('/:id', userExtractorMiddleware, async (request: WebReque
 transactionsRouter.post('/', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
   const { patchTo, patchesFrom, to } = request.body;
   const user: UserType = request.user;
-
   try {
     const newTransaction = new Transaction({
       patchTo,
@@ -62,13 +61,13 @@ transactionsRouter.post('/', userExtractorMiddleware, async (request: WebRequest
       createDate: new Date(),
       lastUpdateDate: new Date(),
       status: 'pending',
-    });
+    })
 
-    const savedTransaction = await newTransaction.save();
+    const savedTransaction = await newTransaction.save()
 
-    response.status(201).json(savedTransaction);
+    response.status(201).json(savedTransaction)
   } catch (error) {
-    console.error('Error creating transaction:', error);
+    console.error('Error creating transaction:', error)
     response.status(500).json({ error: error.message || 'Error creating transaction.' })
   }
 })

@@ -259,9 +259,7 @@ const PatchDetailsScreen = (): ReactElement => {
             <Stack gap="xs" mt="md">
               <Title order={4}>
                 {patch.title}
-                leftSection={<IconSearch size={16}/>}
               </Title>
-
               <Text fw={500} lineClamp={1}>
                 {'Listed by ' + patch.owner.name + ' ' + patch.owner.surname}
               </Text>

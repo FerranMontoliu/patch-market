@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { Button, Space, Center, Container, Divider, Group, Loader, Stack, Text, Title } from '@mantine/core'
+import { Button, Space, Center, Container, Card, Divider, Group, Loader, Stack, Text, Title } from '@mantine/core'
 import PatchCard from '../components/PatchCard.tsx'
 import { useUser } from '../contexts/UserContext.tsx'
 import { notifications } from '@mantine/notifications'
@@ -20,7 +20,6 @@ const TradeDetailsScreen = (): ReactElement => {
     queryKey: ['transactionById', tradeId],
     queryFn: () => getTransactionById(tradeId!)
   })
-
   const updateStatusMutation = useMutation({
     mutationFn: (newStatus: string) => updateTransactionStatus(tradeId!, newStatus),
     onSuccess: () => {
@@ -37,7 +36,6 @@ const TradeDetailsScreen = (): ReactElement => {
       })
     },
   })
-
   const onDecline = (): void => {
     updateStatusMutation.mutate('rejected')
     notifications.show({
@@ -96,12 +94,11 @@ const TradeDetailsScreen = (): ReactElement => {
           {transaction.to && transaction.to.id === ownUser.id
             ? 'I give'
             : 'I receive'}
-        <Space h="xs" />
+          <Space h="xs" />
         </Title>
-        {patchGiven.length > 0 &&
-          patchGiven.map((patch, index) => (
-        <PatchCard key={index} patch={patch} />
-          ))}
+        {patchGiven.length > 0 && patchGiven.map((patch, index) => (
+          <PatchCard key={index} patch={patch} />
+        ))}
       </Stack>
       <Space h="md" />
         <Divider />
@@ -128,22 +125,54 @@ const TradeDetailsScreen = (): ReactElement => {
           </Group>
         ) : transaction.status === 'pending' ? (
         <Group grow>
-          <Button color="red" radius="md" onClick={onCancel}>
-            Cancel
-          </Button>
+          <Stack>
+            <Divider />
+            <Center my="lg">
+              <Text fw={700}>"After the offer is accepted, you will find the partner's Telegram name displayed here.</Text>
+            </Center>
+            <Button color="red" radius="md" onClick={onCancel}>
+              Cancel
+            </Button>
+          </Stack>
         </Group>
         ) : transaction.status === 'accepted' ? (
-        <Center my="lg">
-          <Text>You accepted this trade offer.</Text>
-        </Center>
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Center my="lg">
+            <Stack align="center">
+              {transaction.to && transaction.to.id === ownUser.id ? (
+              <>
+                <Title order={4}>You accepted the trade offer!</Title>
+                <Text>
+                  You can now reach out to your trading partner on Telegram using their username:{" "}
+                  <span style={{ fontWeight: "bold" }}>@{transaction.from?.telegramUser}</span>.
+                </Text>
+              </>
+              ) : (
+              <>
+                <Title order={4}>Trade offer got accepted!</Title>
+                <Text>
+                  You can now reach out to your trading partner on Telegram using their username:{" "}
+                  <span style={{ fontWeight: "bold" }}>@{transaction.to?.telegramUser}</span>.
+                </Text>
+              </>
+              )}
+              <Text fw={700}>Happy trading!</Text>
+            </Stack>
+          </Center>
+        </Card>
         ) : transaction.status === 'rejected' ? (
-        <Center my="lg">
-          <Text>You declined this trade offer.</Text>
-        </Center>
+          <Card shadow="sm" padding="lg" radius="md" withBorder>
+
+            <Center my="lg">
+              <Text fw={700}>You declined this trade offer.</Text>
+            </Center>
+          </Card>
         ) : transaction.status === 'cancelled' ? (
+          <Card shadow="sm" padding="lg" radius="md" withBorder>
         <Center my="lg">
-          <Text>You canceled this trade offer.</Text>
+          <Text fw={700}>You canceled this trade offer.</Text>
         </Center>
+        </Card>
         ) : null}
       </Stack>
     </Container>

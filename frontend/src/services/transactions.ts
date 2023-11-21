@@ -10,8 +10,14 @@ export const getTradeHistory = async (): Promise<Array<Transaction>> => {
 }
 
 export const getTransactionById = async (transactionId: string): Promise<Transaction | null> => {
-    const response = await axios.get(`${baseUrl}/${transactionId}`, getAuthConfig())
-    return response.data as Transaction ?? null
+  try {
+    const response = await axios.get(`${baseUrl}/${transactionId}`, getAuthConfig());
+    const transactionData = response.data as Transaction | null;
+    return transactionData;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
 
 export const updateTransactionStatus = async (transactionId: string, newStatus: string): Promise<Transaction | null> => {

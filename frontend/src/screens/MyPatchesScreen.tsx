@@ -43,7 +43,6 @@ const MyPatchesScreen = (): ReactElement => {
             <Button
               variant="filled"
               component={NavLink} to="/add-patch"
-              color='black'
               radius="md"
               miw="20%"
               mx="sm"
@@ -78,7 +77,6 @@ const MyPatchesScreen = (): ReactElement => {
           <Button
             variant="filled"
             component={NavLink} to="/add-patch"
-            color='black'
             radius="md"
             miw="20%"
             mx="sm"
