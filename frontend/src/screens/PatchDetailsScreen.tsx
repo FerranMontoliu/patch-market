@@ -1,6 +1,6 @@
 import { ReactElement, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Button,CopyButton, Card, Center, Container, Grid, Group, Image, Loader, Pill, Stack, Text, TextInput, Title, UnstyledButton, Space} from '@mantine/core'
+import { Button, Card, Center, Container, Grid, Group, Image, Loader, Pill, Stack, Text, TextInput, Title, UnstyledButton} from '@mantine/core'
 import { Category, Patch } from '../types.ts'
 import { notifications } from '@mantine/notifications'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -11,8 +11,6 @@ import PatchSelectionList from '../components/PatchSelectionList.tsx'
 import PatchList from '../components/PatchList.tsx'
 import { addTransaction, AddTransactionProps } from '../services/transactions.ts';
 import LogoutScreen from './LogoutScreen.tsx'
-import { Link as RouterLink } from 'react-router-dom'
-
 
 const PatchDetailsScreen = (): ReactElement => {
   const { patchId } = useParams()
@@ -157,33 +155,35 @@ const PatchDetailsScreen = (): ReactElement => {
   if(!isTradeMode && !isTradeOffered){
     return (
       <Container>
-      <Title order={1}>Patch details</Title>
-    
-      <Grid my="xl" gutter="xl" p="sm" align="stretch">
+        <Title order={1}>Patch details</Title>
+  
+        <Grid my="xl" gutter="xl" p="sm" align="stretch">
+          <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
+            <Image
+              src={patch.image}
+              alt={patch.title}
+              height="100%"
+              fallbackSrc="https://placehold.co/600x400?font=roboto&text=Placeholder"
+              radius="md"
+            ></Image>
+          </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
-          <Image
-            src={patch.image}
-            alt={patch.title}
-            height="100%"
-            fallbackSrc="https://placehold.co/600x400?font=roboto&text=Placeholder"
-            radius="md"
-          ></Image>
-        </Grid.Col>
-    
-
-
-        <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
-
-        <Grid >
-          <Grid.Col span={6}><Title order={3}>{patch.title}</Title></Grid.Col>
-          <Grid.Col  offset={3} span={3}>
-      <Button fullWidth variant="filled" radius="md" onClick={copyPageUrl}>Share<IconShare size={18} style={{ marginLeft: '5px' }} /></Button>
-      </Grid.Col>
-        </Grid>
+          <Grid >
+            <Grid.Col span={6}>
+              <Title order={3}>
+                {patch.title}
+              </Title>
+            </Grid.Col>
+            <Grid.Col  offset={3} span={3}>
+              <Button fullWidth variant="filled" radius="md" onClick={copyPageUrl}>
+                Share 
+              <IconShare size={18} style={{ marginLeft: '5px' }} /></Button>
+            </Grid.Col>
+          </Grid>
           <Text fw={500} lineClamp={1}>
             {'Listed by ' + patch.owner.name + ' ' + patch.owner.surname}
           </Text>
-        
+
 
             <Card shadow="sm" my="md" padding="md" radius="md" withBorder>
               <Text fw="bold">
@@ -259,7 +259,7 @@ const PatchDetailsScreen = (): ReactElement => {
             <Stack gap="xs" mt="md">
               <Title order={4}>
                 {patch.title}
-                leftSection={<IconSearch size={50}/>}
+                leftSection={<IconSearch size={16}/>}
               </Title>
 
               <Text fw={500} lineClamp={1}>
