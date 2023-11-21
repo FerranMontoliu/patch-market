@@ -43,24 +43,18 @@ const TransactionCard = ({ transaction }: TransactionCardProps): ReactElement =>
               {transaction.patchTo ? transaction.patchTo.title : 'Title not available'}
             </Text>
           </Grid.Col>
-
           <Grid.Col span={4}>
             <Text lineClamp={1}>
               {generateDate(new Date(transaction.createDate))}
             </Text>
           </Grid.Col>
-
           <Grid.Col span={4}>
             {getStatusPill(transaction.status)}
           </Grid.Col>
         </Grid>
       </UnstyledButton>
-
       <Divider />
     </Stack>
   )
 }
-
 export default TransactionCard
-
-//  transaction.patchTo.title does not exist. Writing ' transaction.patchTo : 'Title not available'' gives an error. Needs to be replaced with null.
