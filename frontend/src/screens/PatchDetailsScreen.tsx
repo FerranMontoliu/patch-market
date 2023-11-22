@@ -210,7 +210,7 @@ const PatchDetailsScreen = (): ReactElement => {
 
               <Pill.Group>
                 {patch.categories.map((category: Category, index:number) => (
-                  <Pill key={index} size='lg' bg={categoryColorList[Math.floor(Math.random() * categoryColorList.length)]}>
+                  <Pill key={index} size='lg' bg={categoryColorList[index % categoryColorList.length]}>
                     {category.name}</Pill>
                 ))}
               </Pill.Group>
