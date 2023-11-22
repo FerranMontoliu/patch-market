@@ -1,6 +1,5 @@
 import { ReactElement } from 'react'
-import { Button, Space, Center, Container, Card, Divider, Group, Loader, Stack, Text, Title } from '@mantine/core'
-import PatchCard from '../components/PatchCard.tsx'
+import { Button, Space, Center, Container, Grid, Divider, Group, Loader, Stack, Text, Title } from '@mantine/core'
 import { useUser } from '../contexts/UserContext.tsx'
 import { notifications } from '@mantine/notifications'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -9,6 +8,9 @@ import { Patch, Transaction } from '../types.ts' // Import your types
 import { getTransactionById, updateTransactionStatus } from '../services/transactions.ts'
 import { logout } from '../utils/logout.ts'
 import LogoutScreen from './LogoutScreen.tsx'
+import PatchGrid from '../components/PatchGrid'
+import PatchGridTransactionGive from '../components/PatchGridTransactionGive.tsx'
+import PatchGridTransactionReceive from '../components/PatchGridTransactionReceive.tsx'
 
 const TradeDetailsScreen = (): ReactElement => {
   const navigate = useNavigate()
@@ -85,35 +87,39 @@ const TradeDetailsScreen = (): ReactElement => {
     ? tradeDetailsResult.data.patchesFrom
     : []
 
+
+    const determineColumnSpan = (): number => {
+      if (transaction.to && transaction.to.id === ownUser.id) {
+        return 3;
+      } else {
+        return 9;
+      }
+    };
+    
+
   return (
-    <Container size="sm">
-      <Stack>
-        <Title order={1}>Trade details</Title>
-        <Divider />
-        <Title order={3}>
-          {transaction.to && transaction.to.id === ownUser.id
-            ? 'I give'
-            : 'I receive'}
-          <Space h="xs" />
-        </Title>
-        {patchGiven.length > 0 && patchGiven.map((patch, index) => (
-          <PatchCard key={index} patch={patch} />
-        ))}
-      </Stack>
-      <Space h="md" />
-        <Divider />
-        <Stack>
-        <Space h="xs" />
-        <Title order={3}>
-          {transaction.to && transaction.to.id === ownUser.id
-            ? 'I receive'
-            : 'I give'}
-        <Space h="xs" />
-        </Title>
-        {patchesReceived.length > 0 &&
-          patchesReceived.map((patch, index) => (
-            <PatchCard key={index} patch={patch} />
-          ))}
+    <Container>
+              <Title order={1}>Trade details</Title>
+{/* Two columns for "I give" and "I receive" patches on large screens */}
+<Grid my="xl" gutter="xl" p="sm" align="stretch">
+<Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+    <Title order={3}>
+      {transaction.to && transaction.to.id === ownUser.id ? 'I give' : 'I receive'}
+      <Space h="xs" />
+    </Title>
+    {patchGiven.length > 0 && <PatchGridTransactionGive patches={patchGiven} />}
+  </Grid.Col>
+
+  <Grid.Col span={{ base: 12, md: 6, lg: 9 }}>
+    <Title order={3}>
+      {transaction.to && transaction.to.id === ownUser.id ? 'I receive' : 'I give'}
+      <Space h="xs" />
+    </Title>
+    {patchesReceived.length > 0 && <PatchGridTransactionReceive patches={patchesReceived} />}
+  </Grid.Col>
+</Grid>
+<Stack>
+  {/* Rest of your content */}
         {transaction.to && transaction.to.id === ownUser.id && transaction.status === 'pending' ? (
           <Group grow>
             <Button color="red" variant="outline" radius="md" onClick={onDecline}>
@@ -136,7 +142,6 @@ const TradeDetailsScreen = (): ReactElement => {
           </Stack>
         </Group>
         ) : transaction.status === 'accepted' ? (
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Center my="lg">
             <Stack align="center">
               {transaction.to && transaction.to.id === ownUser.id ? (
@@ -159,16 +164,11 @@ const TradeDetailsScreen = (): ReactElement => {
               <Text fw={700}>Happy trading!</Text>
             </Stack>
           </Center>
-        </Card>
         ) : transaction.status === 'rejected' ? (
-          <Card shadow="sm" padding="lg" radius="md" withBorder>
-
             <Center my="lg">
               <Text fw={700}>You declined this trade offer.</Text>
             </Center>
-          </Card>
         ) : transaction.status === 'cancelled' ? (
-          <Card shadow="sm" padding="lg" radius="md" withBorder>
         <Center my="lg">
         {transaction.to && transaction.to.id === ownUser.id ? (
           <Text fw={700}>Your trading partner cancelled this trade offer.</Text>
@@ -176,7 +176,6 @@ const TradeDetailsScreen = (): ReactElement => {
           <Text fw={700}>You canceled this trade offer.</Text>
           )}
         </Center>
-        </Card>
         ) : null}
       </Stack>
     </Container>

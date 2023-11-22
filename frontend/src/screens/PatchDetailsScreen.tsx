@@ -6,7 +6,7 @@ import { notifications } from '@mantine/notifications'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getOwnPatches, getPatchById, makePatchTradeable } from '../services/patches.ts'
 import { useUserValue } from '../contexts/UserContext.tsx'
-import { IconAdjustmentsHorizontal, IconCircle2Filled, IconCircleCheckFilled, IconSearch, IconShare} from '@tabler/icons-react'
+import { IconCircle2Filled, IconCircleCheckFilled, IconSearch, IconShare} from '@tabler/icons-react'
 import PatchSelectionList from '../components/PatchSelectionList.tsx'
 import PatchList from '../components/PatchList.tsx'
 import { addTransaction, AddTransactionProps } from '../services/transactions.ts';
