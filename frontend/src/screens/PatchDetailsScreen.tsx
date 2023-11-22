@@ -151,6 +151,8 @@ const PatchDetailsScreen = (): ReactElement => {
     } catch (err) {
     }
   }
+  
+  const offsetValue = { base: 2, md: 3, lg: 3 };
 
   if(!isTradeMode && !isTradeOffered){
     return (
@@ -174,7 +176,7 @@ const PatchDetailsScreen = (): ReactElement => {
                 {patch.title}
               </Title>
             </Grid.Col>
-            <Grid.Col  offset={3} span={3}>
+            <Grid.Col offset={offsetValue} span={{ base: 4, md: 3, lg: 3 }}>
               <Button fullWidth variant="filled" radius="md" onClick={copyPageUrl}>
                 Share 
               <IconShare size={18} style={{ marginLeft: '5px' }} /></Button>

@@ -4,13 +4,12 @@ import { useUser } from '../contexts/UserContext.tsx'
 import { notifications } from '@mantine/notifications'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Patch, Transaction } from '../types.ts' // Import your types
+import { Patch, Transaction } from '../types.ts' 
 import { getTransactionById, updateTransactionStatus } from '../services/transactions.ts'
 import { logout } from '../utils/logout.ts'
 import LogoutScreen from './LogoutScreen.tsx'
-import PatchGrid from '../components/PatchGrid'
-import PatchGridTransactionGive from '../components/PatchGridTransactionGive.tsx'
-import PatchGridTransactionReceive from '../components/PatchGridTransactionReceive.tsx'
+import PatchGridTransactionMultiple from '../components/PatchGridTransactionMultiple.tsx'
+import PatchGridTransactionFirstColumn from '../components/PatchGridTransactionFirstColumn.tsx'
 
 const TradeDetailsScreen = (): ReactElement => {
   const navigate = useNavigate()
@@ -86,28 +85,17 @@ const TradeDetailsScreen = (): ReactElement => {
   const patchesReceived: Patch[] = tradeDetailsResult.data
     ? tradeDetailsResult.data.patchesFrom
     : []
-
-
-    const determineColumnSpan = (): number => {
-      if (transaction.to && transaction.to.id === ownUser.id) {
-        return 3;
-      } else {
-        return 9;
-      }
-    };
     
-
   return (
     <Container>
               <Title order={1}>Trade details</Title>
-{/* Two columns for "I give" and "I receive" patches on large screens */}
 <Grid my="xl" gutter="xl" p="sm" align="stretch">
 <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
     <Title order={3}>
       {transaction.to && transaction.to.id === ownUser.id ? 'I give' : 'I receive'}
       <Space h="xs" />
     </Title>
-    {patchGiven.length > 0 && <PatchGridTransactionGive patches={patchGiven} />}
+    {patchGiven.length > 0 && <PatchGridTransactionFirstColumn patches={patchGiven} />}
   </Grid.Col>
 
   <Grid.Col span={{ base: 12, md: 6, lg: 9 }}>
@@ -115,7 +103,7 @@ const TradeDetailsScreen = (): ReactElement => {
       {transaction.to && transaction.to.id === ownUser.id ? 'I receive' : 'I give'}
       <Space h="xs" />
     </Title>
-    {patchesReceived.length > 0 && <PatchGridTransactionReceive patches={patchesReceived} />}
+    {patchesReceived.length > 0 && <PatchGridTransactionMultiple patches={patchesReceived} />}
   </Grid.Col>
 </Grid>
 <Stack>

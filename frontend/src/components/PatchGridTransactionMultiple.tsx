@@ -7,7 +7,7 @@ type PatchGridProps = {
   patches: Array<Patch>;
 }
 
-const PatchGridTransactionGive = ({ patches }: PatchGridProps): ReactElement => (
+const PatchGridTransactionMultiple = ({ patches }: PatchGridProps): ReactElement => (
   <Grid>
     {patches.map((patch) => (
       <Grid.Col key={patch.id} span={{ base: 12, md: 6, lg: 4 }}>
@@ -16,4 +16,4 @@ const PatchGridTransactionGive = ({ patches }: PatchGridProps): ReactElement => 
     ))}
   </Grid>
 )
-export default PatchGridTransactionGive
+export default PatchGridTransactionMultiple
