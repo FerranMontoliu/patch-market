@@ -90,8 +90,10 @@ transactionsRouter.put('/:id', userExtractorMiddleware, async (request: WebReque
       const newOwnerFrom = transaction.to 
       const newOwnerTo = transaction.from
       await Patch.findByIdAndUpdate(patchTo._id, { owner: newOwnerTo })
+      await Patch.findByIdAndUpdate(patchTo._id, { tradeable: false });
       for (const patchFrom of patchesFrom) {
         await Patch.findByIdAndUpdate(patchFrom._id, { owner: newOwnerFrom })
+        await Patch.findByIdAndUpdate(patchFrom._id, { tradeable: false })
       }
     }
     response.json(transaction)

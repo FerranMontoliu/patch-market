@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { Container, Text, Title, Box, Button, Checkbox, Group, TextInput, PasswordInput, Anchor, Stack } from '@mantine/core'
+import { Container, Text, Title, Box, Button, Group, TextInput, PasswordInput, Anchor, Stack } from '@mantine/core'
 import { isEmail, isNotEmpty, useForm } from '@mantine/form'
 import { useNavigate, NavLink } from 'react-router-dom'
 import { useUserDispatch } from '../contexts/UserContext.tsx'
