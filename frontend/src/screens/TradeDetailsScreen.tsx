@@ -107,7 +107,6 @@ const TradeDetailsScreen = (): ReactElement => {
   </Grid.Col>
 </Grid>
 <Stack>
-  {/* Rest of your content */}
         {transaction.to && transaction.to.id === ownUser.id && transaction.status === 'pending' ? (
           <Group grow>
             <Button color="red" variant="outline" radius="md" onClick={onDecline}>

@@ -60,26 +60,32 @@ const PatchSelectionList = ({ patches, selectedPatches, handlePatchSelection }: 
         ))}
       </Pill.Group>
 
-      {patches.map((patch: Patch) => (
-        <Stack key={patch.id} gap="xs">
-          <Grid align='center'>
-            <Grid.Col span="auto">
-              <PatchListElement patch={patch} />
-            </Grid.Col>
 
-            <Grid.Col span="content">
-              <Checkbox
-                c='dark'
-                checked={selectedPatches.includes(patch)}
-                onChange={(event) => handlePatchSelection(event.currentTarget.checked, patch)} />
-            </Grid.Col>
-          </Grid>
-          {patches[patches.length - 1] !== patch ? (
-            <Divider size="xs" my="xs"></Divider>
-          ) : null}
-        </Stack>
+      {patches.map((patch: Patch) => (
+           <div
+           key={patch.id}
+           onClick={() => handlePatchSelection(!selectedPatches.includes(patch), patch)}
+         >
+          <Stack key={patch.id} gap="xs">
+            <Grid align='center'>
+              <Grid.Col span="auto">
+                <PatchListElement patch={patch} />
+              </Grid.Col>
+
+              <Grid.Col span="content">
+                <Checkbox
+                  c='dark'
+                  checked={selectedPatches.includes(patch)}
+                  onChange={(event) => handlePatchSelection(event.currentTarget.checked, patch)} />
+              </Grid.Col>
+            </Grid>
+            {patches[patches.length - 1] !== patch ? (
+              <Divider size="xs" my="xs"></Divider>
+            ) : null}
+          </Stack>
+          </div>
       ))}
     </Stack>) : <Center><Text>You do not have any patches. Add some before trading!</Text></Center>
-)
+);
 
 export default PatchSelectionList
