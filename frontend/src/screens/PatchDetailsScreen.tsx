@@ -97,7 +97,7 @@ const PatchDetailsScreen = (): ReactElement => {
     mutationFn: addTransaction,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['transactionById'] })
-      queryClient.invalidateQueries({ queryKey: ['gettradeHistory'] })
+      queryClient.invalidateQueries({ queryKey: ['tradeHistory'] })
       notifications.show({
         title: 'Offer Made',
         message: 'Your offer has been made successfully.',
@@ -299,12 +299,6 @@ const PatchDetailsScreen = (): ReactElement => {
                   value={searchQuery}
                   onChange={(event) => setSearchQuery(event.currentTarget.value)}
                 />
-              </Grid.Col>
-
-              <Grid.Col span="content">
-                <Button variant="default" radius="md">
-                  <IconAdjustmentsHorizontal size={24} />
-                </Button>
               </Grid.Col>
             </Grid>
 

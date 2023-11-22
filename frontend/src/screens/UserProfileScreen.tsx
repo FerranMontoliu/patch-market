@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useUserValue } from '../contexts/UserContext.tsx'
 import { getOwnPatches } from '../services/patches.ts'
 import { Button, Card, Center, Container, Grid, Group, Loader, Stack, TextInput, Title } from '@mantine/core'
-import { IconAdjustmentsHorizontal, IconSearch } from '@tabler/icons-react'
+import { IconSearch } from '@tabler/icons-react'
 import { Link as RouterLink } from 'react-router-dom'
 import { Patch } from '../types.ts'
 import UserCard from '../components/UserCard.tsx'
@@ -63,12 +63,6 @@ const UserProfileScreen = (): ReactElement => {
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.currentTarget.value)}
             />
-          </Grid.Col>
-
-          <Grid.Col span="content">
-            <Button variant="default" radius="md">
-              <IconAdjustmentsHorizontal size={24} />
-            </Button>
           </Grid.Col>
         </Grid>
 

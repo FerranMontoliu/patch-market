@@ -84,12 +84,15 @@ transactionsRouter.put('/:id', userExtractorMiddleware, async (request: WebReque
       response.status(404).json({ error: 'The transaction you are trying to update does not exist' })
       return
     }
-    const { patchTo, patchesFrom } = transaction
-    const newOwnerFrom = transaction.to 
-    const newOwnerTo = transaction.from
-    await Patch.findByIdAndUpdate(patchTo._id, { owner: newOwnerTo })
-    for (const patchFrom of patchesFrom) {
-      await Patch.findByIdAndUpdate(patchFrom._id, { owner: newOwnerFrom })
+    if (newStatus === 'accepted') {
+
+      const { patchTo, patchesFrom } = transaction
+      const newOwnerFrom = transaction.to 
+      const newOwnerTo = transaction.from
+      await Patch.findByIdAndUpdate(patchTo._id, { owner: newOwnerTo })
+      for (const patchFrom of patchesFrom) {
+        await Patch.findByIdAndUpdate(patchFrom._id, { owner: newOwnerFrom })
+      }
     }
     response.json(transaction)
     } catch (error) {

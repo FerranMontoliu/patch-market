@@ -53,15 +53,15 @@ const TradeDetailsScreen = (): ReactElement => {
       message: 'Your patches will be traded',
       color: 'teal'
     })
-    navigate('/my-trades');
+
   }
   
   const onCancel = (): void => {
-    updateStatusMutation.mutate('cancelled')
+    updateStatusMutation.mutate("cancelled")
     notifications.show({
       title: 'You cancelled the trade offer',
       message: 'Your patches will not be traded',
-      color: 'red'
+      color: 'teal'
     })
     navigate('/my-trades')
   }
@@ -128,7 +128,7 @@ const TradeDetailsScreen = (): ReactElement => {
           <Stack>
             <Divider />
             <Center my="lg">
-              <Text fw={700}>"After the offer is accepted, you will find the partner's Telegram name displayed here.</Text>
+              <Text fw={700}>After the offer is accepted, you will find the partner's Telegram name displayed here.</Text>
             </Center>
             <Button color="red" radius="md" onClick={onCancel}>
               Cancel
@@ -170,7 +170,11 @@ const TradeDetailsScreen = (): ReactElement => {
         ) : transaction.status === 'cancelled' ? (
           <Card shadow="sm" padding="lg" radius="md" withBorder>
         <Center my="lg">
+        {transaction.to && transaction.to.id === ownUser.id ? (
+          <Text fw={700}>Your trading partner canceled this trade offer.</Text>
+          ) : (
           <Text fw={700}>You canceled this trade offer.</Text>
+          )}
         </Center>
         </Card>
         ) : null}
