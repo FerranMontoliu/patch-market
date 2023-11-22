@@ -16,7 +16,6 @@ type SignUpFormValues = {
   telegramUser: string;
   password: string;
   passwordRepeat: string;
-  termsOfService: boolean;
 };
 
 const initialFormValues: SignUpFormValues = {
@@ -26,7 +25,6 @@ const initialFormValues: SignUpFormValues = {
   telegramUser: '',
   password: '',
   passwordRepeat: '',
-  termsOfService: false,
 };
 
 const SignUpScreen = (): ReactElement => {
@@ -49,7 +47,6 @@ const SignUpScreen = (): ReactElement => {
         }
         return null;
       },
-      termsOfService: (value) => (!value ? 'Please accept our Terms and Conditions' : null),
     },
   });
 
@@ -107,12 +104,6 @@ const SignUpScreen = (): ReactElement => {
               placeholder="Your Password"
               {...form.getInputProps('passwordRepeat')}
             />
-
-            <Checkbox
-              label="I agree to the Terms and Conditions."
-              {...form.getInputProps('termsOfService', { type: 'checkbox' })}
-            />
-
             <Button type="submit" fullWidth>
               Sign up
             </Button>

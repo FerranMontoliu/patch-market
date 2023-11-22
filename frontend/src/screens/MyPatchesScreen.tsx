@@ -50,15 +50,6 @@ const MyPatchesScreen = (): ReactElement => {
                 Add Patch
             </Button>
           </Group>
-
-          <TextInput
-            leftSectionPointerEvents="none"
-            leftSection={<IconSearch size={16}/>}
-            placeholder="Search..."
-            radius="md"
-            value={searchQuery}
-            onChange={(event) => setSearchQuery(event.currentTarget.value)}
-          />
           <Center mt="lg">
             <Text fw={500} size="lg" lineClamp={1}>
             You do not have any patches yet. Add one!

@@ -171,7 +171,7 @@ const TradeDetailsScreen = (): ReactElement => {
           <Card shadow="sm" padding="lg" radius="md" withBorder>
         <Center my="lg">
         {transaction.to && transaction.to.id === ownUser.id ? (
-          <Text fw={700}>Your trading partner canceled this trade offer.</Text>
+          <Text fw={700}>Your trading partner cancelled this trade offer.</Text>
           ) : (
           <Text fw={700}>You canceled this trade offer.</Text>
           )}
