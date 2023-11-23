@@ -1,15 +1,15 @@
-import { Router, Response } from 'express';
-import Transaction from '../models/transaction';
-import { WebRequest } from '../types';
-import { userExtractorMiddleware } from '../utils/middlewares';
-import { UserType } from '../models/user';
-import { logInfo } from '../utils/logger';
-import { Patch, Category } from '../models';
+import { Router, Response } from 'express'
+import { Transaction } from '../models'
+import { WebRequest } from '../types'
+import { userExtractorMiddleware } from '../utils/middlewares'
+import { UserType } from '../models/user'
+import { Patch } from '../models'
+import { logInfo } from '../utils/logger'
 
-export const transactionsRouter = Router();
+export const transactionsRouter = Router()
 
 transactionsRouter.get('/', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
-  const user: UserType = request.user;
+  const user: UserType = request.user
 
   try {
     const tradeHistory = await Transaction
@@ -23,11 +23,11 @@ transactionsRouter.get('/', userExtractorMiddleware, async (request: WebRequest,
       .populate('from', { name: 1 })
       .populate('patchTo', { title: 1 })
       .populate('patchesFrom', { title: 1 })
-    response.json(tradeHistory);
+    response.json(tradeHistory)
   } catch (error) {
     response.status(500).json({ error: 'Internal server error' })
   }
-});
+})
 
 transactionsRouter.get('/:id', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
   try {
@@ -39,25 +39,25 @@ transactionsRouter.get('/:id', userExtractorMiddleware, async (request: WebReque
       .populate('patchesFrom', { title: 1, owner: 1, name: 1, surname: 1, university: 1, image: 1, tradeable: 1, categories: 1, description: 1 })
 
     if (tradeHistoryId) {
-      response.json(tradeHistoryId);
+      response.json(tradeHistoryId)
     } else {
-      response.status(404).end();
+      response.status(404).end()
     }
   } catch (error) {
-    console.error('Error fetching transaction by ID:', error);
+    console.error('Error fetching transaction by ID:', error)
     response.status(500).json({ error: 'Internal server error' })
   }
-});
+})
 
 transactionsRouter.post('/', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
-  const { patchTo, patchesFrom, to } = request.body;
-  const user: UserType = request.user;
+  const { patchTo, patchesFrom, to } = request.body
+  const user: UserType = request.user
   try {
     const newTransaction = new Transaction({
       patchTo,
       patchesFrom,
       from: user.id,
-      to: to || '', 
+      to: to || '',
       createDate: new Date(),
       lastUpdateDate: new Date(),
       status: 'pending',
@@ -73,8 +73,8 @@ transactionsRouter.post('/', userExtractorMiddleware, async (request: WebRequest
 })
 
 transactionsRouter.put('/:id', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
-  const { newStatus } = request.body;
-  const id = request.params.id;
+  const { newStatus } = request.body
+  const id = request.params.id
   try {
     const transaction = await Transaction
       .findByIdAndUpdate(id, { status: newStatus }, { new: true })
@@ -84,21 +84,42 @@ transactionsRouter.put('/:id', userExtractorMiddleware, async (request: WebReque
       response.status(404).json({ error: 'The transaction you are trying to update does not exist' })
       return
     }
+    logInfo(transaction)
     if (newStatus === 'accepted') {
+      const transactionsToDecline = await Transaction.find({ patchTo: transaction.patchTo._id, status: 'pending' })
+      const transactionsToCancel = await Transaction.find({ patchesFrom: { $in: [transaction.patchTo._id] }, status: 'pending' })
+      const declinedTransactionsPromise = transactionsToDecline.map(async (transaction) => {
+        try{
+          await Transaction.findByIdAndUpdate(transaction._id, { status: 'rejected' }, { new: true })
+        }catch(error){
+          console.error('Error updating transaction:', error)
+          response.status(500).json('Something went wrong')
+        }
+      })
+      const cancelledTransactionsPromise = transactionsToCancel.map(async (transaction) => {
+        try{
+          await Transaction.findByIdAndUpdate(transaction._id, { status: 'cancelled' }, { new: true })
+        }catch(error){
+          console.error('Error updating transaction:', error)
+          response.status(500).json('Something went wrong')
+        }
+      })
+      await Promise.all(declinedTransactionsPromise)
+      await Promise.all(cancelledTransactionsPromise)
 
       const { patchTo, patchesFrom } = transaction
-      const newOwnerFrom = transaction.to 
+      const newOwnerFrom = transaction.to
       const newOwnerTo = transaction.from
       await Patch.findByIdAndUpdate(patchTo._id, { owner: newOwnerTo })
-      await Patch.findByIdAndUpdate(patchTo._id, { tradeable: false });
+      await Patch.findByIdAndUpdate(patchTo._id, { tradeable: false })
       for (const patchFrom of patchesFrom) {
         await Patch.findByIdAndUpdate(patchFrom._id, { owner: newOwnerFrom })
         await Patch.findByIdAndUpdate(patchFrom._id, { tradeable: false })
       }
     }
     response.json(transaction)
-    } catch (error) {
-      response.status(500).json({ error: error.message || 'Internal server error' })
-    }
+  } catch (error) {
+    response.status(500).json({ error: error.message || 'Internal server error' })
   }
+}
 )

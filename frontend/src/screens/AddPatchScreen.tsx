@@ -147,9 +147,10 @@ const AddPatchScreen = (): ReactElement => {
       <Title order={1}>Add a new patch</Title>
       <Card shadow="sm" padding="lg" my="lg" radius="md" withBorder>
         <form onSubmit={form.onSubmit(onAddPatch)}>
+          {imageInput &&
           <Center>
             <Image
-              src={imageInput ? URL.createObjectURL(imageInput) : 'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_1280.png'}
+              src={URL.createObjectURL(imageInput)}
               radius="md"
               mah={300}
               w="95%"
@@ -157,7 +158,7 @@ const AddPatchScreen = (): ReactElement => {
               fallbackSrc="https://placehold.co/600x400?text=Placeholder"
             />
           </Center>
-
+          }
           <FileInput
             label="Patch Image"
             accept="image/png,image/jpeg"

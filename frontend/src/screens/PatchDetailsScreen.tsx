@@ -46,6 +46,7 @@ const PatchDetailsScreen = (): ReactElement => {
       queryClient.invalidateQueries({ queryKey: ['patchById'] })
       queryClient.invalidateQueries({ queryKey: ['ownPatches'] })
       queryClient.invalidateQueries({ queryKey: ['tradeablePatches'] })
+      queryClient.invalidateQueries({ queryKey: ['tradeHistory'] })
       queryClient.invalidateQueries({ queryKey: ['updateTransactionStatus'] })
 
       if(tradeable){
