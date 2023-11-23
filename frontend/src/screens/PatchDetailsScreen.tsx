@@ -1,15 +1,15 @@
 import { ReactElement, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Button, Card, Center, Container, Grid, Group, Image, Loader, Pill, Stack, Text, TextInput, Title, UnstyledButton} from '@mantine/core'
+import { Button, Card, Center, Container, Grid, Group, Image, Loader, Pill, Stack, Text, TextInput, Title, UnstyledButton } from '@mantine/core'
 import { Category, Patch } from '../types.ts'
 import { notifications } from '@mantine/notifications'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getOwnPatches, getPatchById, changePatchTradeableStatus } from '../services/patches.ts'
 import { useUserValue } from '../contexts/UserContext.tsx'
-import { IconCircle2Filled, IconCircleCheckFilled, IconSearch, IconShare} from '@tabler/icons-react'
+import { IconCircle2Filled, IconCircleCheckFilled, IconSearch, IconShare } from '@tabler/icons-react'
 import PatchSelectionList from '../components/PatchSelectionList.tsx'
 import PatchList from '../components/PatchList.tsx'
-import { addTransaction, AddTransactionProps } from '../services/transactions.ts';
+import { addTransaction, AddTransactionProps } from '../services/transactions.ts'
 import LogoutScreen from './LogoutScreen.tsx'
 
 const PatchDetailsScreen = (): ReactElement => {
@@ -47,7 +47,7 @@ const PatchDetailsScreen = (): ReactElement => {
       queryClient.invalidateQueries({ queryKey: ['ownPatches'] })
       queryClient.invalidateQueries({ queryKey: ['tradeablePatches'] })
       queryClient.invalidateQueries({ queryKey: ['updateTransactionStatus'] })
-      
+
       if(tradeable){
         notifications.show({
           title: 'You listed this patch for trading!',
@@ -115,7 +115,7 @@ const PatchDetailsScreen = (): ReactElement => {
     onError: (error: Error) => {
       notifications.show({
         title: 'Error',
-        message: error.message, 
+        message: error.message,
         color: 'red'
       })
       navigate('/my-patches')
@@ -124,14 +124,14 @@ const PatchDetailsScreen = (): ReactElement => {
 
   function makeOffer(){
     try {
-    const transactionData: AddTransactionProps = {
-      patchTo: patchId!, 
-      patchesFrom: selectedPatches.map((selectedPatch) => selectedPatch.id), 
-      from: ownUser.id,
-      to: patch?.owner?.id || '', 
-    }
+      const transactionData: AddTransactionProps = {
+        patchTo: patchId!,
+        patchesFrom: selectedPatches.map((selectedPatch) => selectedPatch.id),
+        from: ownUser.id,
+        to: patch?.owner?.id || '',
+      }
       addTransactionMutation.mutate(transactionData)
-      navigate('/my-trades') 
+      navigate('/my-trades')
     }catch(error) {
     }
   }
@@ -150,7 +150,7 @@ const PatchDetailsScreen = (): ReactElement => {
 
   async function copyPageUrl() {
     try {
-      await navigator.clipboard.writeText(location.href);
+      await navigator.clipboard.writeText(location.href)
       notifications.show({
         title: 'The URL has been copied to your clipboard.',
         message: 'You can now share the Patch with your friends.',
@@ -159,14 +159,14 @@ const PatchDetailsScreen = (): ReactElement => {
     } catch (err) {
     }
   }
-  
-  const offsetValue = { base: 2, md: 3, lg: 3 };
+
+  const offsetValue = { base: 2, md: 3, lg: 3 }
 
   if(!isTradeMode && !isTradeOffered){
     return (
       <Container>
         <Title order={1}>Patch details</Title>
-  
+
         <Grid my="xl" gutter="xl" p="sm" align="stretch">
           <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
             <Image
@@ -177,22 +177,22 @@ const PatchDetailsScreen = (): ReactElement => {
               radius="md"
             ></Image>
           </Grid.Col>
-        <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
-          <Grid >
-            <Grid.Col span={6}>
-              <Title order={3}>
-                {patch.title}
-              </Title>
-            </Grid.Col>
-            <Grid.Col offset={offsetValue} span={{ base: 4, md: 3, lg: 3 }}>
-              <Button fullWidth variant="filled" radius="md" onClick={copyPageUrl}>
-                Share 
-              <IconShare size={18} style={{ marginLeft: '5px' }} /></Button>
-            </Grid.Col>
-          </Grid>
-          <Text fw={500} lineClamp={1}>
-            {'Listed by ' + patch.owner.name + ' ' + patch.owner.surname}
-          </Text>
+          <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
+            <Grid >
+              <Grid.Col span={6}>
+                <Title order={3}>
+                  {patch.title}
+                </Title>
+              </Grid.Col>
+              <Grid.Col offset={offsetValue} span={{ base: 4, md: 3, lg: 3 }}>
+                <Button fullWidth variant="filled" radius="md" onClick={copyPageUrl}>
+                Share
+                  <IconShare size={18} style={{ marginLeft: '5px' }} /></Button>
+              </Grid.Col>
+            </Grid>
+            <Text fw={500} lineClamp={1}>
+              {'Listed by ' + patch.owner.name + ' ' + patch.owner.surname}
+            </Text>
 
 
             <Card shadow="sm" my="md" padding="md" radius="md" withBorder>
@@ -326,41 +326,41 @@ const PatchDetailsScreen = (): ReactElement => {
           </Card>
         ) : (
           <>
-          <Card shadow="sm" my="md" mx="xl" padding="md" radius="md" withBorder>
-            <Grid gutter="xs" mb="md" p="sm" align="center">
-              <Grid.Col span="auto">
-                <Group>
-                  <IconCircleCheckFilled size={36} />
-                  <Text fw="bold" size="lg" lineClamp={1}>
+            <Card shadow="sm" my="md" mx="xl" padding="md" radius="md" withBorder>
+              <Grid gutter="xs" mb="md" p="sm" align="center">
+                <Grid.Col span="auto">
+                  <Group>
+                    <IconCircleCheckFilled size={36} />
+                    <Text fw="bold" size="lg" lineClamp={1}>
                     Exchange Offer
-                  </Text>
-                </Group>
-              </Grid.Col>
+                    </Text>
+                  </Group>
+                </Grid.Col>
 
-              <Grid.Col span="content">
-                <Button radius="md" variant="outline" color="red" onClick={cancelExchangeOffer}>
+                <Grid.Col span="content">
+                  <Button radius="md" variant="outline" color="red" onClick={cancelExchangeOffer}>
                   Cancel
-                </Button>
-              </Grid.Col>
-            </Grid>
+                  </Button>
+                </Grid.Col>
+              </Grid>
 
-            <Stack mb="xs" px="md" mx="xl">
-              <Text fw={700} size="md">
+              <Stack mb="xs" px="md" mx="xl">
+                <Text fw={700} size="md">
                 Your Offer:
-              </Text>
+                </Text>
 
-              <PatchList patches={selectedPatches} />
-            </Stack>
-          </Card>
+                <PatchList patches={selectedPatches} />
+              </Stack>
+            </Card>
 
-          <Card shadow="sm" my="md" padding="md" radius="md" withBorder>
-            <Button fullWidth mt="lg" radius="md" onClick={makeOffer}>
+            <Card shadow="sm" my="md" padding="md" radius="md" withBorder>
+              <Button fullWidth mt="lg" radius="md" onClick={makeOffer}>
               Make Offer
-            </Button>
-          </Card>
+              </Button>
+            </Card>
           </>
-          )
-        }
+        )
+      }
     </Container>
   )
 }

@@ -145,14 +145,15 @@ const AddPatchScreen = (): ReactElement => {
   return (
     <Container>
       <Title order={1}>Add a new patch</Title>
-      <Card shadow="sm" padding="lg" radius="md" withBorder>
+      <Card shadow="sm" padding="lg" my="lg" radius="md" withBorder>
         <form onSubmit={form.onSubmit(onAddPatch)}>
           <Center>
             <Image
               src={imageInput ? URL.createObjectURL(imageInput) : 'https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_1280.png'}
               radius="md"
-              h={300}
-              w="auto"
+              mah={300}
+              w="95%"
+              fit='contain'
               fallbackSrc="https://placehold.co/600x400?text=Placeholder"
             />
           </Center>
@@ -195,9 +196,11 @@ const AddPatchScreen = (): ReactElement => {
           <TagsInput
             variant='unstyled'
             label="Categories"
+            description="Insert a category and press space to add it to the list."
             value={form.values.categories}
             onChange={(value) => form.setValues({ categories: value })}
             mt={10}
+            splitChars={[',', ' ']}
             placeholder="Add category" />
           <Center>
             <Button type='submit' w="40%" mt="xl" radius="md">
