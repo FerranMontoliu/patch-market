@@ -106,17 +106,17 @@ patchesRouter.post('/', userExtractorMiddleware, async (request: WebRequest, res
 })
 
 patchesRouter.put('/tradeable', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
-  const patch = request.body
+  const { patch, tradeable } = request.body
   const user: UserType = request.user
   logInfo(patch)
   if (user.id === patch.owner.id) {
     const updatedPatch = await Patch
-      .findByIdAndUpdate(patch.id, { tradeable: true }, { new: true })
+      .findByIdAndUpdate(patch.id, { tradeable: tradeable }, { new: true })
     if (updatedPatch) {
       response.json(updatedPatch)
     } else {
-      logInfo('Error in making this patch tradeable.')
-      response.status(500).json({ error: 'Error in making this patch tradeable.' })
+      logInfo('Error in changing the tradable status.')
+      response.status(500).json({ error: 'Error in listing or delisting the patch.' })
     }
   }
   else {
@@ -126,7 +126,7 @@ patchesRouter.put('/tradeable', userExtractorMiddleware, async (request: WebRequ
 })
 
 patchesRouter.put('/ownership', userExtractorMiddleware, async (request: WebRequest, response: Response): Promise<void> => {
-  const user: UserType = request.user;
+  const user: UserType = request.user
   const { patchTo, patchesFrom, newOwner } = request.body
   try {
     await Patch.findByIdAndUpdate(patchTo, { owner: newOwner })
@@ -134,4 +134,4 @@ patchesRouter.put('/ownership', userExtractorMiddleware, async (request: WebRequ
   } catch (error) {
     response.status(500).json({ error: 'Internal server error' })
   }
-});
+})

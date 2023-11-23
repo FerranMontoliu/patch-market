@@ -4,7 +4,7 @@ import { Button, Card, Center, Container, Grid, Group, Image, Loader, Pill, Stac
 import { Category, Patch } from '../types.ts'
 import { notifications } from '@mantine/notifications'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { getOwnPatches, getPatchById, makePatchTradeable } from '../services/patches.ts'
+import { getOwnPatches, getPatchById, changePatchTradeableStatus } from '../services/patches.ts'
 import { useUserValue } from '../contexts/UserContext.tsx'
 import { IconCircle2Filled, IconCircleCheckFilled, IconSearch, IconShare} from '@tabler/icons-react'
 import PatchSelectionList from '../components/PatchSelectionList.tsx'
@@ -41,18 +41,26 @@ const PatchDetailsScreen = (): ReactElement => {
   const ownPatchesFiltered : Array<Patch> = ownPatches !== null && ownPatches !== undefined ? ownPatches.filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery)) : []
 
   const makePatchTradeableMutation = useMutation({
-    mutationFn: makePatchTradeable,
-    onSuccess: () => {
+    mutationFn: (tradeable: boolean) => changePatchTradeableStatus(patch!, tradeable),
+    onSuccess: (patch, tradeable) => {
       queryClient.invalidateQueries({ queryKey: ['patchById'] })
       queryClient.invalidateQueries({ queryKey: ['ownPatches'] })
       queryClient.invalidateQueries({ queryKey: ['tradeablePatches'] })
       queryClient.invalidateQueries({ queryKey: ['updateTransactionStatus'] })
-
-      notifications.show({
-        title: 'You listed this patch for trading!',
-        message: 'Other users can now make offers for this patch.',
-        color: 'teal'
-      })
+      
+      if(tradeable){
+        notifications.show({
+          title: 'You listed this patch for trading!',
+          message: 'Other users can now make offers for this patch.',
+          color: 'teal'
+        })
+      }else{
+        notifications.show({
+          title: 'You unlisted this patch!',
+          message: 'Other users cannot make offers for it anymore.',
+          color: 'teal'
+        })
+      }
     },
     onError: (error: Error) => {
       notifications.show({
@@ -222,12 +230,17 @@ const PatchDetailsScreen = (): ReactElement => {
               </Button>
             )}
             { (patch.owner.id === user.id && patch.tradeable === false) && (
-              <Button fullWidth mt="lg" radius="md" onClick={() => makePatchTradeableMutation.mutate(patch)}>
+              <Button fullWidth mt="lg" radius="md" onClick={() => makePatchTradeableMutation.mutate(true)}>
                 List for trading
               </Button>
             )}
             { (patch.owner.id === user.id && patch.tradeable === true) && (
-              <Center><Text>You listed this patch for trading! </Text></Center>
+              <Stack>
+                <Text>This patch is listed for trading!</Text>
+                <Button fullWidth radius="md" color="red" onClick={() => makePatchTradeableMutation.mutate(false)}>
+                  Unlist this patch
+                </Button>
+              </Stack>
             )}
           </Grid.Col>
         </Grid>
