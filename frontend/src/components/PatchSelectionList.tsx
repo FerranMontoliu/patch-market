@@ -1,6 +1,7 @@
 import { ReactElement } from 'react'
 import { Patch } from '../types'
-import { Checkbox, Divider, Grid, Image, Pill, Stack, Text, Title, Center } from '@mantine/core'
+import { Checkbox, Divider, Grid, Image, Pill, Stack, Text, Title, Center, Alert } from '@mantine/core'
+import { IconInfoCircle } from '@tabler/icons-react'
 import PatchListElement from './PatchListElement'
 
 type PatchListProps = {
@@ -15,8 +16,8 @@ const PatchSelectionList = ({ patches, selectedPatches, handlePatchSelection }: 
       <Title order={4}>
         Selected patches:
       </Title>
-
-      <Pill.Group mb="xl">
+      {selectedPatches.length === 0 && <Alert icon={<IconInfoCircle></IconInfoCircle>} title='Select at least a patch to start trading.' color='blue'>You need to select at least a patch to send a trade offer.</Alert>}
+      <Pill.Group mb="lg">
         {selectedPatches.map((patch: Patch) => (
           <Pill
             maw={200}
@@ -62,10 +63,10 @@ const PatchSelectionList = ({ patches, selectedPatches, handlePatchSelection }: 
 
 
       {patches.map((patch: Patch) => (
-           <div
-           key={patch.id}
-           onClick={() => handlePatchSelection(!selectedPatches.includes(patch), patch)}
-         >
+        <div
+          key={patch.id}
+          onClick={() => handlePatchSelection(!selectedPatches.includes(patch), patch)}
+        >
           <Stack key={patch.id} gap="xs">
             <Grid align='center'>
               <Grid.Col span="auto">
@@ -83,9 +84,9 @@ const PatchSelectionList = ({ patches, selectedPatches, handlePatchSelection }: 
               <Divider size="xs" my="xs"></Divider>
             ) : null}
           </Stack>
-          </div>
+        </div>
       ))}
     </Stack>) : <Center><Text>You do not have any patches. Add some before trading!</Text></Center>
-);
+)
 
 export default PatchSelectionList
