@@ -131,7 +131,7 @@ const TradeDetailsScreen = (): ReactElement => {
             <Stack>
               <Divider />
               <Center my="lg">
-                <Text fw={700}>After the offer is accepted, you will find the partner's Telegram name displayed here.</Text>
+                <Text fw={700}>After the offer is accepted, you will find the partner&aposs Telegram name displayed here.</Text>
               </Center>
               <Button color="red" radius="md" onClick={onCancel}>
               Cancel

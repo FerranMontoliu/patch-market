@@ -134,6 +134,11 @@ const PatchDetailsScreen = (): ReactElement => {
       addTransactionMutation.mutate(transactionData)
       navigate('/my-trades')
     }catch(error) {
+      notifications.show({
+        title: 'Something went wrong while sending the offer.',
+        message: 'This offer was not sent due to an error on our end, try again later.',
+        color: 'red'
+      })
     }
   }
 
@@ -158,6 +163,11 @@ const PatchDetailsScreen = (): ReactElement => {
         color: 'teal'
       })
     } catch (err) {
+      notifications.show({
+        title: 'Something went wrong.',
+        message: 'Try clicking the share button again.',
+        color: 'red'
+      })
     }
   }
 
@@ -231,9 +241,12 @@ const PatchDetailsScreen = (): ReactElement => {
               </Button>
             )}
             { (patch.owner.id === user.id && patch.tradeable === false) && (
-              <Button fullWidth mt="lg" radius="md" onClick={() => makePatchTradeableMutation.mutate(true)}>
+              <Stack>
+                <Text>Make this patch tradeable to receive offers from others.</Text>
+                <Button fullWidth radius="md" onClick={() => makePatchTradeableMutation.mutate(true)}>
                 List for trading
-              </Button>
+                </Button>
+              </Stack>
             )}
             { (patch.owner.id === user.id && patch.tradeable === true) && (
               <Stack>
