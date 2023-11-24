@@ -331,7 +331,7 @@ const PatchDetailsScreen = (): ReactElement => {
               </Grid.Col>
             </Grid>
 
-            <Stack mb="xs" px="md" mx="xl">
+            <Stack mb="xs" mx="xl">
               <PatchSelectionList
                 patches={ownPatchesFiltered}
                 selectedPatches={selectedPatches}
@@ -358,7 +358,7 @@ const PatchDetailsScreen = (): ReactElement => {
                 </Grid.Col>
               </Grid>
 
-              <Stack mb="xs" px="md" mx="xl">
+              <Stack mb="xs" px="md">
                 <Text fw={700} size="md">
                 Your Offer:
                 </Text>
