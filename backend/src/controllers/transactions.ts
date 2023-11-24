@@ -33,8 +33,8 @@ transactionsRouter.get('/:id', userExtractorMiddleware, async (request: WebReque
   try {
     const tradeHistoryId = await Transaction
       .findById(request.params.id)
-      .populate('to', { name: 1, telegramUser: 1 })
-      .populate('from', { name: 1, telegramUser: 1 })
+      .populate('to', { name: 1, surname: 1, telegramUser: 1 })
+      .populate('from', { name: 1, surname: 1, telegramUser: 1 })
       .populate('patchTo', { title: 1, owner: 1, name: 1, surname: 1, university: 1, image: 1, tradeable: 1, categories: 1, description: 1 })
       .populate('patchesFrom', { title: 1, owner: 1, name: 1, surname: 1, university: 1, image: 1, tradeable: 1, categories: 1, description: 1 })
 

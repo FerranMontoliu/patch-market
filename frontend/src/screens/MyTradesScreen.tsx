@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { Center, Container, Grid, Loader, Text, Title } from '@mantine/core'
+import { Center, Container, Grid, Loader, Text, Title, Stack, Divider } from '@mantine/core'
 import { useQuery } from '@tanstack/react-query'
 import HistoryElement from '../components/HistoryListElement.tsx'
 import { getTradeHistory } from '../services/transactions.ts'
@@ -27,7 +27,7 @@ const MyTradesScreen = (): ReactElement => {
   const transactions: Array<Transaction> = result.data
 
   return (
-    <Container>
+    <Container my='lg'>
       <Title order={1}>
       My trades
       </Title>
@@ -61,7 +61,10 @@ const MyTradesScreen = (): ReactElement => {
           </Grid>
 
           {transactions.map((transaction: Transaction, index: number) => (
-            <HistoryElement key={index} transaction={transaction} />
+            <Stack key={index} >
+              <HistoryElement transaction={transaction} />
+              {transactions.length - 1 > index && <Divider></Divider>}
+            </Stack>
           ))}
         </>
       )}

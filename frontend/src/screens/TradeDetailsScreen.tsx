@@ -7,7 +7,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Patch, Transaction } from '../types.ts'
 import { getTransactionById, updateTransactionStatus } from '../services/transactions.ts'
 import { logout } from '../utils/logout.ts'
-import { IconAlertTriangleFilled } from '@tabler/icons-react'
+import { IconAlertTriangleFilled, IconInfoCircle } from '@tabler/icons-react'
 import LogoutScreen from './LogoutScreen.tsx'
 import PatchGridTransactionMultiple from '../components/PatchGridTransactionMultiple.tsx'
 import PatchGridTransactionFirstColumn from '../components/PatchGridTransactionFirstColumn.tsx'
@@ -129,50 +129,76 @@ const TradeDetailsScreen = (): ReactElement => {
         ) : transaction.status === 'pending' ? (
           <Group grow>
             <Stack>
-              <Divider />
-              <Center my="lg">
-                <Text fw={700}>After the offer is accepted, you will find the partner&aposs Telegram name displayed here.</Text>
+              <Alert
+                title={`You sent this trade offer to ${transaction.to?.name + ' ' + transaction.to?.surname}`}
+                icon = {<IconInfoCircle/>}
+                color='blue'
+                my='md'
+              >
+                If your trading partner accepts this trade offer, you will be able to see their Telegram username and contact them.
+              </Alert>
+              <Center>
+                <Button w='50%' color="red" radius="md" onClick={onCancel}>
+                  Cancel
+                </Button>
               </Center>
-              <Button color="red" radius="md" onClick={onCancel}>
-              Cancel
-              </Button>
             </Stack>
           </Group>
         ) : transaction.status === 'accepted' ? (
-          <Center my="lg">
-            <Stack align="center">
-              {transaction.to && transaction.to.id === ownUser.id ? (
-                <>
-                  <Title order={4}>You accepted the trade offer!</Title>
-                  <Text>
-                  You can now reach out to your trading partner on Telegram using their username:{' '}
-                    <span style={{ fontWeight: 'bold' }}>@{transaction.from?.telegramUser}</span>.
-                  </Text>
-                </>
-              ) : (
-                <>
-                  <Title order={4}>Trade offer got accepted!</Title>
-                  <Text>
-                  You can now reach out to your trading partner on Telegram using their username:{' '}
-                    <span style={{ fontWeight: 'bold' }}>@{transaction.to?.telegramUser}</span>.
-                  </Text>
-                </>
-              )}
-              <Text fw={700}>Happy trading!</Text>
-            </Stack>
-          </Center>
-        ) : transaction.status === 'rejected' ? (
-          <Center my="lg">
-            <Text fw={700}>You declined this trade offer.</Text>
-          </Center>
-        ) : transaction.status === 'cancelled' ? (
-          <Center my="lg">
+          <Stack>
             {transaction.to && transaction.to.id === ownUser.id ? (
-              <Text fw={700}>Your trading partner cancelled this trade offer.</Text>
+              <Alert
+                title="You accepted the trade offer!"
+                icon = {<IconInfoCircle/>}
+                color='teal'
+                my='md'
+              >
+                    You can now reach out to your trading partner on Telegram using their username:{' '}
+                <span style={{ fontWeight: 'bold' }}>@{transaction.from?.telegramUser}. Happy Trading!</span>
+              </Alert>
             ) : (
-              <Text fw={700}>You canceled this trade offer.</Text>
+              <Alert
+                title={`${transaction.to?.name + ' ' + transaction.to?.surname} accepted this trade offer!`}
+                icon = {<IconInfoCircle/>}
+                color='teal'
+                my='md'
+              >
+                    You can now reach out to your trading partner on Telegram using their username:{' '}
+                <span style={{ fontWeight: 'bold' }}>@{transaction.to?.telegramUser}. Happy Trading!</span>
+              </Alert>
             )}
-          </Center>
+          </Stack>
+        ) : transaction.status === 'rejected' ? (
+          <Alert
+            title="This trade offer was declined."
+            icon = {<IconAlertTriangleFilled/>}
+            color='red'
+            my='md'
+          >
+            No worries. You will have other chances to trade your patches.
+          </Alert>
+        ) : transaction.status === 'cancelled' ? (
+          <Stack>
+            {transaction.to && transaction.to.id === ownUser.id ? (
+              <Alert
+                title="Your trade partner changed their mind."
+                icon = {<IconAlertTriangleFilled/>}
+                color='red'
+                my='md'
+              >
+              No worries. You will have other chances to trade your patches.
+              </Alert>
+            ) : (
+              <Alert
+                title="Your cancelled this trade offer."
+                icon = {<IconAlertTriangleFilled/>}
+                color='red'
+                my='md'
+              >
+              No worries. You can always send another one!
+              </Alert>
+            )}
+          </Stack>
         ) : null}
       </Stack>
     </Container>

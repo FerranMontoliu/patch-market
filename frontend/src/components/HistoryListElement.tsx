@@ -53,7 +53,6 @@ const TransactionCard = ({ transaction }: TransactionCardProps): ReactElement =>
           </Grid.Col>
         </Grid>
       </UnstyledButton>
-      <Divider />
     </Stack>
   )
 }
