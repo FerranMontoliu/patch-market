@@ -196,7 +196,7 @@ const TradeDetailsScreen = (): ReactElement => {
               </Alert>
             ) : (
               <Alert
-                title="Your cancelled this trade offer."
+                title="You cancelled this trade offer."
                 icon = {<IconAlertTriangleFilled/>}
                 color='red'
                 my='md'
