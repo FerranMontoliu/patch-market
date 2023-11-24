@@ -11,19 +11,19 @@ import {
   FileInput,
   Image,
   Loader,
-  NativeSelect,
+  Select,
   TagsInput,
   TextInput,
   Title
 } from '@mantine/core'
-import { University } from '../types.ts'
+import { Category, University } from '../types.ts'
 import { isNotEmpty, useForm } from '@mantine/form'
 import { getUniversities } from '../services/universities.ts'
 import { IconBuilding, IconPhoto } from '@tabler/icons-react'
 import { logout } from '../utils/logout.ts'
 import { useUserDispatch } from '../contexts/UserContext.tsx'
 import LogoutScreen from './LogoutScreen.tsx'
-
+import { getCategories } from '../services/categories.ts'
 
 const AddPatchScreen = (): ReactElement => {
   const navigate = useNavigate()
@@ -38,6 +38,11 @@ const AddPatchScreen = (): ReactElement => {
   const getUniversitiesResult = useQuery({
     queryKey: ['universities'],
     queryFn: getUniversities
+  })
+
+  const getCategoriesResult = useQuery({
+    queryKey: ['categories'],
+    queryFn: getCategories
   })
 
   const form = useForm({
@@ -75,7 +80,7 @@ const AddPatchScreen = (): ReactElement => {
     },
   })
 
-  const getBase64 = async (file: File) : Promise<string | ArrayBuffer | null> => {
+  const getBase64 = async (file: File): Promise<string | ArrayBuffer | null> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
       reader.onload = () => {
@@ -91,21 +96,21 @@ const AddPatchScreen = (): ReactElement => {
   }
 
   const onAddPatch = async (): Promise<void> => {
-    let base64Image : string = ' '
+    let base64Image: string = ' '
     try {
       const image = await getBase64(imageInput!)
       base64Image = image?.toString() ?? ' '
-      const patch : AddPatchProps = {
-        title : form.values.title,
-        description : form.values.description,
-        universityId : form.values.university,
-        categoriesNames : form.values.categories.map((category: string) => category[0].toUpperCase() + category.slice(1, category.length).toLowerCase()),
-        image : base64Image,
+      const patch: AddPatchProps = {
+        title: form.values.title,
+        description: form.values.description,
+        universityId: form.values.university,
+        categoriesNames: form.values.categories.map((category: string) => category[0].toUpperCase() + category.slice(1, category.length).toLowerCase()),
+        image: base64Image,
       }
       addPatchMutation.mutate(patch)
 
       navigate('/my-patches')
-    } catch(error) {
+    } catch (error) {
       setNoImage(true)
     }
   }
@@ -113,7 +118,7 @@ const AddPatchScreen = (): ReactElement => {
   const checkFile = (file: File | null) => {
     setNoImage(false)
 
-    if(!file || file.size > 1000000) {
+    if (!file || file.size > 1000000) {
       setImageTooBig(true)
       return false
     }
@@ -122,25 +127,20 @@ const AddPatchScreen = (): ReactElement => {
     return true
   }
 
-  if (getUniversitiesResult.isLoading) {
+  if (getUniversitiesResult.isLoading || getCategoriesResult.isLoading) {
     return (
       <Center>
-        <Loader />
+        <Loader/>
       </Center>
     )
   }
 
-  if (getUniversitiesResult.isError || !getUniversitiesResult.data || getUniversitiesResult.data.length === 0) {
-    return <LogoutScreen />
+  if (getUniversitiesResult.isError || getCategoriesResult.isError) {
+    return <LogoutScreen/>
   }
 
   const universities: Array<University> = getUniversitiesResult.data
-
-  if(form.values.university === '') {
-    form.setValues({
-      university: universities[0].id
-    })
-  }
+  const categories: Array<Category> = getCategoriesResult.data
 
   return (
     <Container>
@@ -148,17 +148,18 @@ const AddPatchScreen = (): ReactElement => {
       <Card shadow="sm" padding="lg" my="lg" radius="md" withBorder>
         <form onSubmit={form.onSubmit(onAddPatch)}>
           {imageInput &&
-          <Center>
-            <Image
-              src={URL.createObjectURL(imageInput)}
-              radius="md"
-              mah={300}
-              w="95%"
-              fit='contain'
-              fallbackSrc="https://placehold.co/600x400?text=Placeholder"
-            />
-          </Center>
+            <Center>
+              <Image
+                src={URL.createObjectURL(imageInput)}
+                radius="md"
+                mah={300}
+                w="95%"
+                fit='contain'
+                fallbackSrc="https://placehold.co/600x400?text=Placeholder"
+              />
+            </Center>
           }
+
           <FileInput
             label="Patch Image"
             accept="image/png,image/jpeg"
@@ -168,7 +169,7 @@ const AddPatchScreen = (): ReactElement => {
             mt={30}
             error={imageTooBig ? 'Image is too big, maximum size is 1MB' : noImage ? 'Image is required' : false}
             onChange={(file) => checkFile(file) ? setImageInput(file) : setImageInput(null)}
-          ></FileInput>
+          />
 
           <TextInput
             withAsterisk
@@ -185,27 +186,32 @@ const AddPatchScreen = (): ReactElement => {
             {...form.getInputProps('description')}
           />
 
-          <NativeSelect
+          <Select
+            placeholder="Select a university"
             label="University"
             withAsterisk
             leftSection={<IconBuilding size={16}/>}
-            data={universities.map((university: University) => ({ value: university.id, label: university.name }))}
+            data={universities.map((university: University) => ({
+              value: university.id,
+              label: university.name
+            }))}
             mt={10}
             {...form.getInputProps('university')}
-          ></NativeSelect>
+          />
 
           <TagsInput
-            variant='unstyled'
             label="Categories"
-            description="Insert a category and press space to add it to the list."
+            description="Insert a list of categories separated by spaces or commas to add them to the list"
             value={form.values.categories}
-            onChange={(value) => form.setValues({ categories: value })}
+            onChange={(value: Array<string>) => form.setValues({ categories: value })}
+            data={categories.map((category: Category) => category.name)}
             mt={10}
             splitChars={[',', ' ']}
-            placeholder="Add category" />
+            placeholder="Add category"/>
+
           <Center>
             <Button type='submit' w="40%" mt="xl" radius="md">
-            Add patch
+                Add patch
             </Button>
           </Center>
         </form>
