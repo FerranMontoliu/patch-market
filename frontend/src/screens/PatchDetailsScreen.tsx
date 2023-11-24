@@ -1,6 +1,21 @@
 import { ReactElement, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Button, Card, Center, Container, Grid, Group, Image, Loader, Pill, Stack, Text, TextInput, Title, UnstyledButton } from '@mantine/core'
+import {
+  Button,
+  Card,
+  Center,
+  Container,
+  Grid,
+  Group,
+  Image,
+  Loader,
+  Pill,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+  UnstyledButton
+} from '@mantine/core'
 import { Category, Patch } from '../types.ts'
 import { notifications } from '@mantine/notifications'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -38,24 +53,24 @@ const PatchDetailsScreen = (): ReactElement => {
   const patch: Patch | null | undefined = patchDetailsResult.data
   const ownPatches: Array<Patch> | null | undefined = ownPatchesResult.data
   const lowerCaseSearchQuery: string = searchQuery.toLowerCase()
-  const ownPatchesFiltered : Array<Patch> = ownPatches !== null && ownPatches !== undefined ? ownPatches.filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery)) : []
+  const ownPatchesFiltered: Array<Patch> = ownPatches !== null && ownPatches !== undefined ? ownPatches.filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery)) : []
 
   const makePatchTradeableMutation = useMutation({
     mutationFn: (tradeable: boolean) => changePatchTradeableStatus(patch!, tradeable),
-    onSuccess: (patch, tradeable) => {
+    onSuccess: (_patch, tradeable) => {
       queryClient.invalidateQueries({ queryKey: ['patchById'] })
       queryClient.invalidateQueries({ queryKey: ['ownPatches'] })
       queryClient.invalidateQueries({ queryKey: ['tradeablePatches'] })
       queryClient.invalidateQueries({ queryKey: ['tradeHistory'] })
       queryClient.invalidateQueries({ queryKey: ['updateTransactionStatus'] })
 
-      if(tradeable){
+      if (tradeable) {
         notifications.show({
           title: 'You listed this patch for trading!',
           message: 'Other users can now make offers for this patch.',
           color: 'teal'
         })
-      }else{
+      } else {
         notifications.show({
           title: 'You unlisted this patch!',
           message: 'Other users cannot make offers for it anymore.',
@@ -83,21 +98,20 @@ const PatchDetailsScreen = (): ReactElement => {
   ]
 
   function handlePatchSelection(checked: boolean, patch: Patch) {
-    if(checked){
-      setSelectedPatches([... selectedPatches, patch])
-    }
-    else {
-      let newArray : Array<Patch> = [... selectedPatches]
+    if (checked) {
+      setSelectedPatches([...selectedPatches, patch])
+    } else {
+      let newArray: Array<Patch> = [...selectedPatches]
       newArray = selectedPatches.filter(item => item.id !== patch.id)
       setSelectedPatches(newArray)
     }
   }
 
-  function offerConfirmed(){
+  function offerConfirmed() {
     setIsTradeOffered(true)
   }
 
-  function cancelExchangeOffer(){
+  function cancelExchangeOffer() {
     setIsTradeOffered(false)
     setSelectedPatches(new Array<Patch>)
   }
@@ -123,8 +137,8 @@ const PatchDetailsScreen = (): ReactElement => {
     },
   })
 
-  function makeOffer(){
-    try{
+  function makeOffer() {
+    try {
       const transactionData: AddTransactionProps = {
         patchTo: patchId!,
         patchesFrom: selectedPatches.map((selectedPatch) => selectedPatch.id),
@@ -133,7 +147,7 @@ const PatchDetailsScreen = (): ReactElement => {
       }
       addTransactionMutation.mutate(transactionData)
       navigate('/my-trades')
-    }catch(error) {
+    } catch (error) {
       notifications.show({
         title: 'Something went wrong while sending the offer.',
         message: 'This offer was not sent due to an error on our end, try again later.',
@@ -151,12 +165,13 @@ const PatchDetailsScreen = (): ReactElement => {
   }
 
   if (patchDetailsResult.isError || !patch || !user) {
-    return <LogoutScreen />
+    return <LogoutScreen/>
   }
 
   async function copyPageUrl() {
     try {
       await navigator.clipboard.writeText(location.href)
+
       notifications.show({
         title: 'The URL has been copied to your clipboard.',
         message: 'You can now share the Patch with your friends.',
@@ -173,7 +188,7 @@ const PatchDetailsScreen = (): ReactElement => {
 
   const offsetValue = { base: 2, md: 3, lg: 3 }
 
-  if(!isTradeMode && !isTradeOffered){
+  if (!isTradeMode && !isTradeOffered) {
     return (
       <Container>
         <Title order={1}>Patch details</Title>
@@ -186,25 +201,28 @@ const PatchDetailsScreen = (): ReactElement => {
               height="100%"
               fallbackSrc="https://placehold.co/600x400?font=roboto&text=Placeholder"
               radius="md"
-            ></Image>
+            />
           </Grid.Col>
+
           <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
-            <Grid >
+            <Grid>
               <Grid.Col span={6}>
                 <Title order={3}>
                   {patch.title}
                 </Title>
               </Grid.Col>
+
               <Grid.Col offset={offsetValue} span={{ base: 4, md: 3, lg: 3 }}>
                 <Button fullWidth variant="filled" radius="md" onClick={copyPageUrl}>
-                Share
-                  <IconShare size={18} style={{ marginLeft: '5px' }} /></Button>
+                    Share
+                  <IconShare size={18} style={{ marginLeft: '5px' }}/>
+                </Button>
               </Grid.Col>
             </Grid>
-            <Text fw={500} lineClamp={1}>
-              {'Listed by ' + patch.owner.name + ' ' + patch.owner.surname}
-            </Text>
 
+            <Text fw={500} lineClamp={1}>
+              {`Listed by ${patch.owner.name} ${patch.owner.surname}`}
+            </Text>
 
             <Card shadow="sm" my="md" padding="md" radius="md" withBorder>
               <Text fw="bold">
@@ -228,31 +246,35 @@ const PatchDetailsScreen = (): ReactElement => {
               </Text>
 
               <Pill.Group>
-                {patch.categories.map((category: Category, index:number) => (
-                  <Pill key={index} size='lg' bg={categoryColorList[index % categoryColorList.length]}>
+                {patch.categories.map((category: Category, index: number) => (
+                  <Pill key={index} size='lg'
+                    bg={categoryColorList[index % categoryColorList.length]}>
                     {category.name}</Pill>
                 ))}
               </Pill.Group>
             </Card>
 
-            { patch.owner.id !== user.id && (
+            {patch.owner.id !== user.id && (
               <Button fullWidth mt="lg" radius="md" onClick={() => setIsTradeMode(true)}>
                 Make an offer
               </Button>
             )}
-            { (patch.owner.id === user.id && patch.tradeable === false) && (
+
+            {(patch.owner.id === user.id && !patch.tradeable) && (
               <Stack>
                 <Text>Make this patch tradeable to receive offers from others.</Text>
                 <Button fullWidth radius="md" onClick={() => makePatchTradeableMutation.mutate(true)}>
-                List for trading
+                                    List for trading
                 </Button>
               </Stack>
             )}
-            { (patch.owner.id === user.id && patch.tradeable === true) && (
+
+            {(patch.owner.id === user.id && patch.tradeable) && (
               <Stack>
                 <Text>This patch is listed for trading!</Text>
-                <Button fullWidth radius="md" color="red" onClick={() => makePatchTradeableMutation.mutate(false)}>
-                  Unlist this patch
+                <Button fullWidth radius="md" color="red"
+                  onClick={() => makePatchTradeableMutation.mutate(false)}>
+                                    Unlist this patch
                 </Button>
               </Stack>
             )}
@@ -272,7 +294,7 @@ const PatchDetailsScreen = (): ReactElement => {
               size={36}
             ></IconCircleCheckFilled>
             <Text fw={700} size="lg" lineClamp={1}>
-                Patch Details
+                            Patch Details
             </Text>
           </Group>
 
@@ -297,23 +319,23 @@ const PatchDetailsScreen = (): ReactElement => {
         </Card>
       </UnstyledButton>
 
-      { !isTradeOffered
+      {!isTradeOffered
         ? (
           <Card shadow="sm" my="md" padding="md" radius="md" withBorder>
             <Grid gutter="xs" mb="md" p="sm" align="center">
               <Grid.Col span="auto">
                 <Group>
-                  <IconCircle2Filled size={52} />
+                  <IconCircle2Filled size={52}/>
 
                   <Title order={3}>
-                    Exchange Offer
+                                        Exchange Offer
                   </Title>
                 </Group>
               </Grid.Col>
 
               <Grid.Col span="content">
                 <Button radius="md" disabled={selectedPatches.length === 0} onClick={offerConfirmed}>
-                  Confirm
+                                    Confirm
                 </Button>
               </Grid.Col>
             </Grid>
@@ -335,7 +357,7 @@ const PatchDetailsScreen = (): ReactElement => {
               <PatchSelectionList
                 patches={ownPatchesFiltered}
                 selectedPatches={selectedPatches}
-                handlePatchSelection={handlePatchSelection} />
+                handlePatchSelection={handlePatchSelection}/>
             </Stack>
           </Card>
         ) : (
@@ -344,31 +366,31 @@ const PatchDetailsScreen = (): ReactElement => {
               <Grid gutter="xs" mb="md" p="sm" align="center">
                 <Grid.Col span="auto">
                   <Group>
-                    <IconCircleCheckFilled size={36} />
+                    <IconCircleCheckFilled size={36}/>
                     <Text fw="bold" size="lg" lineClamp={1}>
-                    Exchange Offer
+                                            Exchange Offer
                     </Text>
                   </Group>
                 </Grid.Col>
 
                 <Grid.Col span="content">
                   <Button radius="md" variant="outline" color="red" onClick={cancelExchangeOffer}>
-                  Cancel
+                                        Cancel
                   </Button>
                 </Grid.Col>
               </Grid>
 
               <Stack mb="xs" px="md">
                 <Text fw={700} size="md">
-                Your Offer:
+                                    Your Offer:
                 </Text>
 
-                <PatchList patches={selectedPatches} clickable={false} />
+                <PatchList patches={selectedPatches} clickable={false}/>
               </Stack>
             </Card>
             <Center>
               <Button w='50%' my="lg" radius="md" onClick={makeOffer}>
-              Send trade offer
+                                Send trade offer
               </Button>
             </Center>
           </>
