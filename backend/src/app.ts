@@ -15,6 +15,7 @@ import { patchesRouter } from './controllers/patches'
 import { transactionsRouter } from './controllers/transactions'
 import { universitiesRouter } from './controllers/universities'
 import 'express-async-errors'
+import { categoriesRouter } from './controllers/categories'
 
 export const app: Express = express()
 
@@ -41,6 +42,7 @@ app.use('/api/users', usersRouter)
 app.use('/api/patches', patchesRouter)
 app.use('/api/transactions', transactionsRouter)
 app.use('/api/universities', universitiesRouter)
+app.use('/api/categories', categoriesRouter)
 
 app.use(unknownEndpointMiddleware)
 app.use(errorHandlerMiddleware)
