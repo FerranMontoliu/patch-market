@@ -366,12 +366,11 @@ const PatchDetailsScreen = (): ReactElement => {
                 <PatchList patches={selectedPatches} />
               </Stack>
             </Card>
-
-            <Card shadow="sm" my="md" padding="md" radius="md" withBorder>
-              <Button fullWidth mt="lg" radius="md" onClick={makeOffer}>
-              Make Offer
+            <Center>
+              <Button w='50%' my="lg" radius="md" onClick={makeOffer}>
+              Send trade offer
               </Button>
-            </Card>
+            </Center>
           </>
         )
       }
