@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 import { Patch } from '../types'
-import { Checkbox, Divider, Grid, Image, Pill, Stack, Text, Title, Center, Alert } from '@mantine/core'
+import { Checkbox, Divider, Grid, Image, Pill, Stack, Text, Title, Center, Alert, Group } from '@mantine/core'
 import { IconInfoCircle } from '@tabler/icons-react'
 import PatchListElement from './PatchListElement'
 
@@ -16,7 +16,15 @@ const PatchSelectionList = ({ patches, selectedPatches, handlePatchSelection }: 
       <Title order={4}>
         Selected patches:
       </Title>
-      {selectedPatches.length === 0 && <Alert icon={<IconInfoCircle></IconInfoCircle>} title='Select at least a patch to start trading.' color='blue'>You need to select at least a patch to send a trade offer.</Alert>}
+
+      {selectedPatches.length === 0 &&
+          <Alert
+            icon={<IconInfoCircle />}
+            title='Select at least a patch to start trading.'
+            color='blue'>
+              You need to select at least a patch to send a trade offer.
+          </Alert>}
+
       <Pill.Group mb="lg">
         {selectedPatches.map((patch: Patch) => (
           <Pill
@@ -31,6 +39,7 @@ const PatchSelectionList = ({ patches, selectedPatches, handlePatchSelection }: 
               label: {
                 display: 'flex',
                 alignItems: 'center',
+                width: '100%',
               },
               remove: {
                 marginLeft: 'auto',
@@ -39,24 +48,20 @@ const PatchSelectionList = ({ patches, selectedPatches, handlePatchSelection }: 
             }}
             onRemove={() => handlePatchSelection(false, patch)}
           >
-            <Grid gutter="md">
-              <Grid.Col span={2}>
-                <Image
-                  w={20}
-                  h={20}
-                  src={patch.image}
-                  alt={patch.title}
-                  fallbackSrc="https://placehold.co/600x400?font=roboto&text=Placeholder"
-                  radius="sm"
-                />
-              </Grid.Col>
+            <Group preventGrowOverflow wrap="nowrap" w="100%">
+              <Image
+                w={20}
+                h={20}
+                src={patch.image}
+                alt={patch.title}
+                fallbackSrc="https://placehold.co/20x20?font=roboto&text=Placeholder"
+                radius="sm"
+              />
 
-              <Grid.Col span={10}>
-                <Text size="sm" c="white" truncate="end" style={{ wordBreak: 'break-all' }}>
-                  {patch.title}
-                </Text>
-              </Grid.Col>
-            </Grid>
+              <Text size="sm" c="white" truncate="end" style={{ wordBreak: 'break-all' }}>
+                {patch.title}
+              </Text>
+            </Group>
           </Pill>
         ))}
       </Pill.Group>
