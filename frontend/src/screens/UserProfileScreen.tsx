@@ -9,6 +9,7 @@ import { Patch } from '../types.ts'
 import UserCard from '../components/UserCard.tsx'
 import PatchList from '../components/PatchList.tsx'
 import LogoutScreen from './LogoutScreen.tsx'
+import NotFoundScreen from './NotFoundScreen.tsx'
 
 const UserProfileScreen = (): ReactElement => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -18,7 +19,7 @@ const UserProfileScreen = (): ReactElement => {
     queryFn: getOwnPatches,
   })
 
-  const ownUser = useUserValue()
+  const user = useUserValue()
 
   if (result.isLoading) {
     return (
@@ -28,7 +29,11 @@ const UserProfileScreen = (): ReactElement => {
     )
   }
 
-  if (result.isError || !ownUser || !result.data) {
+  if (!user || !result.data) {
+    return <NotFoundScreen />
+  }
+
+  if (result.isError) {
     return <LogoutScreen />
   }
 
@@ -42,7 +47,7 @@ const UserProfileScreen = (): ReactElement => {
     <Container>
       <Title order={1} mb="xl">My profile</Title>
 
-      <UserCard user={ownUser}></UserCard>
+      <UserCard user={user}></UserCard>
 
       <Card mt="lg" shadow="sm" padding="lg" radius="md" withBorder>
         <Group justify="space-between" align="center" mb="lg">

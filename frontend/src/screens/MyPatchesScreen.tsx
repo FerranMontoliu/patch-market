@@ -24,7 +24,7 @@ const MyPatchesScreen = (): ReactElement => {
     )
   }
 
-  if (result.isError || !result.data) {
+  if (result.isError) {
     return <LogoutScreen />
   }
 

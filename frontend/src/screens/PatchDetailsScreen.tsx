@@ -19,13 +19,14 @@ import {
 import { Category, Patch } from '../types.ts'
 import { notifications } from '@mantine/notifications'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { getOwnPatches, getPatchById, changePatchTradeableStatus } from '../services/patches.ts'
+import { changePatchTradeableStatus, getOwnPatches, getPatchById } from '../services/patches.ts'
 import { useUserValue } from '../contexts/UserContext.tsx'
 import { IconCircle2Filled, IconCircleCheckFilled, IconSearch, IconShare } from '@tabler/icons-react'
 import PatchSelectionList from '../components/PatchSelectionList.tsx'
 import PatchList from '../components/PatchList.tsx'
 import { addTransaction, AddTransactionProps } from '../services/transactions.ts'
 import LogoutScreen from './LogoutScreen.tsx'
+import NotFoundScreen from './NotFoundScreen.tsx'
 
 const PatchDetailsScreen = (): ReactElement => {
   const { patchId } = useParams()
@@ -164,7 +165,11 @@ const PatchDetailsScreen = (): ReactElement => {
     )
   }
 
-  if (patchDetailsResult.isError || !patch || !user) {
+  if (!patch || !user) {
+    return <NotFoundScreen />
+  }
+
+  if (patchDetailsResult.isError) {
     return <LogoutScreen/>
   }
 
