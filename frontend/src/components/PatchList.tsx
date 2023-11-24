@@ -5,14 +5,15 @@ import PatchListElement from './PatchListElement'
 
 type PatchListProps = {
   patches: Array<Patch>
+  clickable: boolean
 }
 
-const PatchList = ({ patches }: PatchListProps): ReactElement => (
+const PatchList = ({ patches, clickable }: PatchListProps): ReactElement => (
   patches.length !== 0 ?
     <Stack gap="xs">
       {patches.map((patch: Patch, i: number) => (
         <Stack key={patch.id} gap="xs">
-          <PatchListElement patch={patch}/>
+          <PatchListElement patch={patch} clickable={clickable}/>
 
           { i < patches.length - 1
             ? <Divider my="xs"></Divider>

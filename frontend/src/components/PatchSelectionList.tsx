@@ -70,7 +70,7 @@ const PatchSelectionList = ({ patches, selectedPatches, handlePatchSelection }: 
           <Stack key={patch.id} gap="xs">
             <Grid align='center'>
               <Grid.Col span="auto">
-                <PatchListElement patch={patch} />
+                <PatchListElement patch={patch} clickable={false} />
               </Grid.Col>
 
               <Grid.Col span="content">

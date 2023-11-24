@@ -67,7 +67,7 @@ const UserProfileScreen = (): ReactElement => {
         </Grid>
 
         <Stack mb="xs" px="md">
-          <PatchList patches={ownPatchesFiltered} />
+          <PatchList patches={ownPatchesFiltered} clickable={true}/>
         </Stack>
       </Card>
     </Container>

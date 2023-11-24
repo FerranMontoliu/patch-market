@@ -124,7 +124,7 @@ const PatchDetailsScreen = (): ReactElement => {
   })
 
   function makeOffer(){
-    try {
+    try{
       const transactionData: AddTransactionProps = {
         patchTo: patchId!,
         patchesFrom: selectedPatches.map((selectedPatch) => selectedPatch.id),
@@ -363,7 +363,7 @@ const PatchDetailsScreen = (): ReactElement => {
                 Your Offer:
                 </Text>
 
-                <PatchList patches={selectedPatches} />
+                <PatchList patches={selectedPatches} clickable={false} />
               </Stack>
             </Card>
             <Center>

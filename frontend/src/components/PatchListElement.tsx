@@ -5,11 +5,14 @@ import { Patch } from '../types.ts'
 
 type PatchListElementProps = {
   patch: Patch
+  clickable: boolean
 }
 
-const PatchListElement = ({ patch }: PatchListElementProps): ReactElement => {
+const PatchListElement = ({ patch, clickable }: PatchListElementProps): ReactElement => {
   return (
-    <UnstyledButton component={RouterLink} to={`/patch-details/${patch.id}`}>
+    <UnstyledButton
+      component={RouterLink}
+      to={clickable ? `/patch-details/${patch.id}` : ''}>
       <Group>
         <Image
           src={patch.image}
