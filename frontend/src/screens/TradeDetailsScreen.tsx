@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { Button, Space, Center, Container, Grid, Divider, Group, Loader, Stack, Text, Title, Alert } from '@mantine/core'
+import { Alert, Button, Center, Container, Grid, Group, Loader, Space, Stack, Title } from '@mantine/core'
 import { useUser } from '../contexts/UserContext.tsx'
 import { notifications } from '@mantine/notifications'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -11,6 +11,7 @@ import { IconAlertTriangleFilled, IconInfoCircle } from '@tabler/icons-react'
 import LogoutScreen from './LogoutScreen.tsx'
 import PatchGridTransactionMultiple from '../components/PatchGridTransactionMultiple.tsx'
 import PatchGridTransactionFirstColumn from '../components/PatchGridTransactionFirstColumn.tsx'
+import NotFoundScreen from './NotFoundScreen.tsx'
 
 const TradeDetailsScreen = (): ReactElement => {
   const navigate = useNavigate()
@@ -75,7 +76,12 @@ const TradeDetailsScreen = (): ReactElement => {
       </Center>
     )
   }
-  if (tradeDetailsResult.isError|| !tradeDetailsResult.data || !ownUser) {
+
+  if (!tradeDetailsResult.data || !ownUser) {
+    return <NotFoundScreen />
+  }
+
+  if (tradeDetailsResult.isError) {
     return <LogoutScreen />
   }
 
