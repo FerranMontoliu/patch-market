@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 import { Center, Container, Grid, Loader, Text, Title, Stack, Divider } from '@mantine/core'
 import { useQuery } from '@tanstack/react-query'
-import HistoryElement from '../components/HistoryListElement.tsx'
+import HistoryElement from '../components/TradeHistoryListElement.tsx'
 import { getTradeHistory } from '../services/transactions.ts'
 import { Transaction } from '../types'
 import LogoutScreen from './LogoutScreen.tsx'
