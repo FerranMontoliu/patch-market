@@ -195,10 +195,10 @@ const PatchDetailsScreen = (): ReactElement => {
 
   if (!isTradeMode && !isTradeOffered) {
     return (
-      <Container>
+      <Container px={0}>
         <Title order={1}>Patch details</Title>
 
-        <Grid my="xl" gutter="xl" p="sm" align="stretch">
+        <Grid my="xl" gutter="xl" align="stretch">
           <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
             <Image
               src={patch.image}
@@ -290,10 +290,11 @@ const PatchDetailsScreen = (): ReactElement => {
   }
 
   return (
-    <Container>
+    <Container px={0}>
       <Title order={1}>Patch details</Title>
+
       <UnstyledButton w="100%" onClick={() => setIsTradeMode(false)}>
-        <Card shadow="sm" my="md" mx="xl" padding="md" radius="md" withBorder>
+        <Card shadow="sm" my="md" radius="md" withBorder>
           <Group>
             <IconCircleCheckFilled
               size={36}
@@ -303,7 +304,7 @@ const PatchDetailsScreen = (): ReactElement => {
             </Text>
           </Group>
 
-          <Group p="sm" my="sm" align="top" gap="xl">
+          <Group p="sm" align="top" gap="xl">
             <Image
               src={patch.image}
               alt={patch.title}
@@ -312,7 +313,7 @@ const PatchDetailsScreen = (): ReactElement => {
               radius="md"
             />
 
-            <Stack gap="xs" mt="md">
+            <Stack gap="xs">
               <Title order={4}>
                 {patch.title}
               </Title>
@@ -326,26 +327,26 @@ const PatchDetailsScreen = (): ReactElement => {
 
       {!isTradeOffered
         ? (
-          <Card shadow="sm" my="md" padding="md" radius="md" withBorder>
+          <Card shadow="sm" padding="md" radius="md" withBorder>
             <Grid gutter="xs" mb="md" p="sm" align="center">
               <Grid.Col span="auto">
                 <Group>
                   <IconCircle2Filled size={52}/>
 
                   <Title order={3}>
-                                        Exchange Offer
+                    Exchange Offer
                   </Title>
                 </Group>
               </Grid.Col>
 
               <Grid.Col span="content">
                 <Button radius="md" disabled={selectedPatches.length === 0} onClick={offerConfirmed}>
-                                    Confirm
+                  Confirm
                 </Button>
               </Grid.Col>
             </Grid>
 
-            <Grid gutter="xs" mb="md" p="sm" mx="md">
+            <Grid gutter="xs" mb="md">
               <Grid.Col span="auto">
                 <TextInput
                   leftSectionPointerEvents="none"
@@ -358,7 +359,7 @@ const PatchDetailsScreen = (): ReactElement => {
               </Grid.Col>
             </Grid>
 
-            <Stack mb="xs" mx="xl">
+            <Stack mb="xs">
               <PatchSelectionList
                 patches={ownPatchesFiltered}
                 selectedPatches={selectedPatches}
@@ -367,37 +368,36 @@ const PatchDetailsScreen = (): ReactElement => {
           </Card>
         ) : (
           <>
-            <Card shadow="sm" my="md" mx="xl" padding="md" radius="md" withBorder>
+            <Card shadow="sm" my="md" padding="md" radius="md" withBorder>
               <Grid gutter="xs" mb="md" p="sm" align="center">
                 <Grid.Col span="auto">
                   <Group>
                     <IconCircleCheckFilled size={36}/>
                     <Text fw="bold" size="lg" lineClamp={1}>
-                                            Exchange Offer
+                      Exchange Offer
                     </Text>
                   </Group>
                 </Grid.Col>
 
                 <Grid.Col span="content">
                   <Button radius="md" variant="outline" color="red" onClick={cancelExchangeOffer}>
-                                        Cancel
+                    Cancel
                   </Button>
                 </Grid.Col>
               </Grid>
 
               <Stack mb="xs" px="md">
                 <Text fw={700} size="md">
-                                    Your Offer:
+                  Your Offer:
                 </Text>
 
                 <PatchList patches={selectedPatches} clickable={false}/>
               </Stack>
             </Card>
-            <Center>
-              <Button w='50%' my="lg" radius="md" onClick={makeOffer}>
-                                Send trade offer
-              </Button>
-            </Center>
+
+            <Button w='100%' radius="md" onClick={makeOffer}>
+              Send trade offer
+            </Button>
           </>
         )
       }

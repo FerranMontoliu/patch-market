@@ -71,8 +71,8 @@ const SignUpScreen = (): ReactElement => {
   }
 
   return (
-    <Container>
-      <Box maw={340} mx="auto">
+    <Container p={0}>
+      <Box maw={400} mx="auto">
         <Group>
           <Title order={2} style={{ textAlign: 'center', width: '100%' }}>
             Sign up to{' '}

@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { Container, Accordion, Title, Space, Text } from '@mantine/core'
+import { Accordion, Container, Text, Title } from '@mantine/core'
 
 type Question = {
   question: string;
@@ -50,18 +50,18 @@ const questions: Array<Question> = [
 ]
 
 const FAQScreen = (): ReactElement => (
-  <Container size="md">
-    <Space h="lg" />
-    <Title ta="center">Frequently Asked Questions</Title>
-    <Space h="lg" />
-    <Space h="lg" />
-    <Space h="lg" />
-    <Accordion>
+  <Container p={0}>
+    <Title>
+      Frequently Asked Questions
+    </Title>
+
+    <Accordion my="md">
       {questions.map(({ question, answer }, i: number) => (
         <Accordion.Item value={`${i}`} key={i}>
-          <Accordion.Control>
+          <Accordion.Control p={0}>
             <Text fw={600}>{question}</Text>
           </Accordion.Control>
+
           <Accordion.Panel>
             <Text>{answer}</Text>
           </Accordion.Panel>

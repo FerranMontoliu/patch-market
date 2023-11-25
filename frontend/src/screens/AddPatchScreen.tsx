@@ -11,7 +11,7 @@ import {
   FileInput,
   Image,
   Loader,
-  Select,
+  Select, Stack,
   TagsInput,
   TextInput,
   Title
@@ -143,77 +143,75 @@ const AddPatchScreen = (): ReactElement => {
   const categories: Array<Category> = getCategoriesResult.data
 
   return (
-    <Container>
-      <Title order={1}>Add a new patch</Title>
-      <Card shadow="sm" padding="lg" my="lg" radius="md" withBorder>
+    <Container p={0}>
+      <Title order={1}>
+        Add a new patch
+      </Title>
+
+      <Card shadow="sm" my="sm" radius="md" withBorder>
         <form onSubmit={form.onSubmit(onAddPatch)}>
-          {imageInput &&
-            <Center>
-              <Image
-                src={URL.createObjectURL(imageInput)}
-                radius="md"
-                mah={300}
-                w="95%"
-                fit='contain'
-                fallbackSrc="https://placehold.co/600x400?text=Placeholder"
-              />
-            </Center>
-          }
+          <Stack>
+            {imageInput &&
+                <Center>
+                  <Image
+                    src={URL.createObjectURL(imageInput)}
+                    radius="md"
+                    mah={300}
+                    w="95%"
+                    fit='contain'
+                    fallbackSrc="https://placehold.co/600x400?text=Placeholder"
+                  />
+                </Center>
+            }
 
-          <FileInput
-            label="Patch Image"
-            accept="image/png,image/jpeg"
-            placeholder='Upload an image that shows the patch'
-            withAsterisk
-            leftSection={<IconPhoto size={16}/>}
-            mt={30}
-            error={imageTooBig ? 'Image is too big, maximum size is 1MB' : noImage ? 'Image is required' : false}
-            onChange={(file) => checkFile(file) ? setImageInput(file) : setImageInput(null)}
-          />
+            <FileInput
+              label="Patch Image"
+              accept="image/png,image/jpeg"
+              placeholder='Upload an image that shows the patch'
+              withAsterisk
+              leftSection={<IconPhoto size={16}/>}
+              error={imageTooBig ? 'Image is too big, maximum size is 1MB' : noImage ? 'Image is required' : false}
+              onChange={(file) => checkFile(file) ? setImageInput(file) : setImageInput(null)}
+            />
 
-          <TextInput
-            withAsterisk
-            label="Patch name"
-            placeholder="Patch name"
-            mt={10}
-            {...form.getInputProps('title')}
-          />
+            <TextInput
+              withAsterisk
+              label="Patch name"
+              placeholder="Patch name"
+              {...form.getInputProps('title')}
+            />
 
-          <TextInput
-            label="Description"
-            placeholder="Write the patch description here!"
-            mt={10}
-            {...form.getInputProps('description')}
-          />
+            <TextInput
+              label="Description"
+              placeholder="Write the patch description here!"
+              {...form.getInputProps('description')}
+            />
 
-          <Select
-            placeholder="Select a university"
-            label="University"
-            withAsterisk
-            leftSection={<IconBuilding size={16}/>}
-            data={universities.map((university: University) => ({
-              value: university.id,
-              label: university.name
-            }))}
-            mt={10}
-            {...form.getInputProps('university')}
-          />
+            <Select
+              placeholder="Select a university"
+              label="University"
+              withAsterisk
+              leftSection={<IconBuilding size={16}/>}
+              data={universities.map((university: University) => ({
+                value: university.id,
+                label: university.name
+              }))}
+              {...form.getInputProps('university')}
+            />
 
-          <TagsInput
-            label="Categories"
-            description="Insert a list of categories separated by spaces or commas to add them to the list"
-            value={form.values.categories}
-            onChange={(value: Array<string>) => form.setValues({ categories: value })}
-            data={categories.map((category: Category) => category.name)}
-            mt={10}
-            splitChars={[',', ' ']}
-            placeholder="Add category"/>
+            <TagsInput
+              label="Categories"
+              description="Insert a list of categories separated by spaces or commas to add them to the list"
+              value={form.values.categories}
+              onChange={(value: Array<string>) => form.setValues({ categories: value })}
+              data={categories.map((category: Category) => category.name)}
+              splitChars={[',', ' ']}
+              placeholder="Add category"/>
 
-          <Center>
-            <Button type='submit' w="40%" mt="xl" radius="md">
-                Add patch
+            <Button type='submit' w="100%" radius="md" mt="sm">
+              Add patch
             </Button>
-          </Center>
+          </Stack>
         </form>
       </Card>
     </Container>
