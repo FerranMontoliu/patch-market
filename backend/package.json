@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "build": "tsc",
-    "start": "cross-env NODE_ENV=production node node dist/index.js",
+    "start": "cross-env NODE_ENV=production node dist/index.js",
     "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
