@@ -1,13 +1,12 @@
 import { ReactElement } from 'react'
-import { Container, Text, Title, Box, Button, Group, TextInput, PasswordInput, Anchor, Stack } from '@mantine/core'
+import { Anchor, Box, Button, Container, Group, PasswordInput, Stack, Text, TextInput, Title } from '@mantine/core'
 import { isEmail, isNotEmpty, useForm } from '@mantine/form'
-import { useNavigate, NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { useUserDispatch } from '../contexts/UserContext.tsx'
 import { login } from '../services/login.ts'
 import { notifications } from '@mantine/notifications'
 import { signUp } from '../services/signup.ts'
 import { User } from '../types.ts'
-
 
 type SignUpFormValues = {
   email: string;
@@ -25,11 +24,10 @@ const initialFormValues: SignUpFormValues = {
   telegramUser: '',
   password: '',
   passwordRepeat: '',
-};
+}
 
 const SignUpScreen = (): ReactElement => {
   const userDispatch = useUserDispatch()
-  const navigate = useNavigate()
   const form = useForm({
     initialValues: initialFormValues,
     validate: {
@@ -45,22 +43,24 @@ const SignUpScreen = (): ReactElement => {
         if (value !== values.password) {
           return 'Passwords did not match'
         }
-        return null;
+        return null
       },
     },
-  });
+  })
 
   const handleFormSubmit = async (values: SignUpFormValues): Promise<void> => {
     try {
-      const response = await signUp(values) as { data: User }
-      const user = response.data
-      window.localStorage.setItem('patchMarketUser', JSON.stringify(user))
-      userDispatch({ type: 'SET_USER', payload: user })
-      navigate('/')
+      const user: User | null = await signUp(values)
+
+      if (user) {
+        window.localStorage.setItem('patchMarketUser', JSON.stringify(user))
+        userDispatch({ type: 'SET_USER', payload: user })
+
         await login({
-        email: values.email,
-        password: values.password,
-      });
+          email: values.email,
+          password: values.password,
+        })
+      }
     } catch (error) {
       notifications.show({
         title: 'Error signing up',
@@ -77,6 +77,7 @@ const SignUpScreen = (): ReactElement => {
           <Title order={2} style={{ textAlign: 'center', width: '100%' }}>
             Sign up to{' '}
           </Title>
+
           <Title order={1} style={{ textAlign: 'center', width: '100%' }}>
             <Text span c="blue" inherit>
               Patch Market
@@ -86,7 +87,7 @@ const SignUpScreen = (): ReactElement => {
 
         <form onSubmit={form.onSubmit(handleFormSubmit)}>
           <Stack mt="lg" gap="sm">
-          <TextInput withAsterisk label="Name" placeholder="First name" {...form.getInputProps('name')} />
+            <TextInput withAsterisk label="Name" placeholder="First name" {...form.getInputProps('name')} />
             <TextInput withAsterisk label="Surname" placeholder="Last name" {...form.getInputProps('surname')} />
             <TextInput
               withAsterisk
@@ -118,7 +119,7 @@ const SignUpScreen = (): ReactElement => {
         </form>
       </Box>
     </Container>
-  );
-};
+  )
+}
 
-export default SignUpScreen;
+export default SignUpScreen

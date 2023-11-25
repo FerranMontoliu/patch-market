@@ -36,9 +36,8 @@ usersRouter.post('/', async (request: WebRequest, response: Response): Promise<v
 
   try {
     const savedUser = await user.save()
-    response.status(201).json({ data: savedUser })
+    response.status(201).json(savedUser)
   } catch (error) {
     response.status(500).json({ error: 'Error creating user.' })
   }
-  return Promise.resolve()
-});
+})

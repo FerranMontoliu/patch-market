@@ -1,11 +1,8 @@
 import { ReactElement } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { Grid, Text, UnstyledButton, Pill, Divider, Stack } from '@mantine/core'
+import { Grid, Pill, Stack, Text, UnstyledButton } from '@mantine/core'
 import { Transaction } from '../types.ts'
-
-type TransactionCardProps = {
-  transaction: Transaction;
-};
+import { parseDate } from '../utils/date.ts'
 
 const getStatusPill = (status: string): ReactElement => {
   switch (status) {
@@ -18,22 +15,15 @@ const getStatusPill = (status: string): ReactElement => {
   case 'pending':
     return <Pill size="lg" bg="blue">Pending</Pill>
   default:
-    return <Pill size="lg" bg="gray">Unknown</Pill> // I don't know how to return null
+    return <Pill size="lg" bg="gray">Unknown</Pill>
   }
 }
 
-const generateDate = (date: Date): string => {
-  if (!date) {
-    return 'Date not available'
-  }
-  if (isNaN(date.getTime())) {
-    return 'Invalid date'
-  }
-  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' }
-  return Intl.DateTimeFormat('en-us', options).format(date)
-}
+type TradeHistoryListElementProps = {
+  transaction: Transaction;
+};
 
-const TransactionCard = ({ transaction }: TransactionCardProps): ReactElement => {
+const TradeHistoryListElement = ({ transaction }: TradeHistoryListElementProps): ReactElement => {
   return (
     <Stack>
       <UnstyledButton component={RouterLink} to={`/trade-details/${transaction.id}`}>
@@ -43,11 +33,13 @@ const TransactionCard = ({ transaction }: TransactionCardProps): ReactElement =>
               {transaction.patchTo ? transaction.patchTo.title : 'Title not available'}
             </Text>
           </Grid.Col>
+
           <Grid.Col span={4}>
             <Text lineClamp={1}>
-              {generateDate(new Date(transaction.createDate))}
+              {parseDate(new Date(transaction.createDate))}
             </Text>
           </Grid.Col>
+
           <Grid.Col span={4}>
             {getStatusPill(transaction.status)}
           </Grid.Col>
@@ -56,4 +48,5 @@ const TransactionCard = ({ transaction }: TransactionCardProps): ReactElement =>
     </Stack>
   )
 }
-export default TransactionCard
+
+export default TradeHistoryListElement
