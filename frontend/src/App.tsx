@@ -1,5 +1,5 @@
 import { ReactElement, useEffect } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { Anchor, AppShell, Burger, Button, Group, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconDiscount2 } from '@tabler/icons-react'
@@ -7,6 +7,7 @@ import AppRouter from './router/AppRouter'
 import { useUser } from './contexts/UserContext.tsx'
 import { User } from './types.ts'
 import { setToken } from './services/config.ts'
+import { logout } from './utils/logout.ts'
 
 type HeaderElement = {
   label: string
@@ -33,7 +34,6 @@ const getHeaderLinks = (onClick: () => void): Array<ReactElement> =>  [
 ))
 
 function App(): ReactElement {
-  const navigate = useNavigate()
   const [opened, { toggle, close }] = useDisclosure()
 
   const [user, userDispatch] = useUser()
@@ -54,7 +54,7 @@ function App(): ReactElement {
   }, [userDispatch])
 
   const handleLogout = (): void => {
-    navigate('/log-out')
+    logout(userDispatch)
   }
 
   const handleMenuClick = (): void => {

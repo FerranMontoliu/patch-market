@@ -27,7 +27,7 @@ const MyTradesScreen = (): ReactElement => {
   const transactions: Array<Transaction> = result.data
 
   return (
-    <Container my='lg'>
+    <Container p={0}>
       <Title order={1}>
       My trades
       </Title>

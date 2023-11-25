@@ -2,7 +2,7 @@ import { ReactElement, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useUserValue } from '../contexts/UserContext.tsx'
 import { getOwnPatches } from '../services/patches.ts'
-import { Button, Card, Center, Container, Grid, Group, Loader, Stack, TextInput, Title } from '@mantine/core'
+import { Button, Card, Center, Container, Grid, Group, Loader, TextInput, Title } from '@mantine/core'
 import { IconSearch } from '@tabler/icons-react'
 import { Link as RouterLink } from 'react-router-dom'
 import { Patch } from '../types.ts'
@@ -44,12 +44,14 @@ const UserProfileScreen = (): ReactElement => {
     .filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery))
 
   return (
-    <Container>
-      <Title order={1} mb="xl">My profile</Title>
+    <Container p={0}>
+      <Title order={1} mb="md">
+        My profile
+      </Title>
 
-      <UserCard user={user}></UserCard>
+      <UserCard user={user} />
 
-      <Card mt="lg" shadow="sm" padding="lg" radius="md" withBorder>
+      <Card shadow="sm" mt="md" padding="md" radius="md" withBorder>
         <Group justify="space-between" align="center" mb="lg">
           <Title order={3}>My Collection</Title>
 
@@ -58,7 +60,7 @@ const UserProfileScreen = (): ReactElement => {
           </Button>
         </Group>
 
-        <Grid gutter="xs" mb="md" p="sm">
+        <Grid gutter="xs" mb="md">
           <Grid.Col span="auto">
             <TextInput
               leftSectionPointerEvents="none"
@@ -71,9 +73,7 @@ const UserProfileScreen = (): ReactElement => {
           </Grid.Col>
         </Grid>
 
-        <Stack mb="xs" px="md">
-          <PatchList patches={ownPatchesFiltered} clickable={true}/>
-        </Stack>
+        <PatchList patches={ownPatchesFiltered} clickable={true}/>
       </Card>
     </Container>
   )

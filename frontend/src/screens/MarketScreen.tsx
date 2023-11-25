@@ -34,7 +34,7 @@ const MarketScreen = (): ReactElement => {
     .filter((patch: Patch) => patch.title.toLowerCase().includes(lowerCaseSearchQuery))
 
   return (
-    <Container>
+    <Container px={0}>
       <Stack>
         <Title order={1}>Trade patches</Title>
         <TextInput

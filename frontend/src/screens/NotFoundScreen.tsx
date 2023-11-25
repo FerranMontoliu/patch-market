@@ -3,7 +3,7 @@ import { Anchor, Container, Stack, Title } from '@mantine/core'
 import { Link as RouterLink } from 'react-router-dom'
 
 const NotFoundScreen = (): ReactElement => (
-  <Container>
+  <Container p={0}>
     <Stack ta="center">
       <Title order={1} style={{ fontSize: '150px' }}>
                     404

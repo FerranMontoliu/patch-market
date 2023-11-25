@@ -48,8 +48,8 @@ const LoginScreen = (): ReactElement => {
   }
 
   return (
-    <Container>
-      <Box maw={340} mx="auto" mt={60}>
+    <Container p={0}>
+      <Box maw={400} mx="auto" mt={60}>
         <Group>
           <Title order={2} style={{ textAlign: 'center', width: '100%' }}>
               Welcome to

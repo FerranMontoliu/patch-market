@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { Alert, Button, Center, Container, Grid, Group, Loader, Space, Stack, Title } from '@mantine/core'
+import { Alert, Button, Center, Container, Grid, Group, Loader, Stack, Title } from '@mantine/core'
 import { useUser } from '../contexts/UserContext.tsx'
 import { notifications } from '@mantine/notifications'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -86,33 +86,38 @@ const TradeDetailsScreen = (): ReactElement => {
   }
 
   const transaction: Transaction = tradeDetailsResult.data
-  const patchGiven: Patch[] = tradeDetailsResult.data
+
+  const patchGiven: Array<Patch> = tradeDetailsResult.data
     ? [tradeDetailsResult.data.patchTo]
     : []
-  const patchesReceived: Patch[] = tradeDetailsResult.data
+  const patchesReceived: Array<Patch> = tradeDetailsResult.data
     ? tradeDetailsResult.data.patchesFrom
     : []
 
   return (
-    <Container>
-      <Title order={1}>Trade details</Title>
-      <Grid my="xl" gutter="xl" p="sm" align="stretch">
+    <Container p={0}>
+      <Title order={1}>
+        Trade details
+      </Title>
+
+      <Grid my="md" gutter="xl" align="stretch">
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-          <Title order={3}>
+          <Title order={3} mb="xs">
             {transaction.to && transaction.to.id === ownUser.id ? 'I give' : 'I receive'}
-            <Space h="xs" />
           </Title>
+
           {patchGiven.length > 0 && <PatchGridTransactionFirstColumn patches={patchGiven} />}
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, md: 6, lg: 9 }}>
-          <Title order={3}>
+          <Title order={3} mb="xs">
             {transaction.to && transaction.to.id === ownUser.id ? 'I receive' : 'I give'}
-            <Space h="xs" />
           </Title>
+
           {patchesReceived.length > 0 && <PatchGridTransactionMultiple patches={patchesReceived} />}
         </Grid.Col>
       </Grid>
+
       <Stack>
         {transaction.to && transaction.to.id === ownUser.id && transaction.status === 'pending' ? (
           <Stack>
@@ -139,15 +144,13 @@ const TradeDetailsScreen = (): ReactElement => {
                 title={`You sent this trade offer to ${transaction.to?.name + ' ' + transaction.to?.surname}`}
                 icon = {<IconInfoCircle/>}
                 color='blue'
-                my='md'
               >
                 If your trading partner accepts this trade offer, you will be able to see their Telegram username and contact them.
               </Alert>
-              <Center>
-                <Button w='50%' color="red" radius="md" onClick={onCancel}>
+
+              <Button w='100%' color="red" radius="md" onClick={onCancel}>
                   Cancel
-                </Button>
-              </Center>
+              </Button>
             </Stack>
           </Group>
         ) : transaction.status === 'accepted' ? (

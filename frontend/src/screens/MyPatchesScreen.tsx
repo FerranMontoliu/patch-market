@@ -36,7 +36,7 @@ const MyPatchesScreen = (): ReactElement => {
 
   if (patches.length === 0) {
     return (
-      <Container>
+      <Container p={0}>
         <Stack>
           <Group>
             <Title order={1} mr="auto">My patches</Title>
@@ -61,7 +61,7 @@ const MyPatchesScreen = (): ReactElement => {
   }
 
   return (
-    <Container>
+    <Container p={0}>
       <Stack>
         <Group>
           <Title order={1} mr="auto">My patches</Title>
@@ -70,7 +70,6 @@ const MyPatchesScreen = (): ReactElement => {
             component={NavLink} to="/add-patch"
             radius="md"
             miw="20%"
-            mx="sm"
           >
                 Add Patch
           </Button>

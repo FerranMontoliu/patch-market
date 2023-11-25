@@ -17,6 +17,9 @@ transactionsRouter.get('/', userExtractorMiddleware, async (request: WebRequest,
           { from: user.id },
         ],
       })
+      .sort({
+        lastUpdateDate: 'desc',
+      })
       .populate('to', { name: 1 })
       .populate('from', { name: 1 })
       .populate('patchTo', { title: 1 })
