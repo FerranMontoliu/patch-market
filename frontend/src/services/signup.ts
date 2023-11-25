@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { User } from '../types.ts'
 
 const baseUrl: string = '/api/users'
 
@@ -8,14 +9,9 @@ type SignUpProps = {
   surname: string;
   telegramUser: string;
   password: string;
-};
+}
 
-export const signUp = async (userData: SignUpProps) => {
-  try {
-    const response = await axios.post(baseUrl, userData)
-    const user = response.data
-    return user
-  } catch (error) {
-    throw error; 
-  }
-};
+export const signUp = async (userData: SignUpProps): Promise<User | null> => {
+  const response = await axios.post(baseUrl, userData)
+  return response.data
+}

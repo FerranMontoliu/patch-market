@@ -33,6 +33,6 @@ export const addPatch = async (patch: AddPatchProps): Promise<Patch | null> => {
 }
 
 export const changePatchTradeableStatus = async (patch: Patch, tradeable: boolean): Promise<Patch | null> => {
-  const response = await axios.put(`${baseUrl}/tradeable`, {patch: patch, tradeable: tradeable}, getAuthConfig())
+  const response = await axios.put(`${baseUrl}/tradeable`, { patch: patch, tradeable: tradeable }, getAuthConfig())
   return response.data as Patch ?? null
 }

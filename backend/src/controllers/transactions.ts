@@ -1,10 +1,8 @@
-import { Router, Response } from 'express'
-import { Transaction } from '../models'
+import { Response, Router } from 'express'
+import { Patch, Transaction } from '../models'
 import { WebRequest } from '../types'
 import { userExtractorMiddleware } from '../utils/middlewares'
 import { UserType } from '../models/user'
-import { Patch } from '../models'
-import { logInfo } from '../utils/logger'
 
 export const transactionsRouter = Router()
 
@@ -33,10 +31,38 @@ transactionsRouter.get('/:id', userExtractorMiddleware, async (request: WebReque
   try {
     const tradeHistoryId = await Transaction
       .findById(request.params.id)
-      .populate('to', { name: 1, surname: 1, telegramUser: 1 })
-      .populate('from', { name: 1, surname: 1, telegramUser: 1 })
-      .populate('patchTo', { title: 1, owner: 1, name: 1, surname: 1, university: 1, image: 1, tradeable: 1, categories: 1, description: 1 })
-      .populate('patchesFrom', { title: 1, owner: 1, name: 1, surname: 1, university: 1, image: 1, tradeable: 1, categories: 1, description: 1 })
+      .populate('to', {
+        name: 1,
+        surname: 1,
+        telegramUser: 1,
+      })
+      .populate('from', {
+        name: 1,
+        surname: 1,
+        telegramUser: 1,
+      })
+      .populate('patchTo', {
+        title: 1,
+        owner: 1,
+        name: 1,
+        surname: 1,
+        university: 1,
+        image: 1,
+        tradeable: 1,
+        categories: 1,
+        description: 1,
+      })
+      .populate('patchesFrom', {
+        title: 1,
+        owner: 1,
+        name: 1,
+        surname: 1,
+        university: 1,
+        image: 1,
+        tradeable: 1,
+        categories: 1,
+        description: 1,
+      })
 
     if (tradeHistoryId) {
       response.json(tradeHistoryId)
@@ -57,7 +83,7 @@ transactionsRouter.post('/', userExtractorMiddleware, async (request: WebRequest
       patchTo,
       patchesFrom,
       from: user.id,
-      to: to || '',
+      to: to ?? '',
       createDate: new Date(),
       lastUpdateDate: new Date(),
       status: 'pending',
@@ -84,22 +110,25 @@ transactionsRouter.put('/:id', userExtractorMiddleware, async (request: WebReque
       response.status(404).json({ error: 'The transaction you are trying to update does not exist' })
       return
     }
-    logInfo(transaction)
+
     if (newStatus === 'accepted') {
       const transactionsToDecline = await Transaction.find({ patchTo: transaction.patchTo._id, status: 'pending' })
-      const transactionsToCancel = await Transaction.find({ patchesFrom: { $in: [transaction.patchTo._id] }, status: 'pending' })
+      const transactionsToCancel = await Transaction.find({
+        patchesFrom: { $in: [transaction.patchTo._id] },
+        status: 'pending'
+      })
       const declinedTransactionsPromise = transactionsToDecline.map(async (transaction) => {
-        try{
+        try {
           await Transaction.findByIdAndUpdate(transaction._id, { status: 'rejected' }, { new: true })
-        }catch(error){
+        } catch (error) {
           console.error('Error updating transaction:', error)
           response.status(500).json('Something went wrong')
         }
       })
       const cancelledTransactionsPromise = transactionsToCancel.map(async (transaction) => {
-        try{
+        try {
           await Transaction.findByIdAndUpdate(transaction._id, { status: 'cancelled' }, { new: true })
-        }catch(error){
+        } catch (error) {
           console.error('Error updating transaction:', error)
           response.status(500).json('Something went wrong')
         }
