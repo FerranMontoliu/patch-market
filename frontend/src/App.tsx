@@ -1,5 +1,5 @@
 import { ReactElement, useEffect } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { Anchor, AppShell, Burger, Button, Group, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconDiscount2 } from '@tabler/icons-react'
@@ -35,7 +35,6 @@ const getHeaderLinks = (onClick: () => void): Array<ReactElement> => [
 ))
 
 function App(): ReactElement {
-  const navigate = useNavigate()
   const [opened, { toggle, close }] = useDisclosure()
 
   const [user, userDispatch] = useUser()
@@ -57,7 +56,6 @@ function App(): ReactElement {
 
   const handleLogout = (): void => {
     logout(userDispatch)
-    navigate('/')
   }
 
   const handleMenuClick = (): void => {

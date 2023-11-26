@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import { Router, type Response } from 'express'
 import User from '../models/user'
 import { type WebRequest } from '../types'
+import { SECRET } from '../utils/config'
 
 export const loginRouter = Router()
 
@@ -29,7 +30,7 @@ loginRouter.post('/', async (request: WebRequest, response: Response): Promise<R
   // Token expires in 60*60 seconds (1h)
   const token: string = sign(
     userIdForToken,
-    process.env.SECRET,
+    SECRET,
     { expiresIn: 60 * 60 }
   )
 
