@@ -1,15 +1,20 @@
 import { type NextFunction, type Response } from 'express'
 import { JwtPayload, verify } from 'jsonwebtoken'
 import { logInfo, logError } from './logger'
-import { SECRET } from './config'
+import { NODE_ENV, SECRET } from './config'
 import User from '../models/user'
 import { type WebRequest, type WebError } from '../types'
 
 export const requestLoggerMiddleware = (request: WebRequest, response: Response, next: NextFunction): void => {
   logInfo('Method:', request.method)
   logInfo('Path:', request.path)
-  logInfo('Body:', request.body)
+
+  if (NODE_ENV !== 'production') {
+    logInfo('Body:', request.body)
+  }
+
   logInfo('---')
+
   next()
 }
 
