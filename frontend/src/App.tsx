@@ -8,18 +8,19 @@ import { useUser } from './contexts/UserContext.tsx'
 import { User } from './types.ts'
 import { setToken } from './services/config.ts'
 import { logout } from './utils/logout.ts'
+import AppFooter from './components/AppFooter.tsx'
 
 type HeaderElement = {
   label: string
   link: string
 }
 
-const getHeaderLinks = (onClick: () => void): Array<ReactElement> =>  [
-  { label:'Home', link: '/' },
-  { label:'My patches', link: '/my-patches' },
-  { label:'My trades', link: '/my-trades' },
-  { label:'Profile', link: '/user-profile' },
-  { label:'FAQ', link: '/faq' },
+const getHeaderLinks = (onClick: () => void): Array<ReactElement> => [
+  { label: 'Home', link: '/' },
+  { label: 'My patches', link: '/my-patches' },
+  { label: 'My trades', link: '/my-trades' },
+  { label: 'Profile', link: '/user-profile' },
+  { label: 'FAQ', link: '/faq' },
 ].map((headerElement: HeaderElement) => (
   <Anchor
     key={headerElement.link}
@@ -84,6 +85,7 @@ function App(): ReactElement {
     <AppShell
       header={{ height: 60 }}
       navbar={{ width: 300, breakpoint: 'sm', collapsed: { desktop: true, mobile: !opened } }}
+      footer={{ height: 60 }}
       padding="md"
     >
       <AppShell.Header>
@@ -91,7 +93,7 @@ function App(): ReactElement {
           <Group justify="space-between" style={{ flex: 1 }}>
             <Anchor component={NavLink} to="/" underline="never">
               <Group>
-                <IconDiscount2 size={30} />
+                <IconDiscount2 size={30}/>
                 <Title order={4}>PatchMarket</Title>
               </Group>
             </Anchor>
@@ -101,7 +103,7 @@ function App(): ReactElement {
             </Group>
           </Group>
 
-          {isLoggedIn && <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />}
+          {isLoggedIn && <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm"/>}
         </Group>
       </AppShell.Header>
 
@@ -110,8 +112,12 @@ function App(): ReactElement {
       </AppShell.Navbar>
 
       <AppShell.Main>
-        <AppRouter />
+        <AppRouter/>
       </AppShell.Main>
+
+      <AppShell.Footer>
+        {isLoggedIn && <AppFooter/>}
+      </AppShell.Footer>
     </AppShell>
   )
 }
