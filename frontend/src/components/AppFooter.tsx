@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom'
 
 const AppFooter = (): ReactElement => {
   return(
-    <Container p="md" bg="gray.0">
+    <Container p="md">
       <Anchor component={NavLink} to="/" underline="never">
         <Group>
           <IconDiscount2 size={30}/>

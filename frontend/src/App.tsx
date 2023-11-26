@@ -115,9 +115,11 @@ function App(): ReactElement {
         <AppRouter/>
       </AppShell.Main>
 
-      <AppShell.Footer>
-        {isLoggedIn && <AppFooter/>}
-      </AppShell.Footer>
+      {isLoggedIn &&
+        <AppShell.Footer>
+          <AppFooter/>
+        </AppShell.Footer>
+      }
     </AppShell>
   )
 }
