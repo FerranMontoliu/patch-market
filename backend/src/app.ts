@@ -16,6 +16,7 @@ import { transactionsRouter } from './controllers/transactions'
 import { universitiesRouter } from './controllers/universities'
 import 'express-async-errors'
 import { categoriesRouter } from './controllers/categories'
+import path from 'path'
 
 export const app: Express = express()
 
@@ -32,7 +33,6 @@ mongoose.connect(MONGODB_URI)
   })
 
 app.use(cors())
-app.use(express.static('build'))
 app.use(express.json({ limit: '16mb' }))
 app.use(requestLoggerMiddleware)
 app.use(tokenExtractorMiddleware)
@@ -43,6 +43,11 @@ app.use('/api/patches', patchesRouter)
 app.use('/api/transactions', transactionsRouter)
 app.use('/api/universities', universitiesRouter)
 app.use('/api/categories', categoriesRouter)
+
+app.use(express.static('build'))
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../build', 'index.html'))
+})
 
 app.use(unknownEndpointMiddleware)
 app.use(errorHandlerMiddleware)
